@@ -56,7 +56,21 @@ cd $CMSSW_BASE/src
 scram b -j 8
 ```
 
-#### Throubleshooting
+#### Temporary integration of Spring16 electron ID MVA and new lepton MVA training in 80X
 
-If you encounter problems at runtime related
-to the Spring16 electron ID MVA, please see [this](https://github.com/CERN-PH-CMG/cmg-cmssw/pull/661).
+Use this branch (80X_M17_newLepMVA_doNotMerge) together with the heppy_80X_M17_newEleMVA_doNotMerge heppy branch.
+
+Checkout both heppy and cmgtools-lite branches and compile with scram.
+
+Then execute the following commands:
+```
+cd $CMSSW_BASE/external/slc6_amd64_gcc530
+git clone https://github.com/ikrav/RecoEgamma-ElectronIdentification.git data/RecoEgamma/ElectronIdentification/data
+cd data/RecoEgamma/ElectronIdentification/data
+git checkout egm_id_80X_v1
+cd $CMSSW_BASE/src
+```
+and compile again with scram.
+
+Both the heppy and cmgtools-lite branches must not be merged in any branch intended for future pull request to the upstream repository.
+Pull requests from such branches will not be merged.
