@@ -42,6 +42,9 @@ susyMultilepton_globalVariables = susyCore_globalVariables + [
             NTupleVariable("nBJetCMVAMedium40", lambda ev: sum([j.btagWP("CMVAM") for j in ev.cleanJets if j.pt() > 40]), int, help="Number of jets with pt > 40 passing CMVA Medium"),
             NTupleVariable("nBJetCMVATight40", lambda ev: sum([j.btagWP("CMVAT") for j in ev.cleanJets if j.pt() > 40]), int, help="Number of jets with pt > 40 passing CMVA Tight"),
 
+            ## ISR jets
+            NTupleVariable("nISRJet30", lambda ev: ev.nisrMatch,help="number of ISR jets with pT>30 GeV"),
+
             ##--------------------------------------------------            
             NTupleVariable("mZ1", lambda ev : ev.bestZ1[0], help="Best m(ll) SF/OS"),
             NTupleVariable("mZ1SFSS", lambda ev : ev.bestZ1sfss[0], help="Best m(ll) SF/SS"),

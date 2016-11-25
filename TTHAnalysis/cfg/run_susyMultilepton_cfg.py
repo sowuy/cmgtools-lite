@@ -500,7 +500,8 @@ if runData and not isTest: # For running on data
 #    json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt' # 6.3/fb
     #json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 12.9/fb
     #json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-283685_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 33.6/fb
-    json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 36.15/fb
+    #json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 36.15/fb
+    json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt' # 36.6/fb
 
     #processing = "Run2016B-23Sep2016-v1"; short = "Run2016B_23Sep2016_v1"; run_ranges = [(272760,273017)]; useAAA=True; # -v2 starts from 272760 to 273017
     #dataChunks.append((json,processing,short,run_ranges,useAAA))

@@ -440,6 +440,13 @@ ttHFatJetAna = cfg.Analyzer(
     #shiftJEC = 0, # set to +1 or -1 to get +/-1 sigma shifts
     )
 
+## ISR jet analyzer
+from CMGTools.TTHAnalysis.analyzers.ttHIsrJetAnalyzer import ttHIsrJetAnalyzer
+ttHIsrJetAna = cfg.Analyzer(
+    ttHIsrJetAnalyzer, name = 'ttHIsrJetAnalyzer',
+    jetPt = 30
+)
+
 
 # Secondary vertex analyzer
 from CMGTools.TTHAnalysis.analyzers.ttHSVAnalyzer import ttHSVAnalyzer
@@ -556,6 +563,7 @@ susyCoreSequence = [
     jetAna,
     #ttHFatJetAna,  # out of core sequence for now
     #ttHSVAna, # out of core sequence for now
+    ttHIsrJetAna,
     metAna,
     ttHCoreEventAna,
     # ttHJetMETSkim,
