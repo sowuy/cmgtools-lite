@@ -51,6 +51,9 @@ _CommonSpect = {
     MVAVar("LepGood_mcMatchAny",lambda x: getattr(x,'mcMatchAny',-999)),
   ],
 }
+_CommonSpect['forMoriond17TTH']=_CommonSpect['forMoriond16']
+_CommonSpect['forMoriond17SUSY']=_CommonSpect['forMoriond16']
+
 _CommonVars = {
  'forMoriond16':[ 
     MVAVar("LepGood_pt",lambda x: x.pt()),
@@ -78,6 +81,8 @@ _CommonVars = {
     MVAVar("LepGood_dz  := log(abs(LepGood_dz))", lambda x: log(abs(x.dz()))),
  ],
 }
+_CommonVars['forMoriond17TTH']=_CommonVars['forMoriond16']
+_CommonVars['forMoriond17SUSY']=_CommonVars['forMoriond16']
 
 _MuonVars = {
  'forMoriond16': [
@@ -88,10 +93,18 @@ _MuonVars = {
  ],
 
 }
+_MuonVars['forMoriond17TTH']=_MuonVars['forMoriond16']
+_MuonVars['forMoriond17SUSY']=_MuonVars['forMoriond16']
 
 _ElectronVars = {
  'forMoriond16': [
     MVAVar("LepGood_mvaIdSpring15",lambda x: x.mvaRun2("NonTrigSpring15MiniAOD")),
+ ],
+ 'forMoriond17TTH': [
+    MVAVar("LepGood_mvaIdSpring16HZZ",lambda x: x.mvaRun2("Spring16HZZ")),
+ ],
+ 'forMoriond17SUSY': [
+    MVAVar("LepGood_mvaIdSpring16GP",lambda x: x.mvaRun2("Spring16GP")),
  ],
  'SoftJetLessNOBTAG': [
     MVAVar("LepGood_mvaIdSpring15",lambda x: x.mvaRun2("NonTrigSpring15MiniAOD")),
@@ -107,7 +120,7 @@ class LeptonMVA:
         self._kind = kind
         muVars = _CommonVars[kind] + _MuonVars[kind]
         elVars = _CommonVars[kind] + _ElectronVars[kind]
-        if ('forMoriond16' in self._kind) or ('SoftJetLessNOBTAG' in self._kind):
+        if ('forMoriond16' in self._kind) or ('forMoriond17' in self._kind) or ('SoftJetLessNOBTAG' in self._kind):
             self.mu = CategorizedMVA([
                     ( lambda x: True, MVATool("BDTG",basepath%"mu",_CommonSpect[kind],muVars) ),
                     ])
