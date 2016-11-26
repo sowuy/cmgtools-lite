@@ -516,15 +516,15 @@ if runData and not isTest: # For running on data
     dataChunks.append((json,processing,short,run_ranges,useAAA))
     processing = "Run2016F-23Sep2016-v1"; short = "Run2016F_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
     dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016G-23Sep2016-v1"; short = "Run2016G_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
-    dataChunks.append((json,processing,short,run_ranges,useAAA))
+    #processing = "Run2016G-23Sep2016-v1"; short = "Run2016G_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
+    #dataChunks.append((json,processing,short,run_ranges,useAAA))
     #run H ==============================================================================================================
-    processing = "Run2016H-PromptReco-v1"; short = "Run2016H-PromptReco-v1"; run_ranges = [(281085,281201)]; useAAA=True;
-    dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016H-PromptReco-v2"; short = "Run2016H-PromptReco-v2"; run_ranges = [(281207,284035)]; useAAA=True;
-    dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016H-PromptReco-v3"; short = "Run2016H-PromptReco-v3"; run_ranges = [(284036,284044)]; useAAA=True;
-    dataChunks.append((json,processing,short,run_ranges,useAAA))
+    #processing = "Run2016H-PromptReco-v1"; short = "Run2016H-PromptReco-v1"; run_ranges = [(281085,281201)]; useAAA=True;
+    #dataChunks.append((json,processing,short,run_ranges,useAAA))
+    #processing = "Run2016H-PromptReco-v2"; short = "Run2016H-PromptReco-v2"; run_ranges = [(281207,284035)]; useAAA=True;
+    #dataChunks.append((json,processing,short,run_ranges,useAAA))
+    #processing = "Run2016H-PromptReco-v3"; short = "Run2016H-PromptReco-v3"; run_ranges = [(284036,284044)]; useAAA=True;
+    #dataChunks.append((json,processing,short,run_ranges,useAAA))
 
     compSelection = ""; compVeto = ""
     DatasetsAndTriggers = []
@@ -639,11 +639,11 @@ if True and runData:
     from CMGTools.Production.promptRecoRunRangeFilter import filterComponent
     for c in selectedComponents:
         printnewsummary = False
-        c.splitFactor = len(c.files)/3
+        c.splitFactor = len(c.files)/4
         if "PromptReco" in c.name:
             printnewsummary = True
             filterComponent(c, 1)
-            c.splitFactor = len(c.files)/3
+            c.splitFactor = len(c.files)/4
     if printnewsummary: printSummary(selectedComponents)
 
 

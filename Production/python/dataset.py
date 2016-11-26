@@ -192,6 +192,11 @@ class CMSDataset( BaseDataset ):
                                                   i*limit,
                                                   ((i+1)*limit)-1)
                 self.files.extend(DBSFiles)
+            if '/store/data/Run2016B/DoubleEG/MINIAOD/23Sep2016-v3/00000/EE9087DE-C297-E611-BAA5-FA163ED9F197.root' in self.files: self.files.remove('/store/data/Run2016B/DoubleEG/MINIAOD/23Sep2016-v3/00000/EE9087DE-C297-E611-BAA5-FA163ED9F197.root')
+            if '/store/data/Run2016B/JetHT/MINIAOD/23Sep2016-v3/00000/EA648C7F-9D97-E611-9E9E-008CFAF2931E.root' in self.files: self.files.remove('/store/data/Run2016B/JetHT/MINIAOD/23Sep2016-v3/00000/EA648C7F-9D97-E611-9E9E-008CFAF2931E.root')
+            if '/store/data/Run2016C/SingleElectron/MINIAOD/23Sep2016-v1/70000/285AB153-918B-E611-9D18-008CFAF2931E.root' in self.files: self.files.remove('/store/data/Run2016C/SingleElectron/MINIAOD/23Sep2016-v1/70000/285AB153-918B-E611-9D18-008CFAF2931E.root')
+            if '/store/data/Run2016F/SingleMuon/MINIAOD/23Sep2016-v1/50000/B26374D9-B08F-E611-8EA0-008CFAF2931E.root' in self.files: self.files.remove('/store/data/Run2016F/SingleMuon/MINIAOD/23Sep2016-v1/50000/B26374D9-B08F-E611-8EA0-008CFAF2931E.root')
+            if '/store/data/Run2016G/SingleMuon/MINIAOD/23Sep2016-v1/90000/1C603D88-C597-E611-A0BE-008CFAF2931E.root' in self.files: self.files.remove('/store/data/Run2016G/SingleMuon/MINIAOD/23Sep2016-v1/90000/1C603D88-C597-E611-A0BE-008CFAF2931E.root')
             if len(self.files) != num_files:
                 raise RuntimeError, "ERROR: mismatching number of files between dataset summary (%d) and dataset query for files(%d)\n" % (num_files, len(self.files))
             return
@@ -225,6 +230,11 @@ class CMSDataset( BaseDataset ):
             return
 
         self.files = self.buildListOfFilesDBS(pattern)
+        if '/store/data/Run2016B/DoubleEG/MINIAOD/23Sep2016-v3/00000/EE9087DE-C297-E611-BAA5-FA163ED9F197.root' in self.files: self.files.remove('/store/data/Run2016B/DoubleEG/MINIAOD/23Sep2016-v3/00000/EE9087DE-C297-E611-BAA5-FA163ED9F197.root')
+        if '/store/data/Run2016B/JetHT/MINIAOD/23Sep2016-v3/00000/EA648C7F-9D97-E611-9E9E-008CFAF2931E.root' in self.files: self.files.remove('/store/data/Run2016B/JetHT/MINIAOD/23Sep2016-v3/00000/EA648C7F-9D97-E611-9E9E-008CFAF2931E.root')
+        if '/store/data/Run2016C/SingleElectron/MINIAOD/23Sep2016-v1/70000/285AB153-918B-E611-9D18-008CFAF2931E.root' in self.files: self.files.remove('/store/data/Run2016C/SingleElectron/MINIAOD/23Sep2016-v1/70000/285AB153-918B-E611-9D18-008CFAF2931E.root')
+        if '/store/data/Run2016F/SingleMuon/MINIAOD/23Sep2016-v1/50000/B26374D9-B08F-E611-8EA0-008CFAF2931E.root' in self.files: self.files.remove('/store/data/Run2016F/SingleMuon/MINIAOD/23Sep2016-v1/50000/B26374D9-B08F-E611-8EA0-008CFAF2931E.root')
+        if '/store/data/Run2016G/SingleMuon/MINIAOD/23Sep2016-v1/90000/1C603D88-C597-E611-A0BE-008CFAF2931E.root' in self.files: self.files.remove('/store/data/Run2016G/SingleMuon/MINIAOD/23Sep2016-v1/90000/1C603D88-C597-E611-A0BE-008CFAF2931E.root')
         if len(self.files) != num_files:
             raise RuntimeError, "ERROR: mismatching number of files between dataset summary (%d) and dataset query for files(%d)\n" % (num_files, len(self.files))
             
