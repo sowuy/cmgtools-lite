@@ -2,6 +2,7 @@
 tar xzf cmgdataset.tar.gz --directory $HOME
 tar xzf python.tar.gz --directory $CMSSW_BASE
 tar xzf cafpython.tar.gz --directory $CMSSW_BASE
+tar xzf external.tar.gz --directory $CMSSW_BASE
 
 # uncomment for debuging purposes
 #ls -lR .
