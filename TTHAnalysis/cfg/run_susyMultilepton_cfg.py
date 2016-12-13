@@ -48,7 +48,7 @@ ttHLepSkim.maxLeptons = 999
 if analysis=='susy':
     susyCoreSequence.insert(susyCoreSequence.index(ttHLepSkim)+1,globalSkim)
     susyCoreSequence.remove(ttHLepSkim)
-    globalSkim.selections=["2lep5","1lep5_1tau18", "2tau18","1lep5[maxObj1]"]
+    globalSkim.selections=["2lep5","1lep5_2tau18"]
 #   [ lambda ev: 2<=sum([(lep.miniRelIso<0.4) for lep in ev.selectedLeptons]) ] 
 #   ["2lep5[os:!DS_TTW_RA5_sync]_1lep50"]#, "1lep5_1tau18", "2tau18","2lep5_1met50"]
 
@@ -342,7 +342,8 @@ else:
     susyScanAna.useLumiInfo=True
     susyScanAna.doLHE=True
     susyCounter.bypass_trackMass_check = False
-    susyCounter.SMS_varying_masses=['genSusyMGluino','genSusyMNeutralino','genSusyMChargino','genSusyMNeutralino2', 'genSusyMStau', 'genSusyMSnuTau', 'genSusyMStop']
+    susyCounter.SMS_varying_masses=['genSusyMGluino','genSusyMChargino','genSusyMNeutralino','genSusyMNeutralino2','genSusyMNeutralino3',
+                                    'genSusyMStau', 'genSusyMSnuTau', 'genSusyMStop']
     susyCoreSequence.insert(susyCoreSequence.index(susyScanAna)+1,susyCounter)
 
 # HBHE new filter
@@ -545,7 +546,7 @@ if runData and not isTest: # For running on data
         if analysis=='susy':
             DatasetsAndTriggers.append( ("SingleMuon", triggers_leptau + triggers_1mu_iso + triggers_1mu_noniso) )
             DatasetsAndTriggers.append( ("SingleElectron", triggers_leptau + triggers_1e) )
-            DatasetsAndTriggers.append( ("Tau", triggers_leptau + triggers_1mu_iso + triggers_1e) )
+            #DatasetsAndTriggers.append( ("Tau", triggers_leptau + triggers_1mu_iso + triggers_1e) )
             #for edgeZ OS
             DatasetsAndTriggers.append( ("JetHT", triggers_pfht ) ) #triggerFlagsAna.triggerBits['htall']
             DatasetsAndTriggers.append( ("MET", triggers_htmet ) ) # triggerFlagsAna.triggerBits['htmet']
@@ -914,14 +915,14 @@ elif test == '80X-MC':
     else: raise RuntimeError, "Unknown MC sample: %s" % what
 elif test == '80X-Data':
     #DoubleMuon = kreator.makeDataComponent("DoubleMuon_Run2016B_run274315", "/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD", "CMS", ".*root", run_range = (274315,274315), triggers = triggers_mumu + triggers_mumu_ht + triggers_ee + triggers_ee_ht )
-    #DoubleEG = kreator.makeDataComponent("DoubleEG_Run2016B_run274315", "/DoubleEG/Run2016B-PromptReco-v2/MINIAOD", "CMS", ".*root", run_range = (274315,274315), triggers = triggers_ee)
-    SingleMuon = kreator.makeDataComponent("SingleMuon_Run2016H_run281693","/SingleMuon/Run2016H-PromptReco-v2/MINIAOD","CMS",".*root", run_range=(281680, 281700), triggers = triggers_1mu_iso)
+    DoubleEG = kreator.makeDataComponent("DoubleEG_Run2016B_run274315", "/DoubleEG/Run2016B-PromptReco-v2/MINIAOD", "CMS", ".*root", run_range = (274315,274315), triggers = triggers_ee)
+    #SingleMuon = kreator.makeDataComponent("SingleMuon_Run2016H_run281693","/SingleMuon/Run2016H-PromptReco-v2/MINIAOD","CMS",".*root", run_range=(281680, 281700), triggers = triggers_1mu_iso)
     #DoubleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleMuon/MINIAOD/PromptReco-v2/000/274/315/00000/A287989F-E129-E611-B5FB-02163E0142C2.root' ]
-    #DoubleEG.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleEG/MINIAOD/PromptReco-v2/000/274/315/00000/FEF59D1D-EE29-E611-8793-02163E0143AE.root' ]
+    DoubleEG.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleEG/MINIAOD/PromptReco-v2/000/274/315/00000/FEF59D1D-EE29-E611-8793-02163E0143AE.root' ]
     #SingleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v2/000/281/693/00000/4E8924DC-3B86-E611-BB28-FA163E72F1B8.root' ]
     #SingleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v2/000/281/693/00000/4E8924DC-3B86-E611-BB28-FA163E72F1B8.root' ]
-    SingleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleMuon/MINIAOD/23Sep2016-v3/00000/5ADA8008-EE98-E611-A57D-848F69FD852B.root' ]
-    selectedComponents = [ SingleMuon ] #DoubleMuon, DoubleEG ]
+    #SingleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleMuon/MINIAOD/23Sep2016-v3/00000/5ADA8008-EE98-E611-A57D-848F69FD852B.root' ]
+    selectedComponents = [ DoubleEG ] #DoubleMuon, DoubleEG ]
     for comp in selectedComponents:
         comp.json = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-283685_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
         tmpfil = os.path.expandvars("/tmp/$USER/%s" % os.path.basename(comp.files[0]))
@@ -941,6 +942,26 @@ elif test == 'ttH-sync':
     if not getHeppyOption("single"): comp.fineSplitFactor = 8
 elif test != None:
     raise RuntimeError, "Unknown test %r" % test
+
+
+###--------- Global Skimming 1 lepton skim ------------------------------
+if runData:
+    for c in selectedComponents:
+        if "DoubleEG" in c.name or "DoubleMuon" in c.name:
+            globalSkim.selections.append("1lep5[maxObj1:DS_"+c.name+"]")
+else: #MC
+    globalSkim.selections.append("1lep5[maxObj1:DS_DYJetsToLL_M10to50]")
+    globalSkim.selections.append("1lep5[maxObj1:DS_DYJetsToLL_M50]")
+    globalSkim.selections.append("1lep5[maxObj1:DS_DYJetsToLL_M10to50_LO]")
+    globalSkim.selections.append("1lep5[maxObj1:DS_DYJetsToLL_M50_LO]")
+    globalSkim.selections.append("1lep5[maxObj1:DS_WJetsToLNu]")
+    globalSkim.selections.append("1lep5[maxObj1:DS_WJetsToLNu_LO]")
+    for c in QCDPtEMEnriched+QCDPtbcToE+[QCD_Mu15]+QCD_Mu5:
+        globalSkim.selections.append("1lep5[maxObj1:DS_"+c.name+"]")
+
+for sel in globalSkim.selections:
+    print ":-->> ",sel
+###---------------------------------------------------------------------
 
 ## FAST mode: pre-skim using reco leptons, don't do accounting of LHE weights (slow)"
 ## Useful for large background samples with low skim efficiency

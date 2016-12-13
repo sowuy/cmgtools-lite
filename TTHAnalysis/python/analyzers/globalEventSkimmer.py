@@ -76,8 +76,10 @@ class objectSelection():
                 else:
                     DS=opt[2:] if opt[0]!="!" else opt[3:]
                
+                if DS[0]=="_": DS=DS[1:]
                 if (DS==compName and veto) or (DS!=compName and not veto):
                     self.vetoDS=True
+                print "---<>>> ",DS," -- ",compName," -- ",veto, " -->> ", self.vetoDS
 
 class globalEventSkimmer( Analyzer ):
     def __init__(self, cfg_ana, cfg_comp, looperName ):
@@ -139,7 +141,7 @@ class globalEventSkimmer( Analyzer ):
             for s in sel.keys():
                 objType=sel[s].pid
                 if sel[s].vetoDS:
-                    nObjTypes-=1
+                    nObjTypes+=1
                     continue
                 
                 cntObj=sel[s].num
@@ -178,16 +180,24 @@ class globalEventSkimmer( Analyzer ):
     def parseSelection(self, selection, compName):
 
         sel=selection
-        scanopt=re.compile(r".+(\[.+\]).+")
-        scansel=re.compile(r".+(\(.+\)).+")
+        scanopt=re.compile(r".+(\[.+?\]).+")
+        scanopt1=re.compile(r".+(\[.+?\])$")
+        scansel=re.compile(r".+(\(.+?\)).+")
+        scansel1=re.compile(r".+(\(.+?\))$")
         so=re.match(scanopt, sel)
+        so1=re.match(scanopt1, sel)
         ss=re.match(scansel, sel)
+        ss1=re.match(scansel1, sel)
         sel=sel.replace("_"," ")
         if so:
             sel=re.sub(r'\[.*?\]',so.group(1),sel)
+        if so1:
+            sel=re.sub(r'\[.*?\]',so1.group(1),sel)    
         if ss:
             sel=re.sub('\(.*?\)',ss.group(1),sel)
-
+        if ss1:
+            sel=re.sub('\(.*?\)',ss1.group(1),sel)
+        
         objects=sel.split()
         ret={}
         for obj in objects:
