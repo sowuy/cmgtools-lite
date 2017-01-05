@@ -79,7 +79,7 @@ class objectSelection():
                 if DS[0]=="_": DS=DS[1:]
                 if (DS==compName and veto) or (DS!=compName and not veto):
                     self.vetoDS=True
-                print "---<>>> ",DS," -- ",compName," -- ",veto, " -->> ", self.vetoDS
+                
 
 class globalEventSkimmer( Analyzer ):
     def __init__(self, cfg_ana, cfg_comp, looperName ):

@@ -71,19 +71,22 @@ if analysis=='susy':
     jetAna.cleanSelectedLeptons=True
     jetAna.storeLowPtJets=True
     jetAna.jetEtaCentral = jetAna.jetEta
-    jetAna.mcGT="Spring16_25nsV8_MC"    
-    jetAna.dataGT   = "Spring16_25nsV8BCD_DATA Spring16_25nsV8E_DATA Spring16_25nsV8F_DATA Spring16_25nsV8_DATA"
-    jetAna.runsDataJEC   = [276811, 277420, 278802]
-if not removeJecUncertainty:
-    jetAna.addJECShifts = True
-    jetAnaScaleDown.copyJetsByValue = True # do not remove this
-    metAnaScaleDown.copyMETsByValue = True # do not remove this
-    jetAnaScaleUp.copyJetsByValue = True # do not remove this
-    metAnaScaleUp.copyMETsByValue = True # do not remove this
-    susyCoreSequence.insert(susyCoreSequence.index(jetAna)+1, jetAnaScaleDown)
-    susyCoreSequence.insert(susyCoreSequence.index(jetAna)+1, jetAnaScaleUp)
-    susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaScaleDown)
-    susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaScaleUp)
+    jetAna.mcGT=[[-1,"Spring16_23Sep2016V2_MC"]]
+    jetAna.dataGT =[ [-1    ,"Spring16_23Sep2016BCDV2_DATA"],
+                     [276831,"Spring16_23Sep2016EFV2_DATA"],
+                     [278802,"Spring16_23Sep2016GV2_DATA"],
+                     [280919,"Spring16_23Sep2016HV2_DATA"] ]
+
+jetAna.addJECShifts = True
+metAnaScaleDown.copyMETsByValue = True # do not remove this
+metAnaScaleUp.copyMETsByValue = True # do not remove this
+jetAnaScaleDown.copyJetsByValue = True # do not remove this
+jetAnaScaleUp.copyJetsByValue = True # do not remove this
+susyCoreSequence.insert(susyCoreSequence.index(jetAna)+1, jetAnaScaleDown)
+susyCoreSequence.insert(susyCoreSequence.index(jetAna)+1, jetAnaScaleUp)
+susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaScaleDown)
+susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaScaleUp)
+if not removeJecUncertainty:     
     if analysis=='susy':
         jetAnaScaleDown.cleanJetsFromLeptons=False
         jetAnaScaleDown.cleanSelectedLeptons=True
@@ -93,13 +96,10 @@ if not removeJecUncertainty:
         jetAnaScaleUp.cleanSelectedLeptons=True
         jetAnaScaleUp.storeLowPtJets=True
         jetAnaScaleUp.jetEtaCentral = jetAnaScaleUp.jetEta
-        jetAnaScaleDown.mcGT="Spring16_25nsV8_MC"    
-        jetAnaScaleDown.dataGT   = "Spring16_25nsV8BCD_DATA Spring16_25nsV8E_DATA Spring16_25nsV8F_DATA Spring16_25nsV8_DATA"
-        jetAnaScaleDown.runsDataJEC   = [276811, 277420, 278802]
-        jetAnaScaleUp.mcGT="Spring16_25nsV8_MC"    
-        jetAnaScaleUp.dataGT   = "Spring16_25nsV8BCD_DATA Spring16_25nsV8E_DATA Spring16_25nsV8F_DATA Spring16_25nsV8_DATA"
-        jetAnaScaleUp.runsDataJEC   = [276811, 277420, 278802]
-
+        jetAnaScaleDown.mcGT=jetAna.mcGT
+        jetAnaScaleDown.dataGT=jetAna.dataGT
+        jetAnaScaleUp.mcGT=jetAna.mcGT
+        jetAnaScaleUp.dataGT=jetAna.dataGT
 
 if analysis in ['SOS']:
 ## -- SOS preselection settings ---
@@ -308,11 +308,12 @@ if saveSuperClusterVariables:
             NTupleVariable("superCluster_seed.energy", lambda x: x.superCluster().seed().energy() if (abs(x.pdgId())==11 and hasattr(x,"superCluster")) else -999, help="Electron superCluster.seed.energy"),
 ])
 
+
+susyMultilepton_globalObjects.update({
+        "met_jecUp" : NTupleObject("met_jecUp", metType, help="PF E_{T}^{miss}, after type 1 corrections (JEC plus 1sigma)"),
+        "met_jecDown" : NTupleObject("met_jecDown", metType, help="PF E_{T}^{miss}, after type 1 corrections (JEC minus 1sigma)"),
+        })
 if not removeJecUncertainty:
-    susyMultilepton_globalObjects.update({
-            "met_jecUp" : NTupleObject("met_jecUp", metType, help="PF E_{T}^{miss}, after type 1 corrections (JEC plus 1sigma)"),
-            "met_jecDown" : NTupleObject("met_jecDown", metType, help="PF E_{T}^{miss}, after type 1 corrections (JEC minus 1sigma)"),
-            })
     susyMultilepton_collections.update({
             "cleanJets_jecUp"       : NTupleCollection("Jet_jecUp",     jetTypeSusyExtraLight, 15, help="Cental jets after full selection and cleaning, sorted by pt (JEC plus 1sigma)"),
             "cleanJets_jecDown"     : NTupleCollection("Jet_jecDown",     jetTypeSusyExtraLight, 15, help="Cental jets after full selection and cleaning, sorted by pt (JEC minus 1sigma)"),
@@ -420,20 +421,23 @@ if runSMS:
     #ttHLepSkim.requireSameSignPair = False
 
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv1 import *
-from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv2 import *
+#from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv2 import *
+from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_050117 import *
 from CMGTools.RootTools.samples.samples_13TeV_signals import *
 from CMGTools.RootTools.samples.samples_13TeV_76X_susySignalsPriv import *
 from CMGTools.RootTools.samples.samples_13TeV_DATA2016 import *
 from CMGTools.HToZZ4L.tools.configTools import printSummary, configureSplittingFromTime, cropToLumi, prescaleComponents, insertEventSelector
 
-selectedComponents = [TTLep_pow_ext]
+selectedComponents = [DYJetsToLL_M50] #TTLep_pow_ext
 
 if analysis=='susy':
-    samples = [DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO, GGHZZ4L, TBarToLeptons_tch_powheg, TBar_tWch, TGJets, TTGJets, TTJets, TTJets_DiLepton, TTJets_SingleLeptonFromT, 
-               TTJets_SingleLeptonFromTbar, TTTT, TT_pow_ext4, TToLeptons_sch_amcatnlo, TToLeptons_tch_amcatnlo, TToLeptons_tch_powheg, T_tWch, VHToNonbb, WGToLNuG, WJetsToLNu, WJetsToLNu_LO, 
-               WWDouble, WWTo2L2Nu, WWW, WWZ, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ, tZq_ll]
+    samples = [DYJetsToLL_M50] #[DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO, GGHZZ4L, 
+              # TBarToLeptons_tch_powheg, TBar_tWch, TGJets, TTGJets, TTJets, TTJets_DiLepton, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromTbar,
+              # TTTT, TT_pow_ext4, TToLeptons_sch_amcatnlo, TToLeptons_tch_amcatnlo, 
+              # TToLeptons_tch_powheg, T_tWch, VHToNonbb, WGToLNuG, WJetsToLNu, WJetsToLNu_LO, 
+              # WWDouble, WWTo2L2Nu, WWW, WWZ, WWTo2L2Nu, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ, tZq_ll]
    
-    samples_LHE = [TTHnobb_pow, TTLLJets_m1to10, TTWToLNu, TTW_LO, TTZToLLNuNu, TTZ_LO,]
+    samples_LHE = [DYJetsToLL_M50] #[TTHnobb_pow, TTLLJets_m1to10, TTWToLNu, TTW_LO, TTZToLLNuNu, TTZ_LO,]
     
     #samples_2l = [TTW_LO,TTZ_LO,WZTo3LNu_amcatnlo,DYJetsToLL_M10to50,DYJetsToLL_M50,WWTo2L2Nu,ZZTo2L2Q,WZTo3LNu,TTWToLNu,TTZToLLNuNu,TTJets_DiLepton,TTHnobb_mWCutfix_ext1,TTHnobb_pow]
     #samples_1l = [WJetsToLNu,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TBarToLeptons_tch_powheg,TToLeptons_sch_amcatnlo,TBar_tWch,T_tWch]
@@ -548,7 +552,7 @@ if runData and not isTest: # For running on data
             DatasetsAndTriggers.append( ("SingleElectron", triggers_leptau + triggers_1e) )
             #DatasetsAndTriggers.append( ("Tau", triggers_leptau + triggers_1mu_iso + triggers_1e) )
             #for edgeZ OS
-            DatasetsAndTriggers.append( ("JetHT", triggers_pfht ) ) #triggerFlagsAna.triggerBits['htall']
+            DatasetsAndTriggers.append( ("JetHT", triggers_pfht + triggers_jet_recoverHT ) ) #triggerFlagsAna.triggerBits['htall']
             DatasetsAndTriggers.append( ("MET", triggers_htmet ) ) # triggerFlagsAna.triggerBits['htmet']
         else:
             DatasetsAndTriggers.append( ("SingleMuon", triggers_1mu_iso + triggers_1mu_noniso) )

@@ -4,7 +4,12 @@
 triggers_mumu_iso    = [ "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*", 
                          "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*",
                          "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*",
-                         "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*" ]
+                         "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*",
+                         "HLT_Mu23_TrkIsoVVL_Mu8_TrkIsoVVL_v*", 
+                         "HLT_Mu23_TrkIsoVVL_TkMu8_TrkIsoVVL_v*",
+                         "HLT_Mu23_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*",
+                         "HLT_Mu23_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*"
+                         ]
 triggers_mumu_noniso = [ "HLT_Mu30_TkMu11_v*" ]
 triggers_mumu_ss = [ "HLT_Mu17_Mu8_SameSign_v*",
                      "HLT_Mu17_Mu8_SameSign_DZ_v*", 
