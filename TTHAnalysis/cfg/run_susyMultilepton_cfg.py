@@ -52,6 +52,14 @@ if analysis=='susy':
 #   [ lambda ev: 2<=sum([(lep.miniRelIso<0.4) for lep in ev.selectedLeptons]) ] 
 #   ["2lep5[os:!DS_TTW_RA5_sync]_1lep50"]#, "1lep5_1tau18", "2tau18","2lep5_1met50"]
 
+
+###--------- Global Skimming 1 lepton skim ------------------------------
+    if runDataQCD or runFRMC or runQCDBM:
+        globalSkim.selections=["1lep5[maxObj]"]
+###---------------------------------------------------------------------
+
+
+
 # Run miniIso
 lepAna.doMiniIsolation = True
 lepAna.packedCandidates = 'packedPFCandidates'
@@ -70,6 +78,7 @@ if analysis=='susy':
     jetAna.cleanJetsFromLeptons=False
     jetAna.cleanSelectedLeptons=True
     jetAna.storeLowPtJets=True
+    jetAna.jetPtOrUpOrDnSelection=True
     jetAna.jetEtaCentral = jetAna.jetEta
     jetAna.mcGT=[[-1,"Spring16_23Sep2016V2_MC"]]
     jetAna.dataGT =[ [-1    ,"Spring16_23Sep2016BCDV2_DATA"],
@@ -100,6 +109,13 @@ if not removeJecUncertainty:
         jetAnaScaleDown.dataGT=jetAna.dataGT
         jetAnaScaleUp.mcGT=jetAna.mcGT
         jetAnaScaleUp.dataGT=jetAna.dataGT
+
+
+if analysis=='susy':
+    # Isolated Track
+    isoTrackAna.setOff=False
+    isoTrackAna.doIsoAnnulus = True
+    #susyCoreSequence.insert(susyCoreSequence.index(),isoTrackAna)
 
 if analysis in ['SOS']:
 ## -- SOS preselection settings ---
@@ -422,7 +438,7 @@ if runSMS:
 
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv1 import *
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv2 import *
-from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_050117 import *
+from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_130117v2 import *
 from CMGTools.RootTools.samples.samples_13TeV_signals import *
 from CMGTools.RootTools.samples.samples_13TeV_76X_susySignalsPriv import *
 from CMGTools.RootTools.samples.samples_13TeV_DATA2016 import *
@@ -431,21 +447,25 @@ from CMGTools.HToZZ4L.tools.configTools import printSummary, configureSplittingF
 selectedComponents = [DYJetsToLL_M50] #TTLep_pow_ext
 
 if analysis=='susy':
-    samples = [DYJetsToLL_M50] #[DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO, GGHZZ4L, 
-              # TBarToLeptons_tch_powheg, TBar_tWch, TGJets, TTGJets, TTJets, TTJets_DiLepton, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromTbar,
-              # TTTT, TT_pow_ext4, TToLeptons_sch_amcatnlo, TToLeptons_tch_amcatnlo, 
-              # TToLeptons_tch_powheg, T_tWch, VHToNonbb, WGToLNuG, WJetsToLNu, WJetsToLNu_LO, 
-              # WWDouble, WWTo2L2Nu, WWW, WWZ, WWTo2L2Nu, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ, tZq_ll]
-   
-    samples_LHE = [DYJetsToLL_M50] #[TTHnobb_pow, TTLLJets_m1to10, TTWToLNu, TTW_LO, TTZToLLNuNu, TTZ_LO,]
+    samples = [ DYJetsToLL_M50, DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO, GGHZZ4L, 
+                TGJets, TTGJets, TTJets, TTJets_DiLepton, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromTbar,
+                TTTT, TToLeptons_sch_amcatnlo, 
+                VHToNonbb, WJetsToLNu, WJetsToLNu_LO, 
+                WWTo2L2Nu, WWG, WWW, WWZ, WWTo2L2Nu, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ]
+    #samples += [DYJetsToLL_M10to50,  TBarToLeptons_tch_powheg, TBar_tWch, TT_pow_ext4, TToLeptons_tch_amcatnlo, TToLeptons_tch_powheg, T_tWch, WGToLNuG, WWDouble, tZq_ll
     
-    #samples_2l = [TTW_LO,TTZ_LO,WZTo3LNu_amcatnlo,DYJetsToLL_M10to50,DYJetsToLL_M50,WWTo2L2Nu,ZZTo2L2Q,WZTo3LNu,TTWToLNu,TTZToLLNuNu,TTJets_DiLepton,TTHnobb_mWCutfix_ext1,TTHnobb_pow]
-    #samples_1l = [WJetsToLNu,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TBarToLeptons_tch_powheg,TToLeptons_sch_amcatnlo,TBar_tWch,T_tWch]
+    samples_LHE = [ TTLLJets_m1to10, TTWToLNu_ext1, TTWToLNu_ext2  , TTZToLLNuNu] #, TTW_LO, TTZ_LO
+    #samples_LHE += [ TTHnobb_pow, ]
+    
     
     if not getHeppyOption("keepLHEweights",False):
         selectedComponents = samples #samples_2l +samples_1l
     else:
         selectedComponents = samples_LHE
+
+    for c in selectedComponents:
+        if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
+            c.splitFactor=300
 
     if runSMS:
         selectedComponents=[TChiSlepSnu,T1tttt_2016,T5qqqqVV_2016]
@@ -499,10 +519,11 @@ if runData and not isTest: # For running on data
     is50ns = False
     dataChunks = []
 
-    json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 36.15/fb
+    json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt' # 36.15/fb
 
     #processing = "Run2016B-23Sep2016-v1"; short = "Run2016B_23Sep2016_v1"; run_ranges = [(272760,273017)]; useAAA=True; # -v2 starts from 272760 to 273017
     #dataChunks.append((json,processing,short,run_ranges,useAAA))
+    
     processing = "Run2016B-23Sep2016-v3"; short = "Run2016B_23Sep2016_v3"; run_ranges = [(273150,275376)]; useAAA=True; # -v3 starts from 273150 to 275376
     dataChunks.append((json,processing,short,run_ranges,useAAA))
     processing = "Run2016C-23Sep2016-v1"; short = "Run2016C_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
@@ -559,13 +580,15 @@ if runData and not isTest: # For running on data
             DatasetsAndTriggers.append( ("SingleElectron", triggers_1e) )
 
         if runDataQCD: # for fake rate measurements in data
-            FRTrigs_mu = triggers_FR_1mu_noiso
-            FRTrigs_el = triggers_FR_1e_noiso
+            FRTrigs_mu = triggers_FR_1mu_noiso + triggers_FR_1mu_iso
+            FRTrigs_el = triggers_FR_1e_noiso + triggers_FR_1e_iso + triggers_FR_1e_b2g
             DatasetsAndTriggers = [
                 ("DoubleMuon", FRTrigs_mu ),
                 ("DoubleEG",   FRTrigs_el ),
                 #("JetHT",   triggers_FR_jet )
             ]
+            for i in DatasetsAndTriggers:
+                print i[0]," => ",i[1]
             exclusiveDatasets = False
         if runDataQCD and runQCDBM: # for fake rate measurements in data
             FRTrigs_mu = triggers_FR_1mu_iso + triggers_FR_1mu_noiso
@@ -589,15 +612,15 @@ if runData and not isTest: # For running on data
                 FRTrigs_mu = triggers_FR_1mu_iso + triggers_FR_1mu_noiso
                 FRTrigs_el = triggers_FR_1e_noiso + triggers_FR_1e_iso + triggers_FR_1e_b2g
                 DatasetsAndTriggers = [ (pd,trig) for pd,trig in DatasetsAndTriggers ] # if pd in ['DoubleMuon','DoubleEG'] ]
-                for pd,trig in DatasetsAndTriggers:
-                    print pd
-                    if pd in ['DoubleMuon','SingleMuon']:
-                        trig.extend(FRTrigs_mu)
-                    elif pd in ['DoubleEG','SingleElectron']:
-                        trig.extend(FRTrigs_el)
-                    else:
-                        print 'the strategy for trigger selection on MuonEG for FR studies should yet be implemented'
-                        #assert(False)
+                #for pd,trig in DatasetsAndTriggers:
+                #    print pd
+                #    if pd in ['DoubleMuon','SingleMuon']:
+                #        trig.extend(FRTrigs_mu)
+                #    elif pd in ['DoubleEG','SingleElectron']:
+                #        trig.extend(FRTrigs_el)
+                #    else:
+                #        print 'the strategy for trigger selection on MuonEG for FR studies should yet be implemented'
+                #        #assert(False)
 
     for json,processing,short,run_ranges,useAAA in dataChunks:
         if len(run_ranges)==0: run_ranges=[None]
@@ -656,12 +679,12 @@ if runFRMC:
 
 #    selectedComponents = [TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar]
 
-    selectedComponents = [QCD_Mu15] + QCD_Mu5 + [WJetsToLNu,DYJetsToLL_M10to50,DYJetsToLL_M50] 
+    selectedComponents = [QCD_Mu15] + QCD_Mu5 + [WJetsToLNu,DYJetsToLL_M10to50_LO,DYJetsToLL_M50] #DYJetsToLL_M10to50
 
     time = 5.0
     configureSplittingFromTime([WJetsToLNu],20,time)
 #    configureSplittingFromTime([WJetsToLNu_LO],20,time)
-    configureSplittingFromTime([DYJetsToLL_M10to50],10,time)
+    configureSplittingFromTime([DYJetsToLL_M10to50_LO],10,time)
     configureSplittingFromTime([DYJetsToLL_M50],30,time)
     configureSplittingFromTime([QCD_Mu15]+QCD_Mu5,70,time)
 #    configureSplittingFromTime(QCDPtbcToE,50,time)
@@ -846,6 +869,11 @@ if selectedEvents!="":
         )
     susyCoreSequence.insert(susyCoreSequence.index(lheWeightAna), eventSelector)
 
+#summary trigger
+if runData:
+    for c in selectedComponents:
+        print c.name," ------>>> ", c.triggers
+
 #-------- SEQUENCE -----------
 
 sequence = cfg.Sequence(susyCoreSequence+[
@@ -947,25 +975,6 @@ elif test == 'ttH-sync':
 elif test != None:
     raise RuntimeError, "Unknown test %r" % test
 
-
-###--------- Global Skimming 1 lepton skim ------------------------------
-if runData:
-    for c in selectedComponents:
-        if "DoubleEG" in c.name or "DoubleMuon" in c.name:
-            globalSkim.selections.append("1lep5[maxObj1:DS_"+c.name+"]")
-else: #MC
-    globalSkim.selections.append("1lep5[maxObj1:DS_DYJetsToLL_M10to50]")
-    globalSkim.selections.append("1lep5[maxObj1:DS_DYJetsToLL_M50]")
-    globalSkim.selections.append("1lep5[maxObj1:DS_DYJetsToLL_M10to50_LO]")
-    globalSkim.selections.append("1lep5[maxObj1:DS_DYJetsToLL_M50_LO]")
-    globalSkim.selections.append("1lep5[maxObj1:DS_WJetsToLNu]")
-    globalSkim.selections.append("1lep5[maxObj1:DS_WJetsToLNu_LO]")
-    for c in QCDPtEMEnriched+QCDPtbcToE+[QCD_Mu15]+QCD_Mu5:
-        globalSkim.selections.append("1lep5[maxObj1:DS_"+c.name+"]")
-
-for sel in globalSkim.selections:
-    print ":-->> ",sel
-###---------------------------------------------------------------------
 
 ## FAST mode: pre-skim using reco leptons, don't do accounting of LHE weights (slow)"
 ## Useful for large background samples with low skim efficiency

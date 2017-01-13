@@ -79,7 +79,7 @@ def checkStatusTask(task):
     return taskName, ext, jobInfos
 
 def crabResubmit(task):
-    os.system("crab resubmit -d "+task)
+    os.system("crab resubmit --maxjobruntime 2880 --maxmemory 5120 -d "+task)
     #p = subprocess.Popen(['crab','resubmit', '-d',task],
     #                     stdout=subprocess.PIPE, 
     #                     stderr=subprocess.PIPE)

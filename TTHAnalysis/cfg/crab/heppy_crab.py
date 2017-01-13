@@ -49,6 +49,7 @@ cfo = imp.load_source(options.cfg_file.split('/')[-1].rstrip(".py"), options.cfg
 conf = cfo.config
 handle.close()
 
+os.system("tar czf external.tar.gz --dereference --directory $CMSSW_BASE external")
 os.system("tar czf python.tar.gz --dereference --directory $CMSSW_BASE python")
 os.system("tar czf cmgdataset.tar.gz --directory $HOME .cmgdataset")
 os.system("tar czf cafpython.tar.gz --directory /afs/cern.ch/cms/caf/ python")
@@ -77,3 +78,4 @@ os.system("rm options.json")
 os.system("rm python.tar.gz")
 os.system("rm cmgdataset.tar.gz")
 os.system("rm cafpython.tar.gz")
+os.system("rm external.tar.gz")
