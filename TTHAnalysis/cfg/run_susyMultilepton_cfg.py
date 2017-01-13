@@ -33,6 +33,7 @@ forcedSplitFactor = getHeppyOption("splitFactor",-1)
 forcedFineSplitFactor = getHeppyOption("fineSplitFactor",-1)
 isTest = getHeppyOption("test",None) != None and not re.match("^\d+$",getHeppyOption("test"))
 selectedEvents=getHeppyOption("selectEvents","")
+group=getHeppyOption("mcGroup",-1)
 
 sample = "main"
 #if runDataQCD or runFRMC: sample="qcd1l"
@@ -451,7 +452,7 @@ if analysis=='susy':
                 TGJets, TTGJets, TTJets, TTJets_DiLepton, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromTbar,
                 TTTT, TToLeptons_sch_amcatnlo, 
                 VHToNonbb, WJetsToLNu, WJetsToLNu_LO, 
-                WWTo2L2Nu, WWG, WWW, WWZ, WWTo2L2Nu, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ]
+                WWTo2L2Nu, WWG, WWW, WWZ, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ]
     #samples += [DYJetsToLL_M10to50,  TBarToLeptons_tch_powheg, TBar_tWch, TT_pow_ext4, TToLeptons_tch_amcatnlo, TToLeptons_tch_powheg, T_tWch, WGToLNuG, WWDouble, tZq_ll
     
     samples_LHE = [ TTLLJets_m1to10, TTWToLNu_ext1, TTWToLNu_ext2  , TTZToLLNuNu] #, TTW_LO, TTZ_LO
@@ -462,6 +463,15 @@ if analysis=='susy':
         selectedComponents = samples #samples_2l +samples_1l
     else:
         selectedComponents = samples_LHE
+
+    if int(group)==0:
+        selectedComponents=[DYJetsToLL_M10to50_LO,GGHZZ4L,TGJets,TTGJets,WWG,WWTo2L2Nu,WZZ,ZZTo4L]
+    elif int(group)==1:
+        selectedComponents=[DYJetsToLL_M50,VHToNonbb ,WJetsToLNu,WJetsToLNu_LO,WpWpJJ,ZZZ]
+    elif int(group)==2:
+        selectedComponents=[DYJetsToLL_M50_LO,WWW,WWZ,WZTo3LNu,WZTo3LNu_amcatnlo,ZGTo2LG]
+    elif int(group)==3:
+        selectedComponents=[TTJets,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTTT,TToLeptons_sch]
 
     for c in selectedComponents:
         if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
