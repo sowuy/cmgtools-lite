@@ -51,9 +51,21 @@ class ttHLepEventAnalyzer( Analyzer ):
 
         if hasattr(self.cfg_ana, 'minJets25'):
             n25 = len([ j for j in event.cleanJets if j.pt() > 25 ])
-            if n25 < self.cfg_ana.minJets25: 
+            if n25 < self.cfg_ana.minJets25:
                 return False
-
+        ###Added by Pablo for the Edge
+        event.nPFLep5 = 0
+        event.nPFHad10 = 0
+        if hasattr(event, 'selectedIsoCleanTrack'):
+            if len(event.selectedIsoTrack)>0:
+                for myTrack in event.selectedIsoTrack:
+                    if abs(myTrack.pdgId()) == 11 or abs(myTrack.pdgId()) == 13:
+                        if myTrack.pt()>5 and myTrack.absIso/myTrack.pt()<0.2:
+                            event.nPFLep5 += 1
+                    if abs(myTrack.pdgId()) == 211:
+                        if myTrack.pt()>10 and myTrack.absIso/myTrack.pt()<0.1:
+                            event.nPFHad10 += 1
+        #################################
         self.makeHadTopDecays(event)
 
         self.counters.counter('events').inc('accepted events')

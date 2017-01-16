@@ -255,6 +255,7 @@ if analysis=="susy":
     photonAna.do_mc_match = True
     susyMultilepton_collections.update({ # for conversion studies
             "selectedPhotons"    : NTupleCollection("PhoGood", photonTypeSusy, 10, help="Selected photons"),
+            "selectedIsoTrack"    : NTupleCollection("isoTrack", isoTrackType, 50, help="isoTrack, sorted by pt")
             }) 
     del susyMultilepton_collections["discardedJets"]
     susyMultilepton_collections.update({"discardedJets"   : NTupleCollection("DiscJet", jetTypeSusySuperLight, 15, help="Jets discarted in the jet-lepton cleaning (JEC)")
@@ -377,6 +378,9 @@ if not runSMS:
     treeProducer.globalVariables.append(NTupleVariable("Flag_badChargedHadronFilter", lambda ev: ev.badChargedHadron, help="bad charged hadron filter decision"))
     treeProducer.globalVariables.append(NTupleVariable("Flag_badMuonFilter", lambda ev: ev.badMuon, help="bad muon filter decision"))
 
+if analysis=="susy":
+    treeProducer.globalVariables.append(NTupleVariable("nPFLep5", lambda ev: ev.nPFLep5, int, help="number of PF leptons (e,mu) with pt > 5, reliso < 0.2"))
+    treeProducer.globalVariables.append(NTupleVariable("nPFHad10", lambda ev: ev.nPFHad10, int, help="number of PF hadrons with pt > 10, reliso < 0.1"))
 
 #additional MET quantities
 metAna.doTkMet = True
