@@ -443,7 +443,7 @@ if runSMS:
 
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv1 import *
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv2 import *
-from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_130117v2 import *
+from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_180117 import *
 from CMGTools.RootTools.samples.samples_13TeV_signals import *
 from CMGTools.RootTools.samples.samples_13TeV_76X_susySignalsPriv import *
 from CMGTools.RootTools.samples.samples_13TeV_DATA2016 import *
@@ -452,12 +452,12 @@ from CMGTools.HToZZ4L.tools.configTools import printSummary, configureSplittingF
 selectedComponents = [DYJetsToLL_M50] #TTLep_pow_ext
 
 if analysis=='susy':
-    samples = [ DYJetsToLL_M50, DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO, GGHZZ4L, 
+    samples = [ DYJetsToLL_M50, DYJetsToLL_M10to50, DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO, GGHZZ4L, 
                 TGJets, TTGJets, TTJets, TTJets_DiLepton, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromTbar,
                 TTTT, TToLeptons_sch_amcatnlo, 
                 VHToNonbb, WJetsToLNu, WJetsToLNu_LO, 
-                WWTo2L2Nu, WWG, WWW, WWZ, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ]
-    #samples += [DYJetsToLL_M10to50,  TBarToLeptons_tch_powheg, TBar_tWch, TT_pow_ext4, TToLeptons_tch_amcatnlo, TToLeptons_tch_powheg, T_tWch, WGToLNuG, WWDouble, tZq_ll
+                WWTo2L2Nu, WWG, WWW, WWZ, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
+    #samples += [,  TBarToLeptons_tch_powheg, TBar_tWch, TT_pow_ext4, TToLeptons_tch_amcatnlo, TToLeptons_tch_powheg, T_tWch]
     
     samples_LHE = [ TTLLJets_m1to10, TTWToLNu_ext1, TTWToLNu_ext2  , TTZToLLNuNu] #, TTW_LO, TTZ_LO
     #samples_LHE += [ TTHnobb_pow, ]
@@ -476,9 +476,11 @@ if analysis=='susy':
         selectedComponents=[DYJetsToLL_M50_LO,WWW,WWZ,WZTo3LNu,WZTo3LNu_amcatnlo,ZGTo2LG]
     elif int(group)==3:
         selectedComponents=[TTJets,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTTT,TToLeptons_sch]
+    elif int(group)==4:
+        selectedComponents=[DYJetsToLL_M10to50, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
 
     for c in selectedComponents:
-        if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
+        if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
             c.splitFactor=300
 
     if runSMS:
