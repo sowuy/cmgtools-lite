@@ -81,11 +81,11 @@ if analysis=='susy':
     jetAna.storeLowPtJets=True
     jetAna.jetPtOrUpOrDnSelection=True
     jetAna.jetEtaCentral = jetAna.jetEta
-    jetAna.mcGT=[[-1,"Spring16_23Sep2016V2_MC"]]
-    jetAna.dataGT =[ [-1    ,"Spring16_23Sep2016BCDV2_DATA"],
-                     [276831,"Spring16_23Sep2016EFV2_DATA"],
-                     [278802,"Spring16_23Sep2016GV2_DATA"],
-                     [280919,"Spring16_23Sep2016HV2_DATA"] ]
+    jetAna.mcGT=[[-1,"Summer16_23Sep2016V3_MC"]]
+    jetAna.dataGT =[ [-1    ,"Summer16_23Sep2016BCDV3_DATA"],
+                     [276831,"Summer16_23Sep2016EFV3_DATA"],
+                     [278802,"Summer16_23Sep2016GV3_DATA"],
+                     [280919,"Summer16_23Sep2016HV3_DATA"] ]
 
 jetAna.addJECShifts = True
 metAnaScaleDown.copyMETsByValue = True # do not remove this

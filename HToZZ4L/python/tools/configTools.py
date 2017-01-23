@@ -16,6 +16,7 @@ def printSummary(selectedComponents):
     print "%-55s | %8s %12s | %7s | %8s %11s | %11s" % (55*"-", 8*"-", 12*"-", 7*"-", 8*"-", 11*"-", 11*"-")
     totj, totf, tote = (0,0,0);
     for comp in sorted(selectedComponents, key = lambda c:c.name):
+        print comp.name
         njobs = min(comp.splitFactor,len(comp.files)) if getattr(comp,'fineSplitFactor',1) == 1 else comp.fineSplitFactor*len(comp.files) 
         nev   = getattr(comp, 'dataset_entries', 0)
         lumi  = nev/(1.e3 * comp.xSection) if comp.isMC and getattr(comp,'xSection',0) > 0 else 0
