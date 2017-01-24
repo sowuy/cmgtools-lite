@@ -475,7 +475,7 @@ if analysis=='susy':
     elif int(group)==2:
         selectedComponents=[DYJetsToLL_M50_LO,WWW,WWZ,WZTo3LNu,WZTo3LNu_amcatnlo,ZGTo2LG]
     elif int(group)==3:
-        selectedComponents=[TTJets,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTTT,TToLeptons_sch]
+        selectedComponents=[TTJets,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTTT,TToLeptons_sch_amcatnlo]
     elif int(group)==4:
         selectedComponents=[DYJetsToLL_M10to50, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
 
