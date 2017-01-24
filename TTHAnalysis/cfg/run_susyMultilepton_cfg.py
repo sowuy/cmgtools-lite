@@ -434,6 +434,12 @@ triggerFlagsAna.saveIsUnprescaled = True
 triggerFlagsAna.checkL1Prescale = True
 
 if runSMS:
+    from CMGTools.TTHAnalysis.analyzers.nIsrAnalyzer import NIsrAnalyzer
+    nIsrAnalyzer = cfg.Analyzer(
+        NIsrAnalyzer, name='nIsrAnalyzer',
+    )
+    susyCoreSequence.insert(susyCoreSequence.index(jetAna)+1,nIsrAnalyzer)
+    treeProducer.globalVariables.append(NTupleVariable("nISR", lambda ev: ev.nIsr, int, help="number of ISR jets according to SUSY recommendations"))
     #if ttHLepSkim in susyCoreSequence: susyCoreSequence.remove(ttHLepSkim)
     #if ttHJetMETSkim in susyCoreSequence: susyCoreSequence.remove(ttHJetMETSkim)
     susyCoreSequence.remove(triggerFlagsAna)
@@ -484,7 +490,10 @@ if analysis=='susy':
             c.splitFactor=300
 
     if runSMS:
-        selectedComponents=[TChiSlepSnu,T1tttt_2016,T5qqqqVV_2016]
+        #selectedComponents=[TChiSlepSnu,T1tttt_2016,T5qqqqVV_2016]
+        selectedComponents=[SMS_T1tttt, SMS_T5qqqqVV, SMS_T6ttWW, SMS_T6ttHZ,\
+        SMS_TChiWZ, SMS_TChiWH, SMS_TChiSlepSnux0p5, SMS_TChiSlepSnux0p05, SMS_TChiSlepSnux0p95, SMS_TChiSlepSnuTEx0p5, SMS_TChiSlepSnuTEx0p05, SMS_TChiSlepSnuTEx0p95, SMS_TChiStauStaux0p5, SMS_TChiStauStaux0p5ext,\
+        SMS_TChiZZ2L, SMS_TChiZZ4L, SMS_TChiHZ, SMS_TChiHH]
         #ttHLepSkim.minLeptons = 0
         #ttHLepSkim.requireSameSignPair = False
         lheWeightAna.useLumiInfo=True
@@ -848,9 +857,9 @@ if removeJetReCalibration:
     jetAnaScaleDown.recalibrateJets = False
 
 if getHeppyOption("noLepSkim",False):
-    if globalSkim in sequence:
+    if globalSkim in susyCoreSequence:
         globalSkim.selection = []
-    if ttHLepSkim in sequence:
+    if ttHLepSkim in susyCoreSequence:
         ttHLepSkim.minLeptons=0 
 
 if forcedSplitFactor>0 or forcedFineSplitFactor>0:
