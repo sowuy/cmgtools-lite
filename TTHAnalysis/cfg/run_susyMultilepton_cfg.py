@@ -667,7 +667,7 @@ if runData and not isTest: # For running on data
                                                  json=json, 
                                                  run_range=(run_range if "PromptReco" not in myprocessing else None), 
                                                  triggers=triggers[:], vetoTriggers = vetos[:],
-                                                 useAAA=useAAA)
+                                                 useAAA=useAAA, unsafe=True)
                 if "PromptReco" in myprocessing:
                     from CMGTools.Production.promptRecoRunRangeFilter import filterComponent
                     filterComponent(comp, verbose=1)

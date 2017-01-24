@@ -25,7 +25,7 @@ class badMuonAnalyzerMoriond2017( Analyzer ):
         tk = mu.innerTrack().get();
         return tk.algoMask().count() == 1 and tk.isAlgoInMask(tk.muonSeededStepOutIn);
     def preselection(self, mu): 
-        return (not(self.selectClones_) or self.outInOnly(mu));
+        return (not(self.selectClones) or self.outInOnly(mu));
     def tighterId(self, mu): 
         return mu.isMediumMuon() and mu.numberOfMatchedStations() >= 2; 
     def tightGlobal(self, mu):
