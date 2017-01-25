@@ -362,7 +362,7 @@ else:
     susyScanAna.doLHE=True
     susyCounter.bypass_trackMass_check = False
     susyCounter.SMS_varying_masses=['genSusyMGluino','genSusyMChargino','genSusyMNeutralino','genSusyMNeutralino2','genSusyMNeutralino3',
-                                    'genSusyMStau', 'genSusyMSnuTau', 'genSusyMStop']
+                                    'genSusyMStau', 'genSusyMSnuTau', 'genSusyMStop', 'genSusyMStop2']
     susyCoreSequence.insert(susyCoreSequence.index(susyScanAna)+1,susyCounter)
 
 # HBHE new filter
