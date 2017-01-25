@@ -858,7 +858,7 @@ if removeJetReCalibration:
 
 if getHeppyOption("noLepSkim",False):
     if globalSkim in susyCoreSequence:
-        globalSkim.selection = []
+        globalSkim.selections = []
     if ttHLepSkim in susyCoreSequence:
         ttHLepSkim.minLeptons=0 
 
