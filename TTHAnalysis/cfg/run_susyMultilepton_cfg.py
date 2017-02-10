@@ -362,7 +362,7 @@ else:
     susyScanAna.doLHE=True
     susyCounter.bypass_trackMass_check = False
     susyCounter.SMS_varying_masses=['genSusyMGluino','genSusyMChargino','genSusyMNeutralino','genSusyMNeutralino2','genSusyMNeutralino3',
-                                    'genSusyMStau', 'genSusyMSnuTau', 'genSusyMStop']
+                                    'genSusyMStau', 'genSusyMSnuTau', 'genSusyMStop', 'genSusyMStop2', 'genSusyMSbottom']
     susyCoreSequence.insert(susyCoreSequence.index(susyScanAna)+1,susyCounter)
 
 # HBHE new filter
@@ -526,7 +526,7 @@ if analysis=='susy':
         #selectedComponents=[TChiSlepSnu,T1tttt_2016,T5qqqqVV_2016]
         selectedComponents=[SMS_T1tttt, SMS_T5qqqqVV, SMS_T6ttWW, SMS_T6ttHZ,\
         SMS_TChiWZ, SMS_TChiWH, SMS_TChiSlepSnux0p5, SMS_TChiSlepSnux0p05, SMS_TChiSlepSnux0p95, SMS_TChiSlepSnuTEx0p5, SMS_TChiSlepSnuTEx0p05, SMS_TChiSlepSnuTEx0p95, SMS_TChiStauStaux0p5, SMS_TChiStauStaux0p5ext,\
-        SMS_TChiZZ2L, SMS_TChiZZ4L, SMS_TChiHZ, SMS_TChiHH]
+        SMS_TChiZZ2L, SMS_TChiZZ4L, SMS_TChiHZ, SMS_TChiHH, SMS_T6bbllslepton_mSbottom_1000To1500_mLSP_120To1450, SMS_T6bbllslepton_mSbottom_400To950_mLSP_120To140]
         #ttHLepSkim.minLeptons = 0
         #ttHLepSkim.requireSameSignPair = False
         lheWeightAna.useLumiInfo=True
@@ -700,7 +700,7 @@ if runData and not isTest: # For running on data
                                                  json=json, 
                                                  run_range=(run_range if "PromptReco" not in myprocessing else None), 
                                                  triggers=triggers[:], vetoTriggers = vetos[:],
-                                                 useAAA=useAAA)
+                                                 useAAA=useAAA, unsafe=True)
                 if "PromptReco" in myprocessing:
                     from CMGTools.Production.promptRecoRunRangeFilter import filterComponent
                     filterComponent(comp, verbose=1)
@@ -891,7 +891,7 @@ if removeJetReCalibration:
 
 if getHeppyOption("noLepSkim",False):
     if globalSkim in susyCoreSequence:
-        globalSkim.selection = []
+        globalSkim.selections = []
     if ttHLepSkim in susyCoreSequence:
         ttHLepSkim.minLeptons=0 
 
