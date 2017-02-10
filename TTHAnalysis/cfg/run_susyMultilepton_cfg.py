@@ -387,6 +387,7 @@ metAna.doTkMet = True
 treeProducer.globalVariables.append(NTupleVariable("met_trkPt", lambda ev : ev.tkMet.pt() if  hasattr(ev,'tkMet') else  0, help="tkmet p_{T}"))
 treeProducer.globalVariables.append(NTupleVariable("met_trkPhi", lambda ev : ev.tkMet.phi() if  hasattr(ev,'tkMet') else  0, help="tkmet phi"))
 
+
 if not skipT1METCorr:
     if doMETpreprocessor: 
         print "WARNING: you're running the MET preprocessor and also Type1 MET corrections. This is probably not intended."
@@ -397,6 +398,36 @@ if not skipT1METCorr:
     jetAnaScaleDown.calculateType1METCorrection = True
     metAnaScaleDown.recalibrate = "type1"
 
+### Reminiaod stuff ---------------------------
+metAnaUnCor = metAna.clone(
+    name="metAnalyzerUnCor",
+    metCollection="slimmedMETsUncorrected",
+    collectionPostFix="UnCor"
+    )
+
+metAnaMuEGClean = metAna.clone(
+    name="metAnalyzerEGClean",
+    metCollection="slimmedMETsMuEGClean",
+    collectionPostFix="MuEGClean"
+    )
+
+susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaUnCor)
+susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaMuEGClean)
+
+susyMultilepton_globalObjects.update({
+        "metUnCor" : NTupleObject("metUnCor", metType, help="PF E_{T}^{miss}, uncorrected from muons"),
+        "metMuEGClean" : NTupleObject("metMuEGClean", metType, help="PF E_{T}^{miss}, fully Moriond corrected"),
+        })
+
+susyCore_globalObjects
+
+if runData:
+    eventFlagsAna.triggerBits["cloneGlobalMuonTagger"]="Flag_cloneGlobalMuonTagger"
+    eventFlagsAna.triggerBits["badGlobalMuonTagger"]="Flag_badGlobalMuonTagger"
+
+    treeProducer.globalVariables.append(NTupleVariable("Flag_cloneGlobalMuonTagger", lambda ev: ev.Flag_cloneGlobalMuonTagger, int, help="Moriond duplicated muons"))
+    treeProducer.globalVariables.append(NTupleVariable("Flag_badGlobalMuonTagger", lambda ev: ev.Flag_badGlobalMuonTagger, int, help="Moriond bad muons"))
+    
 
 #-------- SAMPLES AND TRIGGERS -----------
 
@@ -449,7 +480,7 @@ if runSMS:
 
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv1 import *
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv2 import *
-from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_180117 import *
+from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_070217 import *
 from CMGTools.RootTools.samples.samples_13TeV_signals import *
 from CMGTools.RootTools.samples.samples_13TeV_76X_susySignalsPriv import *
 from CMGTools.RootTools.samples.samples_13TeV_DATA2016 import *
@@ -465,7 +496,7 @@ if analysis=='susy':
                 WWTo2L2Nu, WWG, WWW, WWZ, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
     #samples += [,  TBarToLeptons_tch_powheg, TBar_tWch, TT_pow_ext4, TToLeptons_tch_amcatnlo, TToLeptons_tch_powheg, T_tWch]
     
-    samples_LHE = [ TTLLJets_m1to10, TTWToLNu_ext1, TTWToLNu_ext2  , TTZToLLNuNu] #, TTW_LO, TTZ_LO
+    samples_LHE = [ TTZToLLNuNu_ext2] #TTLLJets_m1to10, TTWToLNu_ext1, TTWToLNu_ext2  , TTZToLLNuNu] #, TTW_LO, TTZ_LO
     #samples_LHE += [ TTHnobb_pow, ]
     
     
@@ -484,6 +515,8 @@ if analysis=='susy':
         selectedComponents=[TTJets,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTTT,TToLeptons_sch_amcatnlo]
     elif int(group)==4:
         selectedComponents=[DYJetsToLL_M10to50, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
+    elif int(group)==5:
+        selectedComponents=[TToLeptons_tch_powheg,TBarToLeptons_tch_powheg,TBar_tWch,T_tWch,TTJets_DiLepton_ext]
 
     for c in selectedComponents:
         if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
@@ -625,10 +658,10 @@ if runData and not isTest: # For running on data
             exclusiveDatasets = True
 
         if runDataQCD or True: # for fake rate measurements in data
-            if analysis!='susy':
-                ttHLepSkim.minLeptons=1
-            else:
-                globalSkim.selection = ["1lep5"]
+            #if analysis!='susy':
+            #    ttHLepSkim.minLeptons=1
+            #else:
+            #    globalSkim.selection = ["1lep5"]
             if getHeppyOption("fast"): raise RuntimeError, 'Already added ttHFastLepSkimmer with 2-lep configuration, this is wrong.'
             FRTrigs = triggers_FR_1mu_iso + triggers_FR_1mu_noiso + triggers_FR_1e_noiso + triggers_FR_1e_iso + triggers_FR_1e_b2g
             for t in FRTrigs:
@@ -972,16 +1005,16 @@ elif test == '80X-MC':
     else: raise RuntimeError, "Unknown MC sample: %s" % what
 elif test == '80X-Data':
     #DoubleMuon = kreator.makeDataComponent("DoubleMuon_Run2016B_run274315", "/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD", "CMS", ".*root", run_range = (274315,274315), triggers = triggers_mumu + triggers_mumu_ht + triggers_ee + triggers_ee_ht )
-    DoubleEG = kreator.makeDataComponent("DoubleEG_Run2016B_run274315", "/DoubleEG/Run2016B-PromptReco-v2/MINIAOD", "CMS", ".*root", run_range = (274315,274315), triggers = triggers_ee)
+    DoubleEG = kreator.makeDataComponent("DoubleMu_test", "/DoubleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD", "CMS", ".*root",  triggers = triggers_mumu)
     #SingleMuon = kreator.makeDataComponent("SingleMuon_Run2016H_run281693","/SingleMuon/Run2016H-PromptReco-v2/MINIAOD","CMS",".*root", run_range=(281680, 281700), triggers = triggers_1mu_iso)
     #DoubleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleMuon/MINIAOD/PromptReco-v2/000/274/315/00000/A287989F-E129-E611-B5FB-02163E0142C2.root' ]
-    DoubleEG.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleEG/MINIAOD/PromptReco-v2/000/274/315/00000/FEF59D1D-EE29-E611-8793-02163E0143AE.root' ]
+    DoubleEG.files = [ 'root://eoscms//eos/cms/store/data/Run2016H/DoubleMuon/MINIAOD/03Feb2017_ver3-v1/50000/54F4D641-52EB-E611-961C-008CFA110C64.root' ]
     #SingleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v2/000/281/693/00000/4E8924DC-3B86-E611-BB28-FA163E72F1B8.root' ]
     #SingleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v2/000/281/693/00000/4E8924DC-3B86-E611-BB28-FA163E72F1B8.root' ]
     #SingleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleMuon/MINIAOD/23Sep2016-v3/00000/5ADA8008-EE98-E611-A57D-848F69FD852B.root' ]
     selectedComponents = [ DoubleEG ] #DoubleMuon, DoubleEG ]
     for comp in selectedComponents:
-        comp.json = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-283685_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
+        comp.json = json #'/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt'
         tmpfil = os.path.expandvars("/tmp/$USER/%s" % os.path.basename(comp.files[0]))
         if not os.path.exists(tmpfil): os.system("xrdcp %s %s" % (comp.files[0],tmpfil)) 
         comp.files = [tmpfil]

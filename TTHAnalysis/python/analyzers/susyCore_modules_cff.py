@@ -459,7 +459,6 @@ ttHHeavyFlavourHadronAna = cfg.Analyzer(
 )
 
 
-
 metAna = cfg.Analyzer(
     METAnalyzer, name="metAnalyzer",
     metCollection     = "slimmedMETs",
