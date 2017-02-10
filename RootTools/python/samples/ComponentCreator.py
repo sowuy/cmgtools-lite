@@ -4,12 +4,12 @@ from CMGTools.Production.dataset import createDataset, createMyDataset
 import re
 
 class ComponentCreator(object):
-    def makeMCComponent(self,name,dataset,user,pattern,xSec=1,useAAA=False):
+    def makeMCComponent(self,name,dataset,user,pattern,xSec=1,useAAA=False,unsafe=False):
         
          component = cfg.MCComponent(
              dataset=dataset,
              name = name,
-             files = self.getFiles(dataset,user,pattern,useAAA=useAAA),
+             files = self.getFiles(dataset,user,pattern,useAAA=useAAA,unsafe=unsafe),
              xSection = xSec,
              nGenEvents = 1,
              triggers = [],
@@ -157,11 +157,11 @@ class ComponentCreator(object):
         )
         return component
 
-    def makeDataComponent(self,name,dataset,user,pattern,json=None,run_range=None,triggers=[],vetoTriggers=[],useAAA=False,jsonFilter=False):
+    def makeDataComponent(self,name,dataset,user,pattern,json=None,run_range=None,triggers=[],vetoTriggers=[],useAAA=False,jsonFilter=False,unsafe=False):
         component = cfg.DataComponent(
             #dataset = dataset,
             name = name,
-            files = self.getFiles(dataset,user,pattern,run_range=run_range,useAAA=useAAA,json=(json if jsonFilter else None)),
+            files = self.getFiles(dataset,user,pattern,run_range=run_range,useAAA=useAAA,json=(json if jsonFilter else None), unsafe=unsafe),
             intLumi = 1,
             triggers = triggers,
             json = (json if jsonFilter else None)
@@ -173,9 +173,9 @@ class ComponentCreator(object):
         component.run_range = run_range
         return component
 
-    def getFiles(self, dataset, user, pattern, useAAA=False, run_range=None, json=None):
+    def getFiles(self, dataset, user, pattern, useAAA=False, run_range=None, json=None, unsafe = False):
         # print 'getting files for', dataset,user,pattern
-        ds = createDataset( user, dataset, pattern, readcache=True, run_range=run_range, json=json )
+        ds = createDataset( user, dataset, pattern, readcache=True, run_range=run_range, json=json, unsafe = unsafe )
         files = ds.listOfGoodFiles()
         mapping = 'root://eoscms.cern.ch//eos/cms%s'
         if useAAA: mapping = 'root://cms-xrd-global.cern.ch/%s'

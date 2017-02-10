@@ -482,7 +482,7 @@ if analysis=='susy':
     elif int(group)==2:
         selectedComponents=[DYJetsToLL_M50_LO,WWW,WWZ,WZTo3LNu,WZTo3LNu_amcatnlo,ZGTo2LG]
     elif int(group)==3:
-        selectedComponents=[TTJets,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTTT,TToLeptons_sch]
+        selectedComponents=[TTJets,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTTT,TToLeptons_sch_amcatnlo]
     elif int(group)==4:
         selectedComponents=[DYJetsToLL_M10to50, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
     elif int(group)==5:
@@ -705,7 +705,7 @@ if runData and not isTest: # For running on data
                                                  json=json, 
                                                  run_range=(run_range if "PromptReco" not in myprocessing else None), 
                                                  triggers=triggers[:], vetoTriggers = vetos[:],
-                                                 useAAA=useAAA)
+                                                 useAAA=useAAA, unsafe=True)
                 if "PromptReco" in myprocessing:
                     from CMGTools.Production.promptRecoRunRangeFilter import filterComponent
                     filterComponent(comp, verbose=1)
