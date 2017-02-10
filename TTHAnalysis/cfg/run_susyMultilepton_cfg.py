@@ -34,6 +34,7 @@ forcedFineSplitFactor = getHeppyOption("fineSplitFactor",-1)
 isTest = getHeppyOption("test",None) != None and not re.match("^\d+$",getHeppyOption("test"))
 selectedEvents=getHeppyOption("selectEvents","")
 group=getHeppyOption("mcGroup",-1)
+siggroup=int(getHeppyOption("sigGroup",-1))
 
 sample = "main"
 #if runDataQCD or runFRMC: sample="qcd1l"
@@ -484,6 +485,10 @@ if analysis=='susy':
         selectedComponents=[TTJets,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTTT,TToLeptons_sch]
     elif int(group)==4:
         selectedComponents=[DYJetsToLL_M10to50, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
+    elif int(group)==5:
+        selectedComponents=[WZZ,ZZTo4L,WWTo2L2Nu,tZW_ll,T_tch_powheg,TBar_tch_powheg,TTHnobb_pow]
+    elif int(group)==6:
+        selectedComponents=[TTJets_DiLepton_ext,TTJets_SingleLeptonFromT_ext,TTJets_SingleLeptonFromTbar_ext]
 
     for c in selectedComponents:
         if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
@@ -491,9 +496,42 @@ if analysis=='susy':
 
     if runSMS:
         #selectedComponents=[TChiSlepSnu,T1tttt_2016,T5qqqqVV_2016]
-        selectedComponents=[SMS_T1tttt, SMS_T5qqqqVV, SMS_T6ttWW, SMS_T6ttHZ,\
-        SMS_TChiWZ, SMS_TChiWH, SMS_TChiSlepSnux0p5, SMS_TChiSlepSnux0p05, SMS_TChiSlepSnux0p95, SMS_TChiSlepSnuTEx0p5, SMS_TChiSlepSnuTEx0p05, SMS_TChiSlepSnuTEx0p95, SMS_TChiStauStaux0p5, SMS_TChiStauStaux0p5ext,\
-        SMS_TChiZZ2L, SMS_TChiZZ4L, SMS_TChiHZ, SMS_TChiHH, SMS_T6bbllslepton_mSbottom_1000To1500_mLSP_120To1450, SMS_T6bbllslepton_mSbottom_400To950_mLSP_120To140]
+        #selectedComponents=[SMS_TChiHZ]
+        #selectedComponents[0].files = selectedComponents[0].files[0:1]
+        #susyCounter.SMS_mass_1 = 'genSusyMNeutralino2'
+        #susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+        susyCounter.SMS_varying_masses += ['genSusyMScan1', 'genSusyMScan2', 'genSusyMScan3', 'genSusyMScan4']
+        if siggroup == 0:
+            selectedComponents=[SMS_T1tttt, SMS_T5qqqqVV]
+            susyCounter.SMS_mass_1 = 'genSusyMGluino'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+        if siggroup == 1:
+            selectedComponents=[SMS_T6ttWW]
+            susyCounter.SMS_mass_1 = 'genSusyMSbottom'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+        if siggroup == 2:
+            selectedComponents=[SMS_T6ttHZ]
+            susyCounter.SMS_mass_1 = 'genSusyMStop2'
+            susyCounter.SMS_mass_2 = 'genSusyMStop'
+        if siggroup == 3:
+            selectedComponents=[SMS_TChiWZ, SMS_TChiWH, \
+                                SMS_TChiSlepSnux0p5, SMS_TChiSlepSnux0p5ext, SMS_TChiSlepSnux0p05, SMS_TChiSlepSnux0p05ext, SMS_TChiSlepSnux0p95, \
+                                SMS_TChiSlepSnuTEx0p5, SMS_TChiSlepSnuTEx0p05, SMS_TChiSlepSnuTEx0p95, \
+                                SMS_TChiStauStaux0p5, SMS_TChiStauStaux0p5ext]
+            susyCounter.SMS_mass_1 = 'genSusyMChargino'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+        if siggroup == 4:
+            selectedComponents=[SMS_TChiZZ2L, SMS_TChiZZ4L, SMS_TChiHZ, SMS_TChiHH]
+            susyCounter.SMS_mass_1 = 'genSusyMNeutralino2'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+        if siggroup == 5:
+            selectedComponents=[SMS_T6bbllslepton_mSbottom_1000To1500_mLSP_120To1450, \
+                                SMS_T6bbllslepton_mSbottom_400To950_mLSP_120To140, \
+                                SMS_T6bbllslepton_mSbottom_400To575_mLSP_150To550, \
+                                SMS_T6bbllslepton_mSbottom_600To775_mLSP_150To725, \
+                                SMS_T6bbllslepton_mSbottom_800To950_mLSP_150To900]
+            susyCounter.SMS_mass_1 = 'genSusyMSbottom'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino2'
         #ttHLepSkim.minLeptons = 0
         #ttHLepSkim.requireSameSignPair = False
         lheWeightAna.useLumiInfo=True
