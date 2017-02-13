@@ -399,27 +399,26 @@ if not skipT1METCorr:
     metAnaScaleDown.recalibrate = "type1"
 
 ### Reminiaod stuff ---------------------------
-metAnaUnCor = metAna.clone(
-    name="metAnalyzerUnCor",
-    metCollection="slimmedMETsUncorrected",
-    collectionPostFix="UnCor"
-    )
+if runData:
+    metAnaUnCor = metAna.clone(
+        name="metAnalyzerUnCor",
+        metCollection="slimmedMETsUncorrected",
+        collectionPostFix="UnCor"
+        )
 
-metAnaMuEGClean = metAna.clone(
-    name="metAnalyzerEGClean",
-    metCollection="slimmedMETsMuEGClean",
-    collectionPostFix="MuEGClean"
-    )
+    metAnaMuEGClean = metAna.clone(
+        name="metAnalyzerEGClean",
+        metCollection="slimmedMETsMuEGClean",
+        collectionPostFix="MuEGClean"
+        )
 
-susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaUnCor)
-susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaMuEGClean)
+    susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaUnCor)
+    susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaMuEGClean)
 
-susyMultilepton_globalObjects.update({
-        "metUnCor" : NTupleObject("metUnCor", metType, help="PF E_{T}^{miss}, uncorrected from muons"),
-        "metMuEGClean" : NTupleObject("metMuEGClean", metType, help="PF E_{T}^{miss}, fully Moriond corrected"),
-        })
-
-susyCore_globalObjects
+    susyMultilepton_globalObjects.update({
+            "metUnCor" : NTupleObject("metUnCor", metType, help="PF E_{T}^{miss}, uncorrected from muons"),
+            "metMuEGClean" : NTupleObject("metMuEGClean", metType, help="PF E_{T}^{miss}, fully Moriond corrected"),
+            })
 
 if runData:
     eventFlagsAna.triggerBits["cloneGlobalMuonTagger"]="Flag_cloneGlobalMuonTagger"
