@@ -57,7 +57,7 @@ class susyLeptonMatchAnalyzer( Analyzer ):
             if not gen: 
                 lep.mcUCSXMatchId = -1
                 continue
-            
+
             prompt = gen.isPromptFinalState() or gen.isDirectPromptTauDecayProductFinalState() or gen.isHardProcess() 
             motherId=-9999
             grandMotherId=-9999
