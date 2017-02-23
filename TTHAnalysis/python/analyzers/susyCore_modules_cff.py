@@ -180,7 +180,9 @@ from CMGTools.TTHAnalysis.analyzers.susyParameterScanAnalyzer import susyParamet
 susyScanAna = cfg.Analyzer(
     susyParameterScanAnalyzer, name="susyParameterScanAnalyzer",
     doLHE=True,
-    useLumiInfo=True
+    useLumiInfo=True,
+    myModel=None,
+    readOldFormat=False
     )
 
 # Lepton Analyzer (generic)

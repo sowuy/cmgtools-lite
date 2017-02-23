@@ -34,6 +34,7 @@ forcedFineSplitFactor = getHeppyOption("fineSplitFactor",-1)
 isTest = getHeppyOption("test",None) != None and not re.match("^\d+$",getHeppyOption("test"))
 selectedEvents=getHeppyOption("selectEvents","")
 group=getHeppyOption("mcGroup",-1)
+siggroup=int(getHeppyOption("sigGroup",-1))
 
 sample = "main"
 #if runDataQCD or runFRMC: sample="qcd1l"
@@ -364,7 +365,8 @@ else:
     susyScanAna.doLHE=True
     susyCounter.bypass_trackMass_check = False
     susyCounter.SMS_varying_masses=['genSusyMGluino','genSusyMChargino','genSusyMNeutralino','genSusyMNeutralino2','genSusyMNeutralino3',
-                                    'genSusyMStau', 'genSusyMSnuTau', 'genSusyMStop', 'genSusyMStop2', 'genSusyMSbottom']
+                                    'genSusyMStau', 'genSusyMSnuTau', 'genSusyMStop', 'genSusyMStop2', 'genSusyMSbottom', 
+                                    'genSusyMSelectron', 'genSusyMSelectron2', 'genSusyMSmuon', 'genSusyMSmuon2']
     susyCoreSequence.insert(susyCoreSequence.index(susyScanAna)+1,susyCounter)
 
 # HBHE new filter
@@ -407,20 +409,20 @@ if runData:
         metCollection="slimmedMETsUncorrected",
         collectionPostFix="UnCor"
         )
-
     metAnaMuEGClean = metAna.clone(
         name="metAnalyzerEGClean",
         metCollection="slimmedMETsMuEGClean",
         collectionPostFix="MuEGClean"
         )
-
+    
     susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaUnCor)
     susyCoreSequence.insert(susyCoreSequence.index(metAna)+1, metAnaMuEGClean)
-
+    
     susyMultilepton_globalObjects.update({
             "metUnCor" : NTupleObject("metUnCor", metType, help="PF E_{T}^{miss}, uncorrected from muons"),
             "metMuEGClean" : NTupleObject("metMuEGClean", metType, help="PF E_{T}^{miss}, fully Moriond corrected"),
             })
+
 
 if runData:
     eventFlagsAna.triggerBits["cloneGlobalMuonTagger"]="Flag_cloneGlobalMuonTagger"
@@ -481,7 +483,8 @@ if runSMS:
 
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv1 import *
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv2 import *
-from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_070217 import *
+from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_180117 import *
+#from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_070217 import *
 from CMGTools.RootTools.samples.samples_13TeV_signals import *
 from CMGTools.RootTools.samples.samples_13TeV_76X_susySignalsPriv import *
 from CMGTools.RootTools.samples.samples_13TeV_DATA2016 import *
@@ -497,8 +500,8 @@ if analysis=='susy':
                 WWTo2L2Nu, WWG, WWW, WWZ, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
     #samples += [,  TBarToLeptons_tch_powheg, TBar_tWch, TT_pow_ext4, TToLeptons_tch_amcatnlo, TToLeptons_tch_powheg, T_tWch]
     
-    samples_LHE = [ TTZToLLNuNu_ext2] #TTLLJets_m1to10, TTWToLNu_ext1, TTWToLNu_ext2  , TTZToLLNuNu] #, TTW_LO, TTZ_LO
-    #samples_LHE += [ TTHnobb_pow, ]
+    #samples_LHE = [ TTZToLLNuNu_ext2] #TTLLJets_m1to10, TTWToLNu_ext1, TTWToLNu_ext2  , TTZToLLNuNu] #, TTW_LO, TTZ_LO
+    samples_LHE = [ TTHnobb_pow, ]
     
     
     if not getHeppyOption("keepLHEweights",False):
@@ -517,7 +520,11 @@ if analysis=='susy':
     elif int(group)==4:
         selectedComponents=[DYJetsToLL_M10to50, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
     elif int(group)==5:
-        selectedComponents=[TToLeptons_tch_powheg,TBarToLeptons_tch_powheg,TBar_tWch,T_tWch,TTJets_DiLepton_ext]
+        selectedComponents=[tZW_ll,T_tch_powheg,TBar_tch_powheg,TTHnobb_pow]
+    elif int(group)==6:
+        selectedComponents=[TTJets_DiLepton_ext,TTJets_SingleLeptonFromT_ext,TTJets_SingleLeptonFromTbar_ext,WZTo3LNu_ext]
+    elif int(group)==7:
+        selectedComponents=[TToLeptons_tch_powheg,TBarToLeptons_tch_powheg,TBar_tWch,T_tWch]
 
     for c in selectedComponents:
         if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
@@ -525,10 +532,42 @@ if analysis=='susy':
 
     selectedComponents=[ZGTo2LG]
     if runSMS:
-        #selectedComponents=[TChiSlepSnu,T1tttt_2016,T5qqqqVV_2016]
-        selectedComponents=[SMS_T1tttt, SMS_T5qqqqVV, SMS_T6ttWW, SMS_T6ttHZ,\
-        SMS_TChiWZ, SMS_TChiWH, SMS_TChiSlepSnux0p5, SMS_TChiSlepSnux0p05, SMS_TChiSlepSnux0p95, SMS_TChiSlepSnuTEx0p5, SMS_TChiSlepSnuTEx0p05, SMS_TChiSlepSnuTEx0p95, SMS_TChiStauStaux0p5, SMS_TChiStauStaux0p5ext,\
-        SMS_TChiZZ2L, SMS_TChiZZ4L, SMS_TChiHZ, SMS_TChiHH, SMS_T6bbllslepton_mSbottom_1000To1500_mLSP_120To1450, SMS_T6bbllslepton_mSbottom_400To950_mLSP_120To140]
+        susyCounter.SMS_varying_masses += ['genSusyMScan1', 'genSusyMScan2', 'genSusyMScan3', 'genSusyMScan4']
+        if siggroup == 0:
+            selectedComponents=[SMS_T1tttt, SMS_T5qqqqVV]
+            susyCounter.SMS_mass_1 = 'genSusyMGluino'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+        if siggroup == 1:
+            selectedComponents=[SMS_T6ttWW]
+            susyCounter.SMS_mass_1 = 'genSusyMSbottom'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+            susyScanAna.myModel = "T6ttWW"
+        if siggroup == 2:
+            selectedComponents=[SMS_T6ttHZ]
+            susyCounter.SMS_mass_1 = 'genSusyMStop'
+            susyCounter.SMS_mass_2 = 'genSusyMStop2'
+            susyScanAna.myModel = "T6ttHZ"
+        if siggroup == 3:
+            selectedComponents=[SMS_TChiWZ, SMS_TChiWH, \
+                                SMS_TChiSlepSnux0p5, SMS_TChiSlepSnux0p5ext, SMS_TChiSlepSnux0p05, SMS_TChiSlepSnux0p05ext, SMS_TChiSlepSnux0p95, \
+                                SMS_TChiSlepSnuTEx0p5, SMS_TChiSlepSnuTEx0p05, SMS_TChiSlepSnuTEx0p95, \
+                                SMS_TChiStauStaux0p5, SMS_TChiStauStaux0p5ext]
+            susyCounter.SMS_mass_1 = 'genSusyMChargino'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+        if siggroup == 4:
+            selectedComponents=[SMS_TChiZZ2L, SMS_TChiZZ4L, SMS_TChiHZ, SMS_TChiHH]
+            susyCounter.SMS_mass_1 = 'genSusyMNeutralino2'
+            susyCounter.SMS_mass_2 = 'genSusyMNeutralino'
+        if siggroup == 5:
+            selectedComponents=[SMS_T6bbllslepton_mSbottom_1000To1500_mLSP_120To1450, \
+                                SMS_T6bbllslepton_mSbottom_400To950_mLSP_120To140]
+            susyScanAna.myModel = "T6bbll"
+        if siggroup == 6:
+            selectedComponents=[SMS_T6bbllslepton_mSbottom_400To575_mLSP_150To550, \
+                                SMS_T6bbllslepton_mSbottom_600To775_mLSP_150To725, \
+                                SMS_T6bbllslepton_mSbottom_800To950_mLSP_150To900]
+            susyScanAna.myModel = "T6bbll"
+            susyScanAna.readOldFormat = True
         #ttHLepSkim.minLeptons = 0
         #ttHLepSkim.requireSameSignPair = False
         lheWeightAna.useLumiInfo=True
@@ -581,27 +620,23 @@ if runData and not isTest: # For running on data
 
     json = os.environ['CMSSW_BASE']+'/src/CMGTools/TTHAnalysis/data/json/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt' # 36.15/fb
 
-    #processing = "Run2016B-23Sep2016-v1"; short = "Run2016B_23Sep2016_v1"; run_ranges = [(272760,273017)]; useAAA=True; # -v2 starts from 272760 to 273017
-    #dataChunks.append((json,processing,short,run_ranges,useAAA))
     
-    processing = "Run2016B-23Sep2016-v3"; short = "Run2016B_23Sep2016_v3"; run_ranges = [(273150,275376)]; useAAA=True; # -v3 starts from 273150 to 275376
+    processing = "Run2016B-03Feb2017_ver2-v2"; short = "Run2016B_03Feb2017_ver2_v2"; run_ranges = [(273150,275376)]; useAAA=True; # -v3 starts from 273150 to 275376
     dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016C-23Sep2016-v1"; short = "Run2016C_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
+    processing = "Run2016C-03Feb2017-v1"; short = "Run2016C_03Feb2017_v1"; run_ranges = [(271036,284044)]; useAAA=True;
     dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016D-23Sep2016-v1"; short = "Run2016D_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
+    processing = "Run2016D-03Feb2017-v1"; short = "Run2016D_03Feb2017_v1"; run_ranges = [(271036,284044)]; useAAA=True;
     dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016E-23Sep2016-v1"; short = "Run2016E_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
+    processing = "Run2016E-03Feb2017-v1"; short = "Run2016E_03Feb2017_v1"; run_ranges = [(271036,284044)]; useAAA=True;
     dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016F-23Sep2016-v1"; short = "Run2016F_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
+    processing = "Run2016F-03Feb2017-v1"; short = "Run2016F_03Feb2017_v1"; run_ranges = [(271036,284044)]; useAAA=True;
     dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016G-23Sep2016-v1"; short = "Run2016G_23Sep2016_v1"; run_ranges = [(271036,284044)]; useAAA=True;
+    processing = "Run2016G-03Feb2017-v1"; short = "Run2016G_03Feb2017_v1"; run_ranges = [(271036,284044)]; useAAA=True;
     dataChunks.append((json,processing,short,run_ranges,useAAA))
-    #run H ==============================================================================================================
-    processing = "Run2016H-PromptReco-v1"; short = "Run2016H-PromptReco-v1"; run_ranges = [(281085,281201)]; useAAA=True;
+    ##run H ==============================================================================================================
+    processing = "Run2016H-03Feb2017_ver2-v1"; short = "Run2016H_03Feb2017_ver2_v1"; run_ranges = [(281085,284035)]; useAAA=True;
     dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016H-PromptReco-v2"; short = "Run2016H-PromptReco-v2"; run_ranges = [(281207,284035)]; useAAA=True;
-    dataChunks.append((json,processing,short,run_ranges,useAAA))
-    processing = "Run2016H-PromptReco-v3"; short = "Run2016H-PromptReco-v3"; run_ranges = [(284036,284044)]; useAAA=True;
+    processing = "Run2016H-03Feb2017_ver3-v1"; short = "Run2016H_03Feb2017_ver3_v1"; run_ranges = [(284036,284044)]; useAAA=True;
     dataChunks.append((json,processing,short,run_ranges,useAAA))
 
 
@@ -969,6 +1004,13 @@ elif test == '5':
         comp.files = comp.files[:5]
         comp.splitFactor = 1
         comp.fineSplitFactor = 5
+elif test == "zgamma":
+    comp = cfg.MCComponent( files = ["root://eoscms.cern.ch//store/mc/RunIISummer16MiniAODv2/ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/100000/000786F7-3AD0-E611-A6AE-842B2B765E01.root"], name="ZGTo2LG")
+    comp.triggers = []
+    comp.splitFactor = 1
+    comp.fineSplitFactor = 1
+    selectedComponents = [comp]
+    sequence.remove(jsonAna)
 elif test == "ewkinosync":
     comp = cfg.MCComponent( files = ["root://eoscms.cern.ch//store/mc/RunIIFall15MiniAODv2/TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/60000/14C51DB0-D6B8-E511-8D9B-8CDCD4A9A484.root"], name="TTW_EWK_sync" )
     comp.triggers = []
@@ -1005,6 +1047,83 @@ elif test == '80X-MC':
         comp.files = [ tmpfil ]
         if not getHeppyOption("single"): comp.fineSplitFactor = 4
     else: raise RuntimeError, "Unknown MC sample: %s" % what
+elif 'reminiAOD' in test:
+    triggersDMU  = triggers_mumu_iso + triggers_mumu_ss + triggers_mu30tkmu11 + triggers_mumu_ht + triggers_3mu + triggers_3mu_alt + triggers_mu27tkmu8
+    triggersDEG  = triggers_ee + triggers_doubleele33 + triggers_doubleele33_MW + triggers_ee_ht + triggers_3e
+    triggersMEG  = triggers_mue + triggers_mue_ht + triggers_2mu1e + triggers_2e1mu + triggers_mu30ele30
+    triggersSMU  = triggers_leptau + triggers_1mu_iso + triggers_1mu_noniso
+    triggersSEL  = triggers_leptau + triggers_1e
+    triggersJET  = triggers_pfht + triggers_jet_recoverHT
+    triggersMET  = triggers_htmet
+    FRTrigs = triggers_FR_1mu_iso + triggers_FR_1mu_noiso + triggers_FR_1e_noiso + triggers_FR_1e_iso + triggers_FR_1e_b2g
+    for t in FRTrigs:
+        tShort = t.replace("HLT_","FR_").replace("_v*","")
+        triggerFlagsAna.triggerBits[tShort] = [ t ]
+    ## DoubleEG
+    if 'reminiAOD_DEG' in test:
+        DoubleEG = kreator.makeDataComponent("DoubleEG_redone", "/DoubleEG/Run2016B-03Feb2017_ver2-v2/MINIAOD", "CMS", ".*root",  triggers = triggersDEG, vetoTriggers=triggersDMU, useAAA=True, unsafe=True)
+        if test == "reminiAOD_DEG_1":
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/0035454A-9FEA-E611-A31E-0CC47A7C3424.root']
+        if test == "reminiAOD_DEG_2":
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/004F6D17-9DEC-E611-B8D8-7CD30AC030A2.root']
+        if test == "reminiAOD_DEG_3":
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/006564CA-7AEA-E611-B21D-0025905A611C.root']
+        if test == "reminiAOD_DEG_4": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/00AA4916-82EA-E611-B303-0025905B8610.root']
+        if test == "reminiAOD_DEG_5": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/3E62C149-9FEA-E611-BD29-0CC47A7C3422.root']
+        if test == "reminiAOD_DEG_6": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/3EAE61EC-97EA-E611-82B1-0CC47A4C8EB6.root']
+        if test == "reminiAOD_DEG_7": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/3EB6BF1B-C6EA-E611-9A2A-0CC47A4D7650.root']
+        if test == "reminiAOD_DEG_8": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/4063F2D0-7AEA-E611-8F58-0CC47A4D76C8.root']
+        if test == "reminiAOD_DEG_9": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/7CB1F572-B9EA-E611-B8A3-00266CFBE29C.root']
+        if test == "reminiAOD_DEG_10": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/7CC59307-82EA-E611-835F-3417EBE70729.root']
+        if test == "reminiAOD_DEG_11": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/7CCA7B2F-DBEA-E611-819C-0CC47A78A436.root']
+        if test == "reminiAOD_DEG_12": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/7CE33F15-82EA-E611-B0CF-0025905A60BC.root']
+        if test == "reminiAOD_DEG_13": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/E6FDE666-73EA-E611-ABE3-0025901E4A10.root']
+        if test == "reminiAOD_DEG_14": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/E8040F0A-EAEA-E611-9F24-0CC47A7C351E.root']
+        if test == "reminiAOD_DEG_15": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/E851B60F-73EA-E611-97A5-0CC47A7C3638.root']
+        if test == "reminiAOD_DEG_16": 
+            DoubleEG.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/DoubleEG/MINIAOD/03Feb2017_ver2-v2/50000/E864A734-DBEA-E611-A656-0025905A608A.root']
+        selectedComponents = [ DoubleEG ]
+	## SingleElectron
+    if 'reminiAOD_SEL' in test:
+        SingleElectron = kreator.makeDataComponent("SingleElectron_redone", "/SingleElectron/Run2016B-03Feb2017_ver2-v2/MINIAOD", "CMS", ".*root", triggers=triggersSEL, vetoTriggers=triggersDMU+triggersDEG+triggersMEG+triggersSMU, useAAA=True, unsafe=True)
+        if test == "reminiAOD_SEL_1": 
+            SingleElectron.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/SingleElectron/MINIAOD/03Feb2017_ver2-v2/110000/2E758C2C-4DEB-E611-B6EB-0025904A8EC8.root']
+        if test == "reminiAOD_SEL_2": 
+            SingleElectron.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/SingleElectron/MINIAOD/03Feb2017_ver2-v2/110000/2ECC0454-47EB-E611-9152-0CC47AD990C4.root']
+        if test == "reminiAOD_SEL_3": 
+            SingleElectron.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/SingleElectron/MINIAOD/03Feb2017_ver2-v2/110000/30346EE9-47EB-E611-B140-6C3BE5B50170.root']
+        if test == "reminiAOD_SEL_4": 
+            SingleElectron.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016B/SingleElectron/MINIAOD/03Feb2017_ver2-v2/110000/30500177-51EB-E611-B98D-002590E3A0EE.root']
+        selectedComponents = [ SingleElectron ]
+    ## MET
+    if 'reminiAOD_MET' in test:
+        MET = kreator.makeDataComponent("MET_redone", "/MET/Run2016G-03Feb2017-v1/MINIAOD", "CMS", ".*root", triggers=triggersMET, vetoTriggers=triggersDMU+triggersDEG+triggersMEG+triggersSMU+triggersSEL+triggersJET, useAAA=True, unsafe=True)
+        if test == "reminiAOD_MET_1": 
+            MET.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016G/MET/MINIAOD/03Feb2017-v1/80000/8059E2A9-BBEB-E611-88CD-0090FAA57690.root']
+        if test == "reminiAOD_MET_2": 
+            MET.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016G/MET/MINIAOD/03Feb2017-v1/80000/80E3A236-D0EB-E611-A286-0CC47A4D99B0.root']
+        if test == "reminiAOD_MET_3": 
+            MET.files = ['root://cms-xrd-global.cern.ch//store/data/Run2016G/MET/MINIAOD/03Feb2017-v1/80000/80F442A9-BBEB-E611-B5D7-0090FAA1ACF4.root']
+        selectedComponents = [ MET ]
+    for comp in selectedComponents:
+        comp.json = json
+        tmpfil = os.path.expandvars("/tmp/$USER/%s" % os.path.basename(comp.files[0]))
+        if not os.path.exists(tmpfil): os.system("xrdcp %s %s" % (comp.files[0],tmpfil)) 
+        comp.files = [tmpfil]
+        comp.splitFactor = 1
+        comp.fineSplitFactor = 1
 elif test == '80X-Data':
     #DoubleMuon = kreator.makeDataComponent("DoubleMuon_Run2016B_run274315", "/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD", "CMS", ".*root", run_range = (274315,274315), triggers = triggers_mumu + triggers_mumu_ht + triggers_ee + triggers_ee_ht )
     DoubleEG = kreator.makeDataComponent("SSDLSync", "/DoubleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD", "CMS", ".*root",  triggers = triggers_mumu_iso + triggers_mumu_ss + triggers_mu30tkmu11 + triggers_mumu_ht + triggers_3mu + triggers_3mu_alt + triggers_mu27tkmu8 + triggers_ee + triggers_doubleele33 + triggers_doubleele33_MW + triggers_ee_ht + triggers_3e + triggers_mue + triggers_mue_ht + triggers_2mu1e + triggers_2e1mu + triggers_mu30ele30)
