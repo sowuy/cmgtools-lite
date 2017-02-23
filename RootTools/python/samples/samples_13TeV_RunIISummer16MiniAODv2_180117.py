@@ -640,6 +640,7 @@ TTWToQQ = kreator.makeMCComponent("TTWToQQ", "/TTWJetsToQQ_TuneCUETP8M1_13TeV-am
 TTW_LO = kreator.makeMCComponent("TTW_LO", "/ttWJets_13TeV_madgraphMLM/RunIISummer16MiniAODv2-80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", "CMS", ".*root",  0.6105 )
 TTZToQQ = kreator.makeMCComponent("TTZToQQ","/TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", "CMS", ".*root", 0.5297)
 TTZToLLNuNu = kreator.makeMCComponent("TTZToLLNuNu","/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM", "CMS", ".*root", 0.2529)
+TTZToLLNuNu_ext2 = kreator.makeMCComponent("TTZToLLNuNu_ext2","/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM", "CMS", ".*root", 0.2529)
 # https://twiki.cern.ch/twiki/bin/view/CMS/SameSignDilepton2016
 TTZ_LO = kreator.makeMCComponent("TTZ_LO", "/ttZJets_13TeV_madgraphMLM/RunIISummer16MiniAODv2-80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", "CMS", ".*root",  0.5297/0.692)
 TTLLJets_m1to10 = kreator.makeMCComponentFromEOS('TTLLJets_m1to10', '/TTLL_m1to10_LO_NoMS_for76X/', '/store/cmst3/group/susy/gpetrucc/13TeV/RunIISpring16MiniAODv2/%s', '.*root', 0.0283)
@@ -654,6 +655,7 @@ TTWToQQ,
 TTW_LO,
 TTZToQQ,
 TTZToLLNuNu,
+TTZToLLNuNu_ext2,
 TTLLJets_m1to10,
 TTZ_LO,
 TTGJets

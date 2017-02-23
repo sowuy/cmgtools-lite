@@ -526,11 +526,33 @@ if analysis=='susy':
     elif int(group)==7:
         selectedComponents=[TToLeptons_tch_powheg,TBarToLeptons_tch_powheg,TBar_tWch,T_tWch]
 
+    elif int(group)==100:
+        selectedComponents=[ZGTo2LG,
+                            TTZToLLNuNu,
+                            TTZToLLNuNu_ext2,
+                            TTLLJets_m1to10,
+                            ZGTo2LG,
+                            ZZTo4L,
+                            WZTo3LNu_ext,
+                            WZTo3LNu,
+                            TTGJets,
+                            WGToLNuG,
+                            TGJets,
+                            WpWpJJ,
+                            WW2L2NuDouble,
+                            WWZ,
+                            WZZ,
+                            ZZZ,
+                            TTTT,
+                            tZq_ll]
+        
+    elif int(group)==101:
+        selectedComponents=[DYJetsToLL_M10to50, DYJetsToLL_M50,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTJets_DiLepton_ext,TTJets_SingleLeptonFromT_ext,TTJets_SingleLeptonFromTbar_ext, WJetsToLNu]
+
     for c in selectedComponents:
-        if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
+        if c in [DYJetsToLL_M10to50, DYJetsToLL_M50,TTJets_DiLepton,TTJets_SingleLeptonFromT,TTJets_SingleLeptonFromTbar,TTJets_DiLepton_ext,TTJets_SingleLeptonFromT_ext,TTJets_SingleLeptonFromTbar_ext, WJetsToLNu]:
             c.splitFactor=300
 
-    selectedComponents=[ZGTo2LG]
     if runSMS:
         susyCounter.SMS_varying_masses += ['genSusyMScan1', 'genSusyMScan2', 'genSusyMScan3', 'genSusyMScan4']
         if siggroup == 0:
@@ -1047,7 +1069,7 @@ elif test == '80X-MC':
         comp.files = [ tmpfil ]
         if not getHeppyOption("single"): comp.fineSplitFactor = 4
     else: raise RuntimeError, "Unknown MC sample: %s" % what
-elif 'reminiAOD' in test:
+elif 'reminiAOD' == test:
     triggersDMU  = triggers_mumu_iso + triggers_mumu_ss + triggers_mu30tkmu11 + triggers_mumu_ht + triggers_3mu + triggers_3mu_alt + triggers_mu27tkmu8
     triggersDEG  = triggers_ee + triggers_doubleele33 + triggers_doubleele33_MW + triggers_ee_ht + triggers_3e
     triggersMEG  = triggers_mue + triggers_mue_ht + triggers_2mu1e + triggers_2e1mu + triggers_mu30ele30
