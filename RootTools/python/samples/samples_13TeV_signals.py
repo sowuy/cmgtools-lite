@@ -22,13 +22,19 @@ SMS_T6ttHZ=kreator.makeMCComponent("SMS_T6ttHZ","/SMS-T6ttHZ_BR-H_0p6_TuneCUETP8
 
 SMS_T6bbllslepton_mSbottom_1000To1500_mLSP_120To1450 = kreator.makeMCComponent("SMS_T6bbllslepton_mSbottom_1000To1500_mLSP_120To1450", "/SMS-T6bbllslepton_mSbottom-1000To1500_mLSP-120To1450_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
 SMS_T6bbllslepton_mSbottom_400To950_mLSP_120To140 = kreator.makeMCComponent("SMS_T6bbllslepton_mSbottom_400To950_mLSP_120To140", "/SMS-T6bbllslepton_mSbottom-400To950_mLSP-120To140_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
+SMS_T6bbllslepton_mSbottom_400To575_mLSP_150To550 = kreator.makeMCComponent("SMS_T6bbllslepton_mSbottom_400To575_mLSP_150To550", "/SMS-T6bbllslepton_mSbottom-400To575_mLSP-150To550_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-pLHE_PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM", "CMS",".*root",1,True)
+SMS_T6bbllslepton_mSbottom_600To775_mLSP_150To725 = kreator.makeMCComponent("SMS_T6bbllslepton_mSbottom_600To775_mLSP_150To725", "/SMS-T6bbllslepton_mSbottom-600To775_mLSP-150To725_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-pLHE_PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM", "CMS",".*root",1,True)
+SMS_T6bbllslepton_mSbottom_800To950_mLSP_150To900 = kreator.makeMCComponent("SMS_T6bbllslepton_mSbottom_800To950_mLSP_150To900", "/SMS-T6bbllslepton_mSbottom-800To950_mLSP-150To900_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-pLHE_PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM", "CMS",".*root",1,True)
+
 
 ## EWKino signals 
 #SMS_TChiWZ=kreator.makeMCComponent("SMS_TChiWZ","/SMS-TChiWZ_ZToLL_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v2/MINIAODSIM","CMS",".*root",1,useAAA=True) ## ICHEP
 SMS_TChiWZ=kreator.makeMCComponent("SMS_TChiWZ","/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUSummer16Fast_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM","CMS",".*root",1,True) ## post-ICHEP
 SMS_TChiWH=kreator.makeMCComponent("SMS_TChiWH","/SMS-TChiWH_WToLNu_HToVVTauTau_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
 SMS_TChiSlepSnux0p5=kreator.makeMCComponent("SMS_TChiSlepSnux0p5","/SMS-TChiSlepSnu_x0p5_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
+SMS_TChiSlepSnux0p5ext=kreator.makeMCComponent("SMS_TChiSlepSnux0p5ext","/SMS-TChiSlepSnu_x0p5_mC1-1250to1300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
 SMS_TChiSlepSnux0p05=kreator.makeMCComponent("SMS_TChiSlepSnux0p05","/SMS-TChiSlepSnu_x0p05_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v2/MINIAODSIM","CMS",".*root",1,True)
+SMS_TChiSlepSnux0p05ext=kreator.makeMCComponent("SMS_TChiSlepSnux0p05ext","/SMS-TChiSlepSnu_x0p05_mC1-1250to1300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
 SMS_TChiSlepSnux0p95=kreator.makeMCComponent("SMS_TChiSlepSnux0p95","/SMS-TChiSlepSnu_x0p95_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
 SMS_TChiSlepSnuTEx0p5=kreator.makeMCComponent("SMS_TChiSlepSnuTEx0p5","/SMS-TChiSlepSnu_tauenriched_x0p5_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
 SMS_TChiSlepSnuTEx0p05=kreator.makeMCComponent("SMS_TChiSlepSnuTEx0p05","/SMS-TChiSlepSnu_tauenriched_x0p05_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM","CMS",".*root",1,True)
@@ -57,10 +63,15 @@ SMS_T6ttWW,
 SMS_T6ttHZ,
 SMS_T6bbllslepton_mSbottom_1000To1500_mLSP_120To1450,
 SMS_T6bbllslepton_mSbottom_400To950_mLSP_120To140,
+SMS_T6bbllslepton_mSbottom_400To575_mLSP_150To550,
+SMS_T6bbllslepton_mSbottom_600To775_mLSP_150To725,
+SMS_T6bbllslepton_mSbottom_800To950_mLSP_150To900,
 SMS_TChiWZ,
 SMS_TChiWH,
 SMS_TChiSlepSnux0p5,
+SMS_TChiSlepSnux0p5ext,
 SMS_TChiSlepSnux0p05,
+SMS_TChiSlepSnux0p05ext,
 SMS_TChiSlepSnux0p95,
 SMS_TChiSlepSnuTEx0p5,
 SMS_TChiSlepSnuTEx0p05,

@@ -17,6 +17,10 @@ class susyParameterScanAnalyzer( Analyzer ):
             (2000000 + 5) : 'Sbottom2',
             (1000000 + 6) : 'Stop',
             (2000000 + 6) : 'Stop2',
+            (1000000 + 11) : 'Selectron',
+            (2000000 + 11) : 'Selectron2',
+            (1000000 + 13) : 'Smuon',
+            (2000000 + 13) : 'Smuon2',
             (1000000 + 15) : 'Stau',
             (2000000 + 15) : 'Stau2',
             (1000000 + 16) : 'SnuTau',
@@ -46,6 +50,9 @@ class susyParameterScanAnalyzer( Analyzer ):
 
 
         if self.cfg_ana.doLHE:
+            if self.cfg_ana.readOldFormat: 
+                self.mchandles['summary'] = AutoHandle( 'externalLHEProducer', 'LHEEventProduct',mayFail=True,fallbackLabel='source',lazy=False) 
+
             if not self.cfg_ana.useLumiInfo:
                 self.mchandles['lhe'] = AutoHandle( 'generator', 'GenLumiInfoHeader', mayFail = True, lazy = False )
             else:
@@ -77,8 +84,29 @@ class susyParameterScanAnalyzer( Analyzer ):
                     if particle not in masses: masses[particle] = []
                     masses[particle].append(p.mass())
         for p,ms in masses.iteritems():
-            avgmass = floor(sum(ms)/len(ms)+0.5)
+            mymass  = self.fixMyMass(p,masses)
+            avgmass = mymass if mymass>0 else floor(sum(ms)/len(ms)+0.5)
             setattr(event, "genSusyM"+p, avgmass)
+
+    def fixMyMass(self, massName, allmasses):
+        ## this function sets the GenSusyM<something> masses by hand for specific models in order to
+        ## bypass the Gaussian peak
+        if not self.cfg_ana.myModel in ["T6ttHZ"]: return 0
+        if not "Neutralino" in allmasses.keys(): return 0
+        if self.cfg_ana.myModel == "T6ttHZ" and massName == "Stop2": 
+            return allmasses["Neutralino"][0]+175
+        return 0
+
+    def readLHEcomments(self, event):
+        if not 'summary' in self.mchandles.keys(): return
+        if self.mchandles['summary'].product().comments_size()<1: return
+        lhecomments = self.mchandles['summary'].product().getComment(0)
+        lhecomment  = lhecomments.split()
+        if "T6bbllslepton" in lhecomment[2]:
+            masses = [int(x) for x in lhecomment[2].split("_")[1:]]
+            event.genSusyMScan1 = masses[0]
+            event.genSusyMScan2 = masses[1]
+            print masses
 
     def readLHE(self,event):
         #print " validity ", self.genLumiHandle.product().configDescription()
@@ -88,7 +116,6 @@ class susyParameterScanAnalyzer( Analyzer ):
                 self.warned_already = True
             return
         lheprod = self.mchandles['lhe'].configDescription();#product()
-        
         scanline = re.compile(r"#\s*model\s+([A-Za-z0-9]+)_((\d+\.?\d*)(_\d+\.?\d*)*)(\s+(\d+\.?\d*))*\s*")
         for i in xrange(lheprod.comments_size()):
             comment = lheprod.getComment(i)
@@ -145,6 +172,10 @@ class susyParameterScanAnalyzer( Analyzer ):
             if len(masses) >= 2: event.genSusyMScan2 = masses[1]
             if len(masses) >= 3: event.genSusyMScan3 = masses[2]
             if len(masses) >= 4: event.genSusyMScan4 = masses[3]
+        elif "T6bbllslepton" in lheprod:
+            masses = [int(x) for x in lheprod.split("_")[1:]]
+            event.genSusyMScan1 = masses[0]
+            event.genSusyMScan2 = masses[1]
 
     def process(self, event):
         # if not MC, nothing to do
@@ -164,9 +195,12 @@ class susyParameterScanAnalyzer( Analyzer ):
         event.genSusyMScan3 = 0.0
         event.genSusyMScan4 = 0.0
 
+
         # do MC level analysis
         if self.cfg_ana.doLHE:
-            if not self.cfg_ana.useLumiInfo:
+            if self.cfg_ana.readOldFormat:
+                self.readLHEcomments(event)
+            elif not self.cfg_ana.useLumiInfo:
                 self.readLHE(event)
             else:
                 self.readLHELumiInfo(event)
