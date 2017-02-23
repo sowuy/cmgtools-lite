@@ -245,6 +245,8 @@ if analysis=="susy":
     susyCoreSequence.insert(susyCoreSequence.index(ttHCoreEventAna),
                             susyLeptonMatchAna)
     susyCoreSequence.insert(susyCoreSequence.index(ttHCoreEventAna),
+                            susyLeptonMatchAnaFlawy)
+    susyCoreSequence.insert(susyCoreSequence.index(ttHCoreEventAna),
                             susyTauMatchAna)
     leptonTypeSusyExtraLight.addVariables([
             NTupleVariable("mcUCSXMatchId", lambda x : x.mcUCSXMatchId if hasattr(x,'mcUCSXMatchId') else -1, mcOnly=True, help="MC truth matching a la UCSX"),
@@ -521,6 +523,7 @@ if analysis=='susy':
         if c in [DYJetsToLL_M10to50_LO , DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_LO, TTJets, WJetsToLNu_LO, WJetsToLNu]:
             c.splitFactor=300
 
+    selectedComponents=[ZGTo2LG]
     if runSMS:
         #selectedComponents=[TChiSlepSnu,T1tttt_2016,T5qqqqVV_2016]
         selectedComponents=[SMS_T1tttt, SMS_T5qqqqVV, SMS_T6ttWW, SMS_T6ttHZ,\
@@ -996,7 +999,7 @@ elif test == '80X-MC':
         comp = selectedComponents[0]
         comp.triggers = []
         comp.files = [ '/store/mc/RunIISpring16MiniAODv1/TTTo2L2Nu_13TeV-powheg/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext1-v1/00000/002606A5-C909-E611-85DA-44A8423D7E31.root' ]
-        tmpfil = os.path.expandvars("/tmp/$USER/002606A5-C909-E611-85DA-44A8423D7E31.root")
+        tmpfil = os.path.expandvars("/afs/cern.ch/user/m/mmarionn/workspace/private/cmssw/cmg8020/src/outputs/ewkino_reminiAOD.root")
         if not os.path.exists(tmpfil):
             os.system("xrdcp root://eoscms//eos/cms%s %s" % (comp.files[0],tmpfil))
         comp.files = [ tmpfil ]
@@ -1004,7 +1007,7 @@ elif test == '80X-MC':
     else: raise RuntimeError, "Unknown MC sample: %s" % what
 elif test == '80X-Data':
     #DoubleMuon = kreator.makeDataComponent("DoubleMuon_Run2016B_run274315", "/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD", "CMS", ".*root", run_range = (274315,274315), triggers = triggers_mumu + triggers_mumu_ht + triggers_ee + triggers_ee_ht )
-    DoubleEG = kreator.makeDataComponent("DoubleMu_test", "/DoubleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD", "CMS", ".*root",  triggers = triggers_mumu)
+    DoubleEG = kreator.makeDataComponent("SSDLSync", "/DoubleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD", "CMS", ".*root",  triggers = triggers_mumu_iso + triggers_mumu_ss + triggers_mu30tkmu11 + triggers_mumu_ht + triggers_3mu + triggers_3mu_alt + triggers_mu27tkmu8 + triggers_ee + triggers_doubleele33 + triggers_doubleele33_MW + triggers_ee_ht + triggers_3e + triggers_mue + triggers_mue_ht + triggers_2mu1e + triggers_2e1mu + triggers_mu30ele30)
     #SingleMuon = kreator.makeDataComponent("SingleMuon_Run2016H_run281693","/SingleMuon/Run2016H-PromptReco-v2/MINIAOD","CMS",".*root", run_range=(281680, 281700), triggers = triggers_1mu_iso)
     #DoubleMuon.files = [ 'root://eoscms//eos/cms/store/data/Run2016B/DoubleMuon/MINIAOD/PromptReco-v2/000/274/315/00000/A287989F-E129-E611-B5FB-02163E0142C2.root' ]
     DoubleEG.files = [ 'root://eoscms//eos/cms/store/data/Run2016H/DoubleMuon/MINIAOD/03Feb2017_ver3-v1/50000/54F4D641-52EB-E611-961C-008CFA110C64.root' ]
@@ -1014,7 +1017,7 @@ elif test == '80X-Data':
     selectedComponents = [ DoubleEG ] #DoubleMuon, DoubleEG ]
     for comp in selectedComponents:
         comp.json = json #'/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt'
-        tmpfil = os.path.expandvars("/tmp/$USER/%s" % os.path.basename(comp.files[0]))
+        tmpfil = os.path.expandvars("/afs/cern.ch/user/m/mmarionn/workspace/private/cmssw/cmg8020/src/missingevent.root")#/tmp/$USER/%s" % os.path.basename(comp.files[0]))
         if not os.path.exists(tmpfil): os.system("xrdcp %s %s" % (comp.files[0],tmpfil)) 
         comp.files = [tmpfil]
         comp.splitFactor = 1

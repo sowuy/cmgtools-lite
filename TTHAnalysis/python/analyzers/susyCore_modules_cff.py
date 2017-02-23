@@ -545,7 +545,13 @@ susyLeptonMatchAna = cfg.Analyzer(
     susyLeptonMatchAnalyzer, name="susyLeptonMatchAna",
     collection = "inclusiveLeptons",
     deltaR     = 0.2,
-    statusOne  = True # put True if trying to match to genParticle with same pdgId and status 1, but False if only require same pdgId
+    statusOne  = True, # put True if trying to match to genParticle with same pdgId and status 1, but False if only require same pdgId
+    )
+susyLeptonMatchAnaFlawy = cfg.Analyzer(
+    susyLeptonMatchAnalyzer, name="susyLeptonMatchAnaFlawy",
+    collection = "inclusiveLeptons",
+    deltaR     = 0.2,
+    statusOne  = True, # put True if trying to match to genParticle with same pdgId and status 1, but False if only require same pdgId
     )
 
 # same as above for taus
@@ -553,7 +559,7 @@ susyTauMatchAna = cfg.Analyzer(
     susyLeptonMatchAnalyzer, name="susyTauMatchAna",
     collection = "inclusiveTaus",
     deltaR     = 0.2,
-    statusOne  = False # put True if trying to match to genParticle with same pdgId and status 1, but False if only require same pdgId
+    statusOne  = False, # put True if trying to match to genParticle with same pdgId and status 1, but False if only require same pdgId
     )
 
 # Core sequence of all common modules

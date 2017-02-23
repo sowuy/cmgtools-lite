@@ -13,7 +13,7 @@ class susyLeptonMatchAnalyzer( Analyzer ):
         self.collection = self.cfg_ana.collection
         self.deltaR     = float(self.cfg_ana.deltaR)
         self.statusOne  = self.cfg_ana.statusOne
-
+        
     def declareHandles(self):
         super(susyLeptonMatchAnalyzer, self).declareHandles()
       
@@ -56,6 +56,7 @@ class susyLeptonMatchAnalyzer( Analyzer ):
             code=-1
             if not gen: 
                 lep.mcUCSXMatchId = -1
+                lep.mcUCSXMatchIdFlawy = -1
                 continue
             
             prompt = gen.isPromptFinalState() or gen.isDirectPromptTauDecayProductFinalState() or gen.isHardProcess() 
@@ -68,10 +69,10 @@ class susyLeptonMatchAnalyzer( Analyzer ):
                 if len(gmoms)==1:
                     grandMotherId = abs(gmoms[0].pdgId())
             if gen.pdgId()==22 or (motherId==22 and gen.pdgId()==lep.pdgId() ):
-                if prompt: code= 4
+                if prompt: code=4
                 else: code= -1
 
-            if prompt or ((abs(gen.pdgId())==abs(lep.pdgId()) or abs(gen.pdgId())==15 ) and ((motherId in self.promptMothers) or (abs(motherId)==15 and (grandMotherId in self.promptMothers)) ) ) :
+            if (prompt and code!=4) or ((abs(gen.pdgId())==abs(lep.pdgId()) or abs(gen.pdgId())==15 ) and ((motherId in self.promptMothers) or (abs(motherId)==15 and (grandMotherId in self.promptMothers)) ) ):
                 if gen.pdgId()*lep.pdgId()>0: code= 0
                 else : code= 1
             
@@ -79,7 +80,7 @@ class susyLeptonMatchAnalyzer( Analyzer ):
             if (abs(gen.pdgId()) in self.charms) or (motherId in self.charms) : code= 3
             if (abs(gen.pdgId()) in self.lights) or (motherId in self.lights) : code= 2
             lep.mcUCSXMatchId = code
-            
+
     def process(self, event):
         self.readCollections(event.input)
 
