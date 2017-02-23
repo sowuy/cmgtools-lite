@@ -401,13 +401,12 @@ if not skipT1METCorr:
     metAnaScaleDown.recalibrate = "type1"
 
 ### Reminiaod stuff ---------------------------
-if runData: 
+if runData:
     metAnaUnCor = metAna.clone(
         name="metAnalyzerUnCor",
         metCollection="slimmedMETsUncorrected",
         collectionPostFix="UnCor"
         )
-    
     metAnaMuEGClean = metAna.clone(
         name="metAnalyzerEGClean",
         metCollection="slimmedMETsMuEGClean",
