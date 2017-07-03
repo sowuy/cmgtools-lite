@@ -1,6 +1,20 @@
 #!/usr/bin/env python
 import sys, os, pickle
 import ROOT
+import os.path as osp
+
+def cacheLocally(infile, tmpDir='/tmp/'):
+    tmpfile = osp.join(tmpDir, osp.basename(infile))
+
+    # Copy locally if it's not there already
+    if not osp.exists(tmpfile):
+        xrcmd = "xrdcp %s %s" % (infile, tmpfile)
+        print " transferring to %s" % tmpDir
+        os.system(xrcmd)
+        print "... copied successfully"
+
+    infile = tmpfile
+    return infile
 
 _treepath = None
 _allfiles = []
@@ -12,12 +26,16 @@ def get_file_or_copy_local(url, copy_local=True):
         raise RuntimeError('File not found: %s'%url)
 
     url = open('%s.url'%url, 'r').read().strip()
+    if "#dcap" in url:
+        url=url.split("\n")[0]
+    #print "---->> ",url,"<<<<"
     if not copy_local:
         return url
 
     else:
-        from LepMVAEfficiencies.runLepTnPFriendMaker import cacheLocally
+        #from CMGTools.TTHAnalysis.macros.leptons.LepMVAEfficiencies.runLepTnPFriendMaker import cacheLocally
         return cacheLocally(url, os.environ.get('TMPDIR', '/tmp'))
+
 
 def load_dataset(name, trainclass, addw=1, path=None, friends=[]):
     if not path:
@@ -154,9 +172,10 @@ def train_multiclass(fOutName, options):
 
     fOut.Close()
 
-def train_single(allcuts, variables, dsets, fOutName, options):
+def train_single(allcuts, variables, dsets, fOutName, options, spectators=[]):
     datasets = []
     for name, trainclass, addw in dsets:
+        #print "--->>>> ",options.treepath,options.friends
         tree, weight = load_dataset(name, trainclass, addw,
                                     path=options.treepath,
                                     friends=options.friends)
@@ -169,9 +188,15 @@ def train_single(allcuts, variables, dsets, fOutName, options):
     for cut in options.addcuts:
         allcuts += cut
 
-    factory.AddSpectator("iF0 := iLepFO_Recl[0]","F") # do not remove this!
-    factory.AddSpectator("iF1 := iLepFO_Recl[1]","F") # do not remove this!
-    factory.AddSpectator("iF2 := iLepFO_Recl[2]","F") # do not remove this!
+    #factory.AddSpectator("iF0 := iLepFO_Recl[0]","F") # do not remove this!
+    #factory.AddSpectator("iF1 := iLepFO_Recl[1]","F") # do not remove this!
+    #factory.AddSpectator("iF2 := iLepFO_Recl[2]","F") # do not remove this!
+
+    for spec in spectators:
+        factory.AddSpectator(spec)
+
+    #factory.AddSpectator("iJ0 := ","F")
+    #factory.AddSpectator("iJ1 := ","F")
 
     ## Add the variables
     for var in variables:
@@ -182,15 +207,17 @@ def train_single(allcuts, variables, dsets, fOutName, options):
         factory.AddTree(tree, trainclass, weight)
 
     fOut.cd()
-    for trainclass in set([x[1] for x in dsets]):
-        factory.SetWeightExpression("genWeight*xsec", trainclass)
+    #for trainclass in set([x[1] for x in dsets]):
+    #    factory.SetWeightExpression("genWeight*xsec", trainclass)
 
     ## Start the training
-    factory.PrepareTrainingAndTestTree(allcuts, "!V")
+    print "======= prepare datasets ========"
+    factory.PrepareTrainingAndTestTree(allcuts, "V")#:nTrain_Signal=1000:nTest_Signal=1000:nTrain_Background=1000:nTest_Background=1000")
+    print "======= datasets ready for training and testing ========"
     factory.BookMethod(ROOT.TMVA.Types.kBDT, 'BDTG',
                             ':'.join([
                                 '!H',
-                                '!V',
+                                'V',
                                 'NTrees=200',
                                 'BoostType=Grad',
                                 'Shrinkage=0.10',
@@ -202,10 +229,13 @@ def train_single(allcuts, variables, dsets, fOutName, options):
                                 'NegWeightTreatment=PairNegWeightsGlobal',
                                 'CreateMVAPdfs',
                                 ]))
+    print "=============== method booked, now training ========================================="
     factory.TrainAllMethods()
+    print "===============  training done, now testing ========================================="
     factory.TestAllMethods()
+    print "===============  testing done, now evaluation ========================================="
     factory.EvaluateAllMethods()
-
+    print "=============================== successful! ==========================================="
     fOut.Close()
 
 def train_2d(fOutName, training, options):
@@ -368,20 +398,111 @@ def train_2d(fOutName, training, options):
     outname = fOutName+'_'+training+'.root'
     train_single(allcuts, variables, dsets, outname, options)
 
+
+
+def train_ttZ(fOutName, training, options):
+    allcuts = ROOT.TCut('1')
+    allcuts += "nLepTight_Recl>=3"
+    allcuts += "abs(mZ_Extra-91.2)>25"
+    #allcuts += "LepGood_Pt[ iLepFO_Recl[0] ]>25"
+    #allcuts += "LepGood_Pt[ iLepFO_Recl[1] ]>15"
+    #allcuts += "LepGood_Pt[ iLepFO_Recl[2] ]>15"
+    allcuts += "(nJetSel_Recl >= 2)"
+    #allcuts += "Entry$<10000"
+    
+    variables = [ # Common variables
+        #"max_Lep_eta := max(abs(LepGood_eta[iLepFO_Recl[0]]),abs(LepGood_eta[iLepFO_Recl[1]]))",
+        "numJets_float := nJetSel_Recl",
+        #"mindr_lep1_jet := mindr_lep1_jet",
+        #"mindr_lep2_jet := mindr_lep2_jet",
+        #"MT_met_lep1 := MT_met_lep1",
+
+        "lJetPt  := JetSel_Recl_pt[0]",
+        "slJetPt := JetSel_Recl_pt[1]",
+        
+        "lBTag  := Max$(JetSel_Recl_btagCSV)",
+        "slBTag := MaxIf$(JetSel_Recl_btagCSV, JetSel_Recl_btagCSV!=Max$(JetSel_Recl_btagCSV) )",
+
+    ]
+
+    spectators=[
+        "iJPt0 := JetSel_Recl_pt[0]",
+        "iJPt1 := JetSel_Recl_pt[1]",
+        ]
+
+
+    #if '3l' in training and 'WZ' in training:
+    #    variables += []
+    if '3l' in training and 'tth' in training:
+        variables += [ 
+            "mZ1TT := mZ1TT_Recl"
+            "mindr_lep1_jet := mindr_lep1_jet",
+            "mindr_lep2_jet := mindr_lep2_jet",
+            #"MT_met_lep1 := MT_met_lep1",
+            "max_Lep_eta := max(abs(LepGood_eta[iT_Recl[0]]),abs(LepGood_eta[iT_Recl[1]]))"
+            ]
+        spectators += [
+            "iL0 := iT_Recl[0]",
+            "iL1 := iT_Recl[1]"
+            ]
+    if '3l' in training and 'ttx' in training:
+        variables += [
+            #"mZ1TT := mZ1TT_Recl",
+            #"max_Lep_eta := max(abs(LepGood_eta[iT_Recl[0]]),abs(LepGood_eta[iT_Recl[1]]))",
+            "mindr_lep1_jet := mindr_lep1_jet_Recl",
+            "mindr_lep2_jet := mindr_lep2_jet_Recl",
+            "max_Lep_eta := max(abs(LepGood_eta[iT_Recl[0]]),abs(LepGood_eta[iT_Recl[1]]))",
+            "mZ := mZ_Extra",
+            "pTZ := pTZ_Extra",
+            "mtWLep := mTWLep_Extra",
+            "pTWLep := pTWLep_Extra",
+            "minDRWLepBJet := minDRWLepBJet_Extra",
+            "mWHad1 := mWHad1_Extra",
+            "pTWHad1 := pTWHad1_Extra",
+            "minDrWHadBJet1 := minDrWHadBJet1_Extra",
+            "mWHad2 := mWHad2_Extra",
+            "pTWHad2 := pTWHad2_Extra",
+            "minDrWHadBJet2 := minDrWHadBJet2_Extra",
+            "mTHad := mTHad_Extra",
+            "pTTHad := pTTHad_Extra",
+            "mTSLep := mTSLep_Extra",
+            "pTSLep := pTSLep_Extra",
+            ]
+        spectators += [
+            "iL0 := iT_Recl[0]",
+            "iL1 := iT_Recl[1]"
+            ]
+
+    dsets = []
+    dsets += [('TTZToLLNuNu_ext2', 'Signal', 1.)]
+    if '3l' in training and 'wz' in training:
+        dsets += [('WZTo3LNu', 'Background', 1.)]
+    if '3l' in training and 'tth' in training:
+        dsets += [('TTHnobb_pow', 'Background', 1.)]
+    if '3l' in training and 'ttx' in training:
+        dsets += [('tZq_ll_tiny', 'Background', 1.)]
+        
+
+
+    outname = fOutName+'_'+training+'.root'
+    train_single(allcuts, variables, dsets, outname, options)
+
 def main(args, options):
     global _treepath
     _treepath = options.treepath
     if 'MultiClassICHEP16' in options.training:
         train_multiclass(args[0]+'.root', options)
         return
-
+    #print "-->>",options.training,options.training.lower()
     if len(options.training):
-        train_2d(args[0], options.training.lower(), options)
+        #train_2d(args[0], options.training.lower(), options)
+        train_ttZ(args[0], options.training.lower(), options)
     else:
-        train_2d(args[0], '2lss_ttv',   options)
-        train_2d(args[0], '2lss_ttbar', options)
-        train_2d(args[0], '3l_ttv',     options)
-        train_2d(args[0], '3l_ttbar',   options)
+        #train_2d(args[0], '2lss_ttv',   options)
+        #train_2d(args[0], '2lss_ttbar', options)
+        #train_2d(args[0], '3l_ttv',     options)
+        #train_2d(args[0], '3l_ttbar',   options)
+        train_ttZ(args[0], '3l_ttvVsWZ', options)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,23 @@
+mZ:             mZ_Extra               : 60, 60, 120; XTitle="m_{Z} [GeV]"
+mZ1TT:		mZ1TT		       : 60, 60, 120; XTitle="Best Z candidate mass (tight l) [GeV]"
+pTZ:            pTZ_Extra              : 50, 0, 200;  XTitle="p_{T}(Z) [GeV]", Logy
+mTWLep:         mTWLep_Extra           : 50, 0, 200;  XTitle="m_{T\,Wl} [GeV]"
+pTWLep:         pTWLep_Extra           : 50, 0, 200;  XTitle="p_{T}(Wl) [GeV]", Logy
+minDRWLepBJet:  minDRWLepBJet_Extra    : 50, 0, 5  ;  XTitle="#DeltaR(Wl\,b-jet)"
+mWHad1:        mWHad1_Extra          : 50, 0, 400;  XTitle="m_{Wh1} [GeV]"
+pTWHad1:        pTWHad1_Extra          : 50, 0, 200;  XTitle="p_{T}(Wh1) [GeV]", Logy
+minDrWHad1BJet: minDrWHadBLeadJet_Extra   : 50, 0, 5  ;  XTitle="#DeltaR(Wh1\,b-jet)", Logy
+mWHad2:        mWHad2_Extra          : 50, 0, 400;  XTitle="m_{Wh2} [GeV]"
+pTWHad2:        pTWHad2_Extra          : 50, 0, 200;  XTitle="p_{T}(Wh2) [GeV]", Logy
+minDrWHad2BJet: minDrWHadBSubLeadJet_Extra   : 50, 0, 5  ;  XTitle="#DeltaR(Wh2\,b-jet)", Logy
+nLepTight: nLepTight_Recl : 6,-0.5,5.5; XTitle="number of tight leptons"
+nJets: nJetSel_Recl : 10,-0.5,9.5; XTitle="number of tight leptons"
+maxEta: max(abs(LepGood1_eta),abs(LepGood2_eta)): 50, 0, 5  ;  XTitle="max #eta"
+mindrLep1Jet: mindr_lep1_jet_Recl: 50, 0, 5  ;  XTitle="min dr l1"
+mindrLep2Jet: mindr_lep2_jet_Recl: 50, 0, 5  ;  XTitle="min dr l2"
+lBTag: Max$(JetSel_Recl_btagCSV): 50,0,1; XTitle="lead btag", Logy
+slBTag: MaxIf$(JetSel_Recl_btagCSV, JetSel_Recl_btagCSV!=Max$(JetSel_Recl_btagCSV) ): 50,0,1; XTitle="sublead btag", Logy
+mTHad  : mTHad_Extra    : 50, 0, 400;  XTitle="m_{THad} [GeV]"
+pTTHad : pTTHad_Extra   : 50, 0, 400;  XTitle="m_{T\,THad} [GeV]", Logy
+mTSLep : mTSLep_Extra   : 50, 0, 400;  XTitle="m_{TSLep} [GeV]"
+pTSLep :  pTSLep_Extra  : 50, 0, 400;  XTitle="p_{T\,SLep} [GeV]"
