@@ -1,0 +1,20 @@
+export SCRAM_ARCH=slc6_amd64_gcc530
+
+# setup de cmssw
+cmsrel CMSSW_8_0_28
+cd CMSSW_8_0_28/src
+cmsenv
+git cms-init
+
+
+# Clonar repositorio de cmgtools lite de matthieu
+git clone -o cmg-central https://github.com/mmarionncern/cmgtools-lite.git -b 80X_8020_M17 CMGTools
+
+# Compilar en paralelo con 8 cores
+scram b -j 8
+
+
+# Coger el repositorio de Sergio
+git remote add sergio git@github.com:sscruz/cmgtools-lite.git
+git fetch sergio
+git checkout Tutorial_TFGs
