@@ -1,0 +1,25 @@
+ttH    : TTHnobb_pow : 0.5071*0.418  ; FillColor=ROOT.kOrange+10
+TT     : TTJets_DiLepton+TTJets_DiLepton_ext : xsec ; FillColor=ROOT.kRed
+DY     : DYJetsToLL_M10to50 : xsec ; FillColor=ROOT.kBlue
+DY     : DYJetsToLL_M50 : xsec ; FillColor=ROOT.kBlue
+WZ 	: WZTo3LNu : xsec  ;  FillColor=ROOT.kViolet-4
+
+TTW     : TTWToLNu_ext1 : xsec  ;  FillColor=ROOT.kGreen-5
+TTZ     : TTZToLLNuNu : xsec   ;  FillColor=ROOT.kSpring+2
+TTZ     : TTLLJets_m1to10 : xsec  ;  FillColor=ROOT.kSpring+2
+TTZ	: TTJets_DiLepton : xsec  ; FillColor=ROOT.kSpring+2
+
+
+Rares      : ZZTo4L : xsec  ;  FillColor=ROOT.kAzure-9
+
+
+Rares: WWZ : xsec  ; FillColor=ROOT.kMagenta-7
+Rares: WZZ : xsec  ; FillColor=ROOT.kMagenta-7
+Rares: ZZZ : xsec  ; FillColor=ROOT.kMagenta-7
+Rares: TTTT : xsec  ; FillColor=ROOT.kMagenta-7
+
+
+Fakes : TTJets_SingleLeptonFromT + TTJets_SingleLeptonFromTbar : xsec ; FillColor=ROOT.kGray
+#Fakes : WJetsToLNu : xsec ; FillColor=ROOT.kGray
+
+

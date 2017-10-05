@@ -1,0 +1,10 @@
+tot_weight: 1 : 1,0.5,1.5; XTitle = "Selected events", Legend='TR', MoreY=2.0
+nJet25:	    	nJet25					: [1.5,2.5,3.5,4.5,5.5,6.5,7.5] ; XTitle='N(jet\, p_{T} > 25 GeV)', XNDdiv=505, xBinLabels="2\,3\,4\,5\,6\,#geq 7"
+nJet25_from4:  	nJet25					: [3.5,4.5,5.5,6.5,7.5] ; XTitle='N(jet\, p_{T} > 25 GeV)', XNDdiv=505, xBinLabels="4\,5\,6\,#geq 7"
+nBJetLoose25:	nBJetLoose25				: [-0.5,0.5,1.5,2.5,3.5,4.5,5.5] ; XTitle='N(jet\, p_{T} > 25 GeV\, CSVL)', XNDdiv=505
+nBJetMedium25:	nBJetMedium25				: [-0.5,0.5,1.5,2.5,3.5,4.5,5.5] ; XTitle='N(jet\, p_{T} > 25 GeV\, CSVM)', XNDdiv=505
+lep1_pt: 	 LepGood1_pt					 : 40,0,200; XTitle="Leading lepton p_{T} [GeV]"
+lep1_conePt: 	 LepGood1_conePt				 : 40,0,200; XTitle="Leading lepton cone p_{T} [GeV]"
+lep1_eta: 	 LepGood1_eta					 : 40,-2.5,2.5; XTitle="Leading lepton #eta"
+lep1_phi: 	 LepGood1_phi					 : 20,-3.14,3.14; XTitle="Leading lepton #phi"
+lep1_pdgId:	 0.5*LepGood1_pdgId/abs(LepGood1_pdgId)*(abs(LepGood1_pdgId)-10) : [-2,-1,0,1,2]; XTitle="Leading lepton PDG ID (#mu^{-}/e^{-}/e^{+}/#mu^{+})", XNDdiv=505

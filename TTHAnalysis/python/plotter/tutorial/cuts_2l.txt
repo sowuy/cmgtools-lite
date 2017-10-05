@@ -1,0 +1,35 @@
+alwaystrue: 1
+filters: $DATA{(Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_HBHENoiseIsoFilter && Flag_HBHENoiseFilter && Flag_eeBadScFilter && Flag_goodVertices && Flag_globalTightHalo2016Filter && Flag_badChargedHadronFilter)} $MC{1}
+triggers: $DATA{(Triggers_ee || Triggers_mm || Triggers_em)} $MC{(Triggers_ee || Triggers_mm || Triggers_em)}
+twolightlep: nLepSel>1 && abs(LepSel1_pdgId)<14 && abs(LepSel2_pdgId)<14
+pt2520: LepSel1_conePt>25 && LepSel2_conePt>20
+cutPOGT: LepSel1_iscutPOGT && LepSel2_iscutPOGT
+
+
+# some cuts that are off by default but can be turned on with -E
+
+ee: abs(LepSel1_pdgId)+abs(LepSel2_pdgId)==22; Disable=True
+em: abs(LepSel1_pdgId)+abs(LepSel2_pdgId)==24; Disable=True
+mm: abs(LepSel1_pdgId)+abs(LepSel2_pdgId)==26; Disable=True
+
+
+#cutPOGM: LepSel1_iscutPOGM && LepSel2_iscutPOGM; Disable=True
+
+
+
+# mind the third lepton!!
+
+#mvaPOGRA7: LepSel1_ismvaPOGRA7 && LepSel2_ismvaPOGRA7 && LepSel3_ismvaPOGRA7; Disable=True
+#mvaPOG80: LepSel1_ismvaPOG80 && LepSel2_ismvaPOG80 && LepSel3_ismvaPOG80; Disable=True
+#mvaPOG90: LepSel1_ismvaPOG90 && LepSel2_ismvaPOG90 && LepSel3_ismvaPOG90; Disable=True
+#MVAET: LepSel1_isMVAET && LepSel2_isMVAET && LepSel3_isMVAET; Disable=True
+#MVAVT: LepSel1_isMVAVT && LepSel2_isMVAVT && LepSel3_isMVAVT; Disable=True
+#MVAT : LepSel1_isMVAT  && LepSel2_isMVAT  && LepSel3_isMVAT ; Disable=True
+#MVAM : LepSel1_isMVAM  && LepSel2_isMVAM  && LepSel3_isMVAM ; Disable=True
+#MVAL : LepSel1_isMVAL  && LepSel2_isMVAL  && LepSel3_isMVAL ; Disable=True
+#MVAVL: LepSel1_isMVAVL && LepSel2_isMVAVL && LepSel3_isMVAVL; Disable=True
+#MVAVT: LepSel1_isTight && LepSel2_isTight && LepSel3_isTight; Disable=True
+#ptWZ: LepZ1_conePt>25 && LepZ2_conePt>10 && LepW_conePt>25; Disable=True
+
+
+
