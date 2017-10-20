@@ -1,10 +1,11 @@
 from CMGTools.TTHAnalysis.treeReAnalyzer import Collection, deltaR
 from CMGTools.TTHAnalysis.tools.collectionSkimmer import CollectionSkimmer
 import ROOT, os
+import array 
 
 class fastCombinedObjectRecleaner:
 
-    def __init__(self,label,inlabel,cleanTausWithLooseLeptons,cleanJetsWithFOTaus,doVetoZ,doVetoLMf,doVetoLMt,jetPts,btagL_thr,btagM_thr,jetCollection='Jet',isMC=True):
+    def __init__(self,label,inlabel,cleanTausWithLooseLeptons,cleanJetsWithFOTaus,doVetoZ,doVetoLMf,doVetoLMt,jetPts,btagL_thr,btagM_thr,jetCollection='Jet',isMC=True, cleanJetsWithAK4Jets=False):
 
         self.label = "" if (label in ["",None]) else ("_"+label)
         self.inlabel = inlabel
@@ -12,16 +13,17 @@ class fastCombinedObjectRecleaner:
         self.vars = ["pt","eta","phi","mass"]
         self.vars_leptons = ["pdgId"]
         self.vars_taus = ["idMVAdR03"]
-        self.vars_jets = ["btagCSV","qgl","corr","corr_JECUp","corr_JECDown"]
+        self.vars_jets = ["qgl", "btagCSV", "corr","corr_JECUp","corr_JECDown"] if jetCollection == 'Jet' else []
         self.vars_jets_int = ["hadronFlavour"] if isMC else []
         self.vars_jets_nooutput = []
         self.jc = jetCollection
 
         self.cleanTausWithLooseLeptons = cleanTausWithLooseLeptons
         self.cleanJetsWithFOTaus = cleanJetsWithFOTaus
+        self.cleanJetsWithAK4Jets   = cleanJetsWithAK4Jets
         self.jetPts = jetPts
 
-        self.systsJEC = {0:"", 1:"_jecUp", -1:"_jecDown"}
+        self.systsJEC = {0:"", 1:"_jecUp", -1:"_jecDown"} if jetCollection == 'Jet' else { 0 : "" }
 
         self.outmasses=['mZ1','minMllAFAS','minMllAFOS','minMllAFSS','minMllSFOS']
         self._outjetvars = [x%self.jc for x in ['ht%s%%dj','mht%s%%d','nB%sLoose%%d','nB%sMedium%%d','n%s%%d']]
@@ -40,7 +42,7 @@ class fastCombinedObjectRecleaner:
         if "/fastCombinedObjectRecleanerHelper_cxx.so" not in ROOT.gSystem.GetLibraries():
             print "Load C++ recleaner worker module"
             ROOT.gROOT.ProcessLine(".L %s/src/CMGTools/TTHAnalysis/python/tools/fastCombinedObjectRecleanerHelper.cxx+O" % os.environ['CMSSW_BASE'])
-        self._worker = ROOT.fastCombinedObjectRecleanerHelper(self._helper_taus.cppImpl(),self._helper_jets.cppImpl(),self.cleanJetsWithFOTaus,btagL_thr,btagM_thr)
+        self._worker = ROOT.fastCombinedObjectRecleanerHelper(self._helper_taus.cppImpl(),self._helper_jets.cppImpl(),self.cleanJetsWithFOTaus,btagL_thr,btagM_thr, self.cleanJetsWithAK4Jets)
         for x in self.jetPts: self._worker.addJetPt(x)
 
         if "/fastCombinedObjectRecleanerMassVetoCalculator_cxx.so" not in ROOT.gSystem.GetLibraries():
@@ -59,7 +61,7 @@ class fastCombinedObjectRecleaner:
         for x in self._helpers: x.initOutputTree(pytree);
 
     def initReaders(self,tree):
-        for coll in ["LepGood","TauGood",self.jc]:
+        for coll in ["LepGood","TauGood",self.jc,'Jet']:
             setattr(self,'n'+coll,tree.valueReader('n'+coll))
             _vars = self.vars[:]
             if coll=='LepGood': _vars.extend(self.vars_leptons)
@@ -72,7 +74,11 @@ class fastCombinedObjectRecleaner:
         self._worker.setLeptons(self.nLepGood, self.LepGood_pt, self.LepGood_eta, self.LepGood_phi)
         self._worker.setTaus(self.nTauGood, self.TauGood_pt, self.TauGood_eta, self.TauGood_phi)
         self._worker.setJets(getattr(self,'n%s'%self.jc),getattr(self,'%s_pt'%self.jc),getattr(self,'%s_eta'%self.jc),getattr(self,'%s_phi'%self.jc),
-                             getattr(self,'%s_btagCSV'%self.jc),getattr(self,'%s_corr'%self.jc),getattr(self,'%s_corr_JECUp'%self.jc),getattr(self,'%s_corr_JECDown'%self.jc))
+                             getattr(self,'%s_btagCSV'%self.jc     ) if hasattr(self,'%s_btagCSV'%self.jc)      else getattr(self,'%s_pt'%self.jc), # pt as a dummy value so it doesnt crash  
+                             getattr(self,'%s_corr'%self.jc        ) if hasattr(self,'%s_corr'%self.jc)         else getattr(self,'%s_pt'%self.jc), # pt as a dummy value so it doesnt crash 
+                             getattr(self,'%s_corr_JECUp'%self.jc  ) if hasattr(self,'%s_corr_JECUp'%self.jc)   else getattr(self,'%s_pt'%self.jc), # pt as a dummy value so it doesnt crash  
+                             getattr(self,'%s_corr_JECDown'%self.jc) if hasattr(self,'%s_corr_JECDown'%self.jc) else getattr(self,'%s_pt'%self.jc)) # pt as a dummy value so it doesnt crash 
+        self._worker.setAK4( self.nJet, self.Jet_pt, self.Jet_eta, self.Jet_phi)
         self._workerMV.setLeptons(self.nLepGood, self.LepGood_pt, self.LepGood_eta, self.LepGood_phi, self.LepGood_mass, self.LepGood_pdgId)
 
     def listBranches(self):

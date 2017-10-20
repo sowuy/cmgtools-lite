@@ -57,6 +57,7 @@ parser = OptionParser(usage="%prog [options] <TREE_DIR> <OUT>")
 parser.add_option("-m", "--modules", dest="modules",  type="string", default=[], action="append", help="Run these modules");
 parser.add_option("-d", "--dataset", dest="datasets",  type="string", default=[], action="append", help="Process only this dataset (or dataset if specified multiple times)");
 parser.add_option("-D", "--dm", "--dataset-match", dest="datasetMatches",  type="string", default=[], action="append", help="Process only this dataset (or dataset if specified multiple times): REGEXP");
+parser.add_option("--dataset-exclude", dest="datasetExclude", type="string",  default=[], action="append", help="Dont run this dataset(s): REGEXP");
 parser.add_option("-c", "--chunk",   dest="chunks",    type="int",    default=[], action="append", help="Process only these chunks (works only if a single dataset is selected with -d)");
 parser.add_option("--subChunk", dest="subChunk",    type="int",    default=None, nargs=None, help="Process sub-chunk of this chunk");
 parser.add_option("--fineSplit", dest="fineSplit",    type="int",    default=None, nargs=1, help="Split each chunk in N subchunks");
@@ -137,6 +138,13 @@ for D in glob(args[0]+"/*"):
             for dm in  options.datasetMatches:
                 if re.match(dm,short): found = True
             if not found: continue
+        found = True
+        for dm in options.datasetExclude:
+            if dm in short: 
+                found = False
+                break
+        if not found: continue
+
         data =  any(x in short for x in "DoubleMu DoubleEl DoubleEG MuEG MuonEG SingleMu SingleEl".split()) # FIXME
         f = ROOT.TFile.Open(fname)
         t = f.Get(treename)
@@ -198,10 +206,11 @@ if options.queue:
         super  = "bsub -q {queue}".format(queue = options.queue)
 
     basecmd = "{dir}/{runner} {dir} {cmssw} python {self} -N {chunkSize} -T {tdir} -t {tree} {data} {output}".format(
-                dir = os.getcwd(), runner=runner, cmssw = os.environ['CMSSW_BASE'],
+                dir = os.getcwd().replace('/mnt_pool/ciencias_users','/nfs/fanae/'),
+                runner=runner, cmssw = os.environ['CMSSW_BASE'].replace('/mnt_pool/ciencias_users','/nfs/fanae/'),
                 self=sys.argv[0], chunkSize=options.chunkSize, tdir=options.treeDir,
                 tree=options.tree, data=args[0], output=theoutput)
-
+    print basecmd
     writelog = ""
     logdir   = ""
     if options.logdir: logdir = options.logdir.rstrip("/")
@@ -307,6 +316,9 @@ def _runIt(myargs):
         os.system("rm %s"%fetchedfile)
     if options.bookkeeping:
         if not os.path.exists(fout[:fout.rfind("/")] + "/cmd"): os.system("mkdir -p " + fout[:fout.rfind("/")] + "/cmd")
+        print '############################'
+        print '############################'
+        print fout[:fout.rfind("/")] + "/cmd/" + fout[fout.rfind("/")+1:].rstrip(".root") + "_command.txt"
         fcmd = open(fout[:fout.rfind("/")] + "/cmd/" + fout[fout.rfind("/")+1:].rstrip(".root") + "_command.txt", "w")
         fcmd.write("%s\n\n" % " ".join(sys.argv)) 
         fcmd.write("%s\n%s\n" % (args,options)) 

@@ -87,6 +87,20 @@ MODULES.append( ('leptonJetFastReCleanerTTH_step2_data',lambda : fastCombinedObj
                                                                                              btagM_thr=0.8484,
                                                                                              isMC = False) ))
 
+MODULES.append( ('leptonJetFastReCleanerTTH_step2_fatjets',lambda : fastCombinedObjectRecleaner(label="Recl",
+                                                                                                inlabel="_InternalRecl",
+                                                                                                cleanTausWithLooseLeptons=True,
+                                                                                                cleanJetsWithFOTaus=True,
+                                                                                                doVetoZ=False,
+                                                                                                doVetoLMf=False,
+                                                                                                doVetoLMt=False,
+                                                                                                jetPts=[125],
+                                                                                                btagL_thr=0.5426,
+                                                                                                btagM_thr=0.8484,
+                                                                                                jetCollection = 'FatJet',
+                                                                                                cleanJetsWithAK4Jets = True,
+                                                                                                isMC = False) ))
+
 from CMGTools.TTHAnalysis.tools.eventVars_2lss import EventVars2LSS
 MODULES.append( ('eventVars', lambda : EventVars2LSS('','Recl')) )
 
@@ -115,16 +129,16 @@ MODULES.append( ('Trigger_2lss', lambda : EvtTagger("Trigger_2l",[
                     ev.HLT_DoubleMu or \
                     ev.HLT_BIT_HLT_IsoMu24_v or \
                     ev.HLT_BIT_HLT_IsoTkMu24_v or \
-                    ev.HLT_BIT_HLT_IsoMu22_eta2p1_v or \
-                    ev.HLT_BIT_HLT_IsoTkMu22_eta2p1_v or \
+                    #ev.HLT_BIT_HLT_IsoMu22_eta2p1_v or \
+                    #ev.HLT_BIT_HLT_IsoTkMu22_eta2p1_v or \
                     ev.HLT_BIT_HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v or \
                     ev.HLT_BIT_HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ_v or \
                     ev.HLT_BIT_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v or \
                     ev.HLT_BIT_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v or \
                     ev.HLT_BIT_HLT_IsoMu24_v or \
                     ev.HLT_BIT_HLT_IsoTkMu24_v or \
-                    ev.HLT_BIT_HLT_IsoMu22_eta2p1_v or \
-                    ev.HLT_BIT_HLT_IsoTkMu22_eta2p1_v or \
+                    #ev.HLT_BIT_HLT_IsoMu22_eta2p1_v or \
+                    #ev.HLT_BIT_HLT_IsoTkMu22_eta2p1_v or \
                     ev.HLT_BIT_HLT_Ele27_WPTight_Gsf_v or \
                     ev.HLT_BIT_HLT_Ele25_eta2p1_WPTight_Gsf_v \
                     ] )))
@@ -143,3 +157,6 @@ MODULES.append( ('TauTightFlag', lambda : ObjTagger("isTauTight","TauSel_Recl",
 
 from CMGTools.TTHAnalysis.tools.bTagEventWeightsCSVFullShape import BTagEventWeightFriend
 MODULES.append( ('eventBTagWeight', lambda : BTagEventWeightFriend(csvfile=os.environ["CMSSW_BASE"]+"/src/CMGTools/TTHAnalysis/data/btag/CSVv2_Moriond17_B_H.csv")))
+
+from CMGTools.TTHAnalysis.tools.fatJets import FatJets
+MODULES.append( ('fatJets', lambda : FatJets() ))
