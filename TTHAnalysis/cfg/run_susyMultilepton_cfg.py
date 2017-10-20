@@ -29,7 +29,7 @@ removeJecUncertainty = getHeppyOption("removeJecUncertainty",False)
 doMETpreprocessor = getHeppyOption("doMETpreprocessor",False)
 skipT1METCorr = getHeppyOption("skipT1METCorr",False)
 #doAK4PFCHSchargedJets = getHeppyOption("doAK4PFCHSchargedJets",False)
-forcedSplitFactor = getHeppyOption("splitFactor",-1)
+forcedSplitFactor = int(getHeppyOption("splitFactor",-1))
 forcedFineSplitFactor = getHeppyOption("fineSplitFactor",-1)
 isTest = getHeppyOption("test",None) != None and not re.match("^\d+$",getHeppyOption("test"))
 selectedEvents=getHeppyOption("selectEvents","")
@@ -44,13 +44,14 @@ if analysis not in ['ttH','susy','SOS']: raise RuntimeError, 'Analysis type unkn
 print 'Using analysis type: %s'%analysis
 
 # Lepton Skimming
-ttHLepSkim.minLeptons = 2
+ttHLepSkim.minLeptons = 0
 ttHLepSkim.maxLeptons = 999
 
 if analysis=='susy':
     susyCoreSequence.insert(susyCoreSequence.index(ttHLepSkim)+1,globalSkim)
     susyCoreSequence.remove(ttHLepSkim)
-    globalSkim.selections=["2lep5","1lep5_2tau18"]
+    susyCoreSequence.remove(globalSkim)
+#    globalSkim.selections=["2lep5","1lep5_2tau18"]
 #   [ lambda ev: 2<=sum([(lep.miniRelIso<0.4) for lep in ev.selectedLeptons]) ] 
 #   ["2lep5[os:!DS_TTW_RA5_sync]_1lep50"]#, "1lep5_1tau18", "2tau18","2lep5_1met50"]
 
@@ -485,19 +486,19 @@ if runSMS:
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISpring16MiniAODv2 import *
 from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_180117 import *
 #from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2_070217 import *
-from CMGTools.RootTools.samples.samples_13TeV_signals import *
-from CMGTools.RootTools.samples.samples_13TeV_76X_susySignalsPriv import *
-from CMGTools.RootTools.samples.samples_13TeV_DATA2016 import *
+#from CMGTools.RootTools.samples.samples_13TeV_signals import *
+#from CMGTools.RootTools.samples.samples_13TeV_76X_susySignalsPriv import *
+#from CMGTools.RootTools.samples.samples_13TeV_DATA2016 import *
 from CMGTools.HToZZ4L.tools.configTools import printSummary, configureSplittingFromTime, cropToLumi, prescaleComponents, insertEventSelector
 
-selectedComponents = [DYJetsToLL_M50] #TTLep_pow_ext
+selectedComponents = TTV #[WJetsToQQ_HT180] # [DYJetsToLL_M50, TTHnobb_pow, WJetsToLNu_LO, DYJetsToQQ_HT180] 
 
 if analysis=='susy':
-    samples = [ DYJetsToLL_M50, DYJetsToLL_M10to50, DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO, GGHZZ4L, 
-                TGJets, TTGJets, TTJets, TTJets_DiLepton, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromTbar,
-                TTTT, TToLeptons_sch_amcatnlo, 
-                VHToNonbb, WJetsToLNu, WJetsToLNu_LO, 
-                WWTo2L2Nu, WWG, WWW, WWZ, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
+    #samples = [ DYJetsToLL_M50, DYJetsToLL_M10to50, DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO, GGHZZ4L, 
+     #           TGJets, TTGJets, TTJets, TTJets_DiLepton, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromTbar,
+      #          TTTT, TToLeptons_sch_amcatnlo, 
+       #         VHToNonbb, WJetsToLNu, WJetsToLNu_LO, 
+        #        WWTo2L2Nu, WWG, WWW, WWZ, WZTo3LNu, WZTo3LNu_amcatnlo, WZZ, WpWpJJ, ZGTo2LG, ZZTo4L, ZZZ, WZG, WGToLNuG, WW2L2NuDouble, tZq_ll]
     #samples += [,  TBarToLeptons_tch_powheg, TBar_tWch, TT_pow_ext4, TToLeptons_tch_amcatnlo, TToLeptons_tch_powheg, T_tWch]
     
     #samples_LHE = [ TTZToLLNuNu_ext2] #TTLLJets_m1to10, TTWToLNu_ext1, TTWToLNu_ext2  , TTZToLLNuNu] #, TTW_LO, TTZ_LO
@@ -622,6 +623,15 @@ elif analysis=="ttH":
 #    cropToLumi(TTHnobb_mWCutfix,2000)
 #    configureSplittingFromTime(samples_1l,50,3)
 #    configureSplittingFromTime(samples_2l,100,3)
+
+DYJetsToQQ_HT180.splitFactor = 400
+#DYJetsToQQ_HT180.fineSplitFactor = 1
+
+selectedComponents = TTV # [WJetsToQQ_HT180] # [DYJetsToLL_M50, TTHnobb_pow, WJetsToLNu_LO, DYJetsToQQ_HT180, TTJets] 
+
+for comp in selectedComponents:
+    comp.splitFactor = 400
+    #comp.fineSplitFactor=1
 
 if scaleProdToLumi>0: # select only a subset of a sample, corresponding to a given luminosity (assuming ~30k events per MiniAOD file, which is ok for central production)
     target_lumi = scaleProdToLumi # in inverse picobarns

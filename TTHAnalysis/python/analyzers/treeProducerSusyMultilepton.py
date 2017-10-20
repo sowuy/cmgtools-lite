@@ -159,7 +159,7 @@ susyMultilepton_collections.update({
             ##------------------------------------------------
             "cleanJets"       : NTupleCollection("Jet",     jetTypeSusyExtraLight, 15, help="Cental jets after full selection and cleaning, sorted by pt"),
             "cleanJetsFwd"    : NTupleCollection("JetFwd",  jetTypeSusy,  6, help="Forward jets after full selection and cleaning, sorted by pt"),            
-            #"fatJets"         : NTupleCollection("FatJet",  fatJetType,  15, help="AK8 jets, sorted by pt"),
+            "fatJets"         : NTupleCollection("FatJet",  fatJetType,  15, help="AK8 jets, sorted by pt"),
             ##------------------------------------------------
             "discardedJets"    : NTupleCollection("DiscJet", jetTypeSusyExtraLight, 15, help="Jets discarted in the jet-lepton cleaning"),
             "discardedLeptons" : NTupleCollection("DiscLep", leptonTypeSusy, 8, help="Leptons discarded in the jet-lepton cleaning"),
