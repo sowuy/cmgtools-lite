@@ -44,7 +44,7 @@ def submit(base, name, queue):
 
 parser = OptionParser(usage="%prog treedir [options]")
 parser.add_option("--model", dest="model", type="string"      , default="forMoriond16"               , help="The MVA name"        )
-parser.add_option("--sig1" , dest="sig1" , type="string"      , default="TTZ_LO"                     , help="Signal process 1"    )
+parser.add_option("--sig1" , dest="sig1" , type="string"      , default="TTHnobb_pow"                     , help="Signal process 1"    )
 parser.add_option("--sig2" , dest="sig2" , type="string"      , default=None                         , help="Signal process 2"    )
 parser.add_option("--bkg1" , dest="bkg1" , type="string"      , default="TTJets_SingleLeptonFromT"   , help="Background process 1")
 parser.add_option("--bkg2" , dest="bkg2" , type="string"      , default="TTJets_SingleLeptonFromTbar", help="Background process 2")
@@ -55,7 +55,7 @@ treedir = args[0].rstrip("/")
 
 base = "root.exe -b -l -q 'trainLeptonID.cxx(\"{MODEL}\", \"{SIG1}\", \"{SIG2}\", \"{BKG1}\", \"{BKG2}\", {MULTI}, \"\", \"\", \"\", \"\", {NS1}, {NS2}, {NB1}, {NB2})'"
 
-for flavor in ["el", "mu"]:
+for flavor in ["el_eleGP", "mu"]:
 	name    = options.model+"_"+flavor
 	submit(base.format(MODEL=name, SIG1 =getTreePath(treedir, options.sig1), \
 	                               SIG2 =getTreePath(treedir, options.sig2), \
