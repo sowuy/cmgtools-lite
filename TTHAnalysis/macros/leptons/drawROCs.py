@@ -38,7 +38,7 @@ for flavour in ['el_eleGP', 'mu']:
     for classifier, cn in zip(classifiers, classifierNames):
         name='%s_%s' % (classifier, flavour)
         
-        fname='%s.root' % name
+        fname='%s/%s.root' % (inputDir, name)
         print('Processing file %s' % fname)
         
         f = TFile.Open(fname)
@@ -69,7 +69,7 @@ for flavour in ['el_eleGP', 'mu']:
         bdtroc = bdtroc + bdty[nbins-1]*(1-bdtx[nbins-2])
 
         gbdtroc  = TGraph(nbins-1, bdtx, bdty)
-        thelist.append([gbdtroc, bdtroc])
+        thelist.append([gbdtroc, bdtroc, classifier])
     
     c = TCanvas("c", "c", 1000, 1000)
     c.cd() 
@@ -79,6 +79,7 @@ for flavour in ['el_eleGP', 'mu']:
     for idx, val in enumerate(thelist):
         graph=val[0]
         roc=val[1]
+        clas=val[2]
         print(roc)
         graph.SetTitle("ROC curves")
         graph.GetXaxis().SetTitle("Signal efficiency")
@@ -87,7 +88,7 @@ for flavour in ['el_eleGP', 'mu']:
         graph.SetLineColor(idx+1)
         graph.SetLineWidth(2)
         graph.SetMarkerColor(idx+1)
-        leg.AddEntry(graph,'%s: %f' % (classifier, abs(roc)),"l")
+        leg.AddEntry(graph,'%s: %f' % (clas, abs(roc)),"l")
 
     leg.Draw()
     for ext in extensions:
