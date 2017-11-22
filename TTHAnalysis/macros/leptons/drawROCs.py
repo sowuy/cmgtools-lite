@@ -2,8 +2,12 @@ import os
 import optparse
 import itertools
 import numpy as np
+import copy
 from ROOT import *
 
+import gc
+gc.disable()
+gc.set_threshold(0)
 # Command line options
 usage = 'usage: %prog --input]'
 parser = optparse.OptionParser(usage)
@@ -14,6 +18,7 @@ parser.add_option('-n', '--classifierName', dest='classifierNames', help='Intern
 parser.add_option('-b', '--nbins',      dest='nbins', help='Number of bins for the ROC', default=100, type='int')
 parser.add_option('-s', '--smooth',     dest='smooth', help='Draw a smoothed curve instead of a binned histogram', action='store_true')
 parser.add_option('-e', '--extensions', dest='extensions', help='Write the plots in the specified format (comma-separated list)', default='png,pdf,root', type='string')
+parser.add_option('--simple', dest='simple', help='Take the ROCs directly from the ROOT histograms', action='store_true')
 (opt, args) = parser.parse_args()                                                                                                                        
 
 inputDir=opt.inputDir
@@ -70,7 +75,7 @@ for flavour in ['el_eleGP', 'mu']:
 
         gbdtroc  = TGraph(nbins-1, bdtx, bdty)
         thelist.append([gbdtroc, bdtroc, classifier])
-    
+
     c = TCanvas("c", "c", 1000, 1000)
     c.cd() 
     leg = TLegend(0.3,0.3,0.58,0.58)
@@ -80,7 +85,6 @@ for flavour in ['el_eleGP', 'mu']:
         graph=val[0]
         roc=val[1]
         clas=val[2]
-        print(roc)
         graph.SetTitle("ROC curves")
         graph.GetXaxis().SetTitle("Signal efficiency")
         graph.GetYaxis().SetTitle("1-(bkg efficiency)")
@@ -88,6 +92,7 @@ for flavour in ['el_eleGP', 'mu']:
         graph.SetLineColor(idx+1)
         graph.SetLineWidth(2)
         graph.SetMarkerColor(idx+1)
+        #roc=graph.GetHistogram().Integral()
         leg.AddEntry(graph,'%s: %f' % (clas, abs(roc)),"l")
 
     leg.Draw()
