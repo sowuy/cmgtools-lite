@@ -4,6 +4,7 @@ import itertools
 import numpy as np
 import copy
 from ROOT import *
+from scipy import integrate
 
 import gc
 gc.disable()
@@ -73,8 +74,10 @@ for flavour in ['el_eleGP', 'mu']:
             bdtroc = bdtroc + bdty[jEntry]*(bdtx[jEntry+1]-bdtx[jEntry-1])/2
         bdtroc = bdtroc + bdty[nbins-1]*(1-bdtx[nbins-2])
 
-        gbdtroc  = TGraph(nbins-1, bdtx, bdty)
-        thelist.append([gbdtroc, bdtroc, classifier])
+        gbdtroc=TGraph(nbins-1, bdtx, bdty)
+        fbdtroc = lambda x : gbdtroc.Eval(x)
+        bdtroc = integrate.quad(fbdtroc, 0, 1)[0]
+        thelist.append([copy.deepcopy(gbdtroc), bdtroc, classifier])
 
     c = TCanvas("c", "c", 1000, 1000)
     c.cd() 
@@ -92,8 +95,7 @@ for flavour in ['el_eleGP', 'mu']:
         graph.SetLineColor(idx+1)
         graph.SetLineWidth(2)
         graph.SetMarkerColor(idx+1)
-        #roc=graph.GetHistogram().Integral()
-        leg.AddEntry(graph,'%s: %f' % (clas, abs(roc)),"l")
+        leg.AddEntry(graph,'%s: %f' % (clas, roc),"l")
 
     leg.Draw()
     for ext in extensions:
