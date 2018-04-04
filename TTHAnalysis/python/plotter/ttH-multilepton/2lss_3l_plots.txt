@@ -95,7 +95,7 @@ minMllAFAS:	minMllAFAS				: 20,0,200; XTitle="min M_{ll} (GeV)", Legend='TR'
 minMllAFOS:     minMllAFOS                              : 20,0,200; XTitle="min M_{ll} (GeV)", Legend='TR'
 minMllSFOS:     minMllSFOS                              : 20,0,200; XTitle="min M_{ll} (GeV)", Legend='TR'
 mZ1:		mZ1					: 80,50,130; XTitle="Best Z candidate mass (GeV)"
-nVert:		nVert					: 240,0.5,60.5; XTitle="N_{vtx}"
+nVert:		nVert					: 60,0.5,60.5; XTitle="N_{vtx}"
 
 
 #kinMVA_opt_2lss_2Dplot : kinMVA_2lss_ttV\:kinMVA_2lss_ttbar : 40,-1,1,40,-1,1; XTitle="BDT (ttH\,tt)", YTitle="BDT (ttH\,ttV)"

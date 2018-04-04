@@ -52,8 +52,8 @@ def file2map(x):
 #YRpath = os.environ['CMSSW_RELEASE_BASE']+"/src/HiggsAnalysis/CombinedLimit/data/lhc-hxswg/sm/";
 YRpath = '/afs/cern.ch/user/p/peruzzi/work/cmgtools/combine/CMSSW_7_4_14/src/HiggsAnalysis/CombinedLimit/data/lhc-hxswg/sm/'
 #XStth = file2map(YRpath+"xs/8TeV/8TeV-ttH.txt")
-BRhvv = file2map(YRpath+"br/BR2bosons.txt")
-BRhff = file2map(YRpath+"br/BR2fermions.txt")
+#BRhvv = file2map(YRpath+"br/BR2bosons.txt")
+#BRhff = file2map(YRpath+"br/BR2fermions.txt")
 def mkspline(table,column,sf=1.0):
     pairs = [ (x,c[column]/sf) for (x,c) in table.iteritems() ]
     pairs.sort()
