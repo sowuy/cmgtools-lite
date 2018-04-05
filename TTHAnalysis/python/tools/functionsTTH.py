@@ -74,6 +74,7 @@ MODULES.append( ('leptonJetFastReCleanerTTH_step2_mc',lambda : fastCombinedObjec
                                                                                            jetPts=[25,40],
                                                                                            btagL_thr=0.1522,
                                                                                            btagM_thr=0.4941,
+                                                                                           btagT_thr=0.8001,
                                                                                            isMC = True) ))
 MODULES.append( ('leptonJetFastReCleanerTTH_step2_data',lambda : fastCombinedObjectRecleaner(label="Recl",
                                                                                              inlabel="_InternalRecl",
@@ -85,6 +86,7 @@ MODULES.append( ('leptonJetFastReCleanerTTH_step2_data',lambda : fastCombinedObj
                                                                                              jetPts=[25,40],
                                                                                              btagL_thr=0.1522,
                                                                                              btagM_thr=0.4941,
+                                                                                             btagT_thr=0.8001,
                                                                                              isMC = False) ))
 
 from CMGTools.TTHAnalysis.tools.eventVars_2lss import EventVars2LSS

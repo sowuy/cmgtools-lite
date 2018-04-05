@@ -14,6 +14,7 @@ struct JetSumCalculatorOutput {
   float mhtJet;
   int nBJetLoose;
   int nBJetMedium; 
+  int nBJetTight; 
   int nJet;
 };
 
@@ -23,7 +24,7 @@ public:
   typedef TTreeReaderArray<float> rfloats;
   typedef TTreeReaderArray<int> rints;
   
-  fastCombinedObjectRecleanerHelper(CollectionSkimmer &clean_taus, CollectionSkimmer &clean_jets, bool cleanJetsWithFOTaus, float bTagL, float bTagM) : clean_taus_(clean_taus), clean_jets_(clean_jets), deltaR2cut(0.16), cleanJetsWithFOTaus_(cleanJetsWithFOTaus), bTagL_(bTagL), bTagM_(bTagM) {
+  fastCombinedObjectRecleanerHelper(CollectionSkimmer &clean_taus, CollectionSkimmer &clean_jets, bool cleanJetsWithFOTaus, float bTagL, float bTagM, float bTagT) : clean_taus_(clean_taus), clean_jets_(clean_jets), deltaR2cut(0.16), cleanJetsWithFOTaus_(cleanJetsWithFOTaus), bTagL_(bTagL), bTagM_(bTagM), bTagT_(bTagT) {
     _ct.reset(new std::vector<int>);
     _cj.reset(new std::vector<int>);
 }
@@ -70,6 +71,7 @@ public:
       sums.htJetj = 0;
       sums.nBJetLoose = 0;
       sums.nBJetMedium = 0;
+      sums.nBJetTight  = 0;
       sums.nJet = 0;
       
       for (auto j : *_cj){
@@ -84,6 +86,7 @@ public:
 	mht = mht - jp4;
 	if (csv>bTagL_) sums.nBJetLoose += 1;
 	if (csv>bTagM_) sums.nBJetMedium += 1;
+	if (csv>bTagT_) sums.nBJetTight  += 1;
 	sums.nJet += 1;
       }
 
@@ -185,5 +188,5 @@ private:
   std::unique_ptr<std::vector<int> > _ct;
   std::unique_ptr<std::vector<int> > _cj;
   bool cleanJetsWithFOTaus_;
-  float bTagL_,bTagM_;
+  float bTagL_,bTagM_,bTagT_;
 };

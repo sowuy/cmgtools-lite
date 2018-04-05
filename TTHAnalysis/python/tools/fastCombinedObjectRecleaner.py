@@ -4,7 +4,7 @@ import ROOT, os
 
 class fastCombinedObjectRecleaner:
 
-    def __init__(self,label,inlabel,cleanTausWithLooseLeptons,cleanJetsWithFOTaus,doVetoZ,doVetoLMf,doVetoLMt,jetPts,btagL_thr,btagM_thr,jetCollection='Jet',isMC=True):
+    def __init__(self,label,inlabel,cleanTausWithLooseLeptons,cleanJetsWithFOTaus,doVetoZ,doVetoLMf,doVetoLMt,jetPts,btagL_thr,btagM_thr,jetCollection='Jet',isMC=True, btagT_thr=100):
 
         self.label = "" if (label in ["",None]) else ("_"+label)
         self.inlabel = inlabel
@@ -24,7 +24,7 @@ class fastCombinedObjectRecleaner:
         self.systsJEC = {0:"", 1:"_jecUp", -1:"_jecDown"}
 
         self.outmasses=['mZ1','minMllAFAS','minMllAFOS','minMllAFSS','minMllSFOS']
-        self._outjetvars = [x%self.jc for x in ['ht%s%%dj','mht%s%%d','nB%sLoose%%d','nB%sMedium%%d','n%s%%d']]
+        self._outjetvars = [x%self.jc for x in ['ht%s%%dj','mht%s%%d','nB%sLoose%%d','nB%sMedium%%d','nB%sTight%%d','n%s%%d']]
         self.outjetvars=[]
         for jetPt in self.jetPts: self.outjetvars.extend([(x%jetPt+y,'I' if ('nB%s'%self.jc in x or 'n%s'%self.jc in x) else 'F') for x in self._outjetvars for y in self.systsJEC.values()])
         self.branches = [var+self.label for var in self.outmasses]
@@ -40,7 +40,7 @@ class fastCombinedObjectRecleaner:
         if "/fastCombinedObjectRecleanerHelper_cxx.so" not in ROOT.gSystem.GetLibraries():
             print "Load C++ recleaner worker module"
             ROOT.gROOT.ProcessLine(".L %s/src/CMGTools/TTHAnalysis/python/tools/fastCombinedObjectRecleanerHelper.cxx+O" % os.environ['CMSSW_BASE'])
-        self._worker = ROOT.fastCombinedObjectRecleanerHelper(self._helper_taus.cppImpl(),self._helper_jets.cppImpl(),self.cleanJetsWithFOTaus,btagL_thr,btagM_thr)
+        self._worker = ROOT.fastCombinedObjectRecleanerHelper(self._helper_taus.cppImpl(),self._helper_jets.cppImpl(),self.cleanJetsWithFOTaus,btagL_thr,btagM_thr,btagT_thr)
         for x in self.jetPts: self._worker.addJetPt(x)
 
         if "/fastCombinedObjectRecleanerMassVetoCalculator_cxx.so" not in ROOT.gSystem.GetLibraries():
