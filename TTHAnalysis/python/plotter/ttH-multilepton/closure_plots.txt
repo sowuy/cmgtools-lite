@@ -1,0 +1,12 @@
+# vim: syntax=sh
+# * ; LegendCutoff=1e-5
+
+Electron_pdgId : Electron_pdgId : 100,-20,20; XTitle = "Electrons pdgId", Legend='TR', MoreY=2.0
+Muon_pdgId : Muon_pdgId : 100,-20,20; XTitle = "Electrons pdgId", Legend='TR', MoreY=2.0
+tot_weight : 1 : 1,0.5,1.5; XTitle = "Selected events", Legend='TR', MoreY=2.0
+Electron_pt       : Electron_pt : [10,15,20,25,30,37.5,45,60,80,100]; XTitle= "Electron p_{T} [GeV]", Legend='TR', MoreY=2.0
+Muon_pt           : Muon_pt : [10,15,20,25,30,37.5,45,60,80,100]; XTitle= "Muon p_{T} [GeV]", Legend='TR', MoreY=2.0
+Electron_isTight   : Electron_isLepTight : 2,-0.5,1.5; XTitle= "Electron Tightness", Legend='TR', MoreY=2.0
+Muon_isTight       : Muon_isLepTight : 2,-0.5,1.5; XTitle= "Muon Tightness", Legend='TR', MoreY=2.0
+lep_pdgID    : LepGood_pdgId[iLepFO_Recl] : 60,-30.,30; XTitle= "Lepton p_{T} [GeV]", Legend='TR', MoreY=2.0
+

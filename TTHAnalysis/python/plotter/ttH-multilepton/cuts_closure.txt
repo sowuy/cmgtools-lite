@@ -1,0 +1,16 @@
+alwaystrue: 1
+trigger: Trigger_2lss
+cleanup: minMllAFAS > 12
+dilep: nLepFO>=2
+exclusive: nLepFO<=2
+opposite-sign: LepGood1_charge*LepGood2_charge < 0
+em: abs(LepGood1_pdgId) != abs(LepGood2_pdgId)
+leq3j: nJet25<4
+
+MuTag_pt2510: Muon_conePt>25 && Electron_conePt>10; Disable=True
+ElTag_pt2510: Electron_conePt>25 && Muon_conePt>10; Disable=True
+
+MuTight: Muon_isLepTight; Disable=True
+ElTight: Electron_isLepTight; Disable=True
+
+prompt: Muon_isMatchRightCharge && Electron_isMatchRightCharge; Disable=True
