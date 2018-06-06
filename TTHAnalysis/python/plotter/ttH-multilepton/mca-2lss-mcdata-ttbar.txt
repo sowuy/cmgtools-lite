@@ -1,3 +1,8 @@
-incl_tt : + ; IncludeMca="ttH-multilepton/mca-includes/mca-tt-dy-w-st.txt"
+incl_tt_prompt : + ; IncludeMca="ttH-multilepton/mca-includes/mca-tt-dy-w-st-prompt.txt", AddWeight='LepGood1_isMatchRightCharge && LepGood2_isMatchRightCharge'
+include_rares_prompt: + ; IncludeMca="ttH-multilepton/mca-includes/mca-rares-prompt.txt", AddWeight='LepGood1_isMatchRightCharge && LepGood2_isMatchRightCharge'
+incl_tt_fake : + ; IncludeMca="ttH-multilepton/mca-includes/mca-tt-dy-w-st-fake.txt", AddWeight='(!LepGood1_isMatchRightCharge) || (!LepGood2_isMatchRightCharge)', FillStyle=3005
+include_rares_fake: + ; IncludeMca="ttH-multilepton/mca-includes/mca-rares-fake.txt", AddWeight='(!LepGood1_isMatchRightCharge) || (!LepGood2_isMatchRightCharge)', FillStyle=3005
 
 incl_data : + ; IncludeMca="ttH-multilepton/mca-includes/mca-data.txt"
+
+

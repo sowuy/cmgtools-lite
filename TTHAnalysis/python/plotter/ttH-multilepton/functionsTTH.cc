@@ -2,8 +2,12 @@
 #include "TH2.h"
 #include "TH2Poly.h"
 #include "TGraphAsymmErrors.h"
+#include "TEfficiency.h"
 
 #include <iostream>
+#include <algorithm>
+#include "TRandom3.h"
+#include <numeric>
 
 float ttH_MVAto1D_6_2lss_Marco (float kinMVA_2lss_ttbar, float kinMVA_2lss_ttV){
 
@@ -210,57 +214,171 @@ float _get_recoToLoose_leptonSF_ttH(int pdgid, float pt, float eta, int nlep, fl
 
     return out;
   }
-
   std::cout << "ERROR" << std::endl;
   std::abort();
   return -999;
 
 }
 
-TFile *_file_looseToTight_leptonSF_mu_2lss = NULL;
-TH2F *_histo_looseToTight_leptonSF_mu_2lss = NULL;
-TFile *_file_looseToTight_leptonSF_el_2lss = NULL;
-TH2F *_histo_looseToTight_leptonSF_el_2lss = NULL;
-TFile *_file_looseToTight_leptonSF_mu_3l = NULL;
-TH2F *_histo_looseToTight_leptonSF_mu_3l = NULL;
-TFile *_file_looseToTight_leptonSF_el_3l = NULL;
-TH2F *_histo_looseToTight_leptonSF_el_3l = NULL;
 
-float _get_looseToTight_leptonSF_ttH(int pdgid, float pt, float eta, int nlep, float var){
+std::vector<int> boundaries_runPeriod2017 = {297020,299337,302030,303435,304911};
+std::vector<double> lumis_runPeriod2017 = {4.802,9.629,4.235,9.268,13.433};
+bool cumul_lumis_runPeriod2017_isInit = false;
+std::vector<float> cumul_lumis_runPeriod2017;
 
-  // var is ignored in all cases (systematics handled in systsEnv.txt)
+int runPeriod2017(int run){
+  auto period = std::find_if(boundaries_runPeriod2017.begin(),boundaries_runPeriod2017.end(),[run](const int &y){return y>run;});
+  return std::distance(boundaries_runPeriod2017.begin(),period)-1;
+}
 
-  if (!_histo_looseToTight_leptonSF_mu_2lss) {
-    _file_looseToTight_leptonSF_mu_2lss = new TFile("../../data/leptonSF/lepMVAEffSF_m_2lss.root","read");
-    _histo_looseToTight_leptonSF_mu_2lss = (TH2F*)(_file_looseToTight_leptonSF_mu_2lss->Get("sf"));
+
+
+TRandom3 rand_generator_RunDependentMC(0);
+int hashBasedRunDependentMC(int isData, int run, int lumi, int event){
+  if (isData) return runPeriod2017(run);
+  if (!cumul_lumis_runPeriod2017_isInit){
+    cumul_lumis_runPeriod2017.push_back(0);
+    float tot_lumi = std::accumulate(lumis_runPeriod2017.begin(),lumis_runPeriod2017.end(),float(0.0));
+    for (uint i=0; i<lumis_runPeriod2017.size(); i++) cumul_lumis_runPeriod2017.push_back(cumul_lumis_runPeriod2017.back()+lumis_runPeriod2017[i]/tot_lumi);
+    cumul_lumis_runPeriod2017_isInit = true;
   }
-  if (!_histo_looseToTight_leptonSF_el_2lss) {
-    _file_looseToTight_leptonSF_el_2lss = new TFile("../../data/leptonSF/lepMVAEffSF_e_2lss.root","read");
-    _histo_looseToTight_leptonSF_el_2lss = (TH2F*)(_file_looseToTight_leptonSF_el_2lss->Get("sf"));
+  Int_t x = 161248*run+2136324*lumi+12781432*event;
+  unsigned int hash = TString::Hash(&x,sizeof(Int_t));
+  rand_generator_RunDependentMC.SetSeed(hash);
+  float val = rand_generator_RunDependentMC.Uniform();
+  auto period = std::find_if(cumul_lumis_runPeriod2017.begin(),cumul_lumis_runPeriod2017.end(),[val](const float &y){return y>val;});
+  return std::distance(cumul_lumis_runPeriod2017.begin(),period)-1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+TFile *_file_looseToTight_leptonSF_B_mu_2lss = NULL;
+TH2F *_histo_looseToTight_leptonSF_B_mu_2lss = NULL;
+TFile *_file_looseToTight_leptonSF_B_el_2lss = NULL;
+TH2F *_histo_looseToTight_leptonSF_B_el_2lss = NULL;
+TFile *_file_looseToTight_leptonSF_B_mu_3l = NULL;
+TH2F *_histo_looseToTight_leptonSF_B_mu_3l = NULL;
+TFile *_file_looseToTight_leptonSF_B_el_3l = NULL;
+TH2F *_histo_looseToTight_leptonSF_B_el_3l = NULL;
+
+
+TFile *_file_looseToTight_leptonSF_CD_mu_2lss = NULL;
+TH2F *_histo_looseToTight_leptonSF_CD_mu_2lss = NULL;
+TFile *_file_looseToTight_leptonSF_CD_el_2lss = NULL;
+TH2F *_histo_looseToTight_leptonSF_CD_el_2lss = NULL;
+TFile *_file_looseToTight_leptonSF_CD_mu_3l = NULL;
+TH2F *_histo_looseToTight_leptonSF_CD_mu_3l = NULL;
+TFile *_file_looseToTight_leptonSF_CD_el_3l = NULL;
+TH2F *_histo_looseToTight_leptonSF_CD_el_3l = NULL;
+
+TFile *_file_looseToTight_leptonSF_E_mu_2lss = NULL;
+TH2F *_histo_looseToTight_leptonSF_E_mu_2lss = NULL;
+TFile *_file_looseToTight_leptonSF_E_el_2lss = NULL;
+TH2F *_histo_looseToTight_leptonSF_E_el_2lss = NULL;
+TFile *_file_looseToTight_leptonSF_E_mu_3l = NULL;
+TH2F *_histo_looseToTight_leptonSF_E_mu_3l = NULL;
+TFile *_file_looseToTight_leptonSF_E_el_3l = NULL;
+TH2F *_histo_looseToTight_leptonSF_E_el_3l = NULL;
+
+TFile *_file_looseToTight_leptonSF_F_mu_2lss = NULL;
+TH2F *_histo_looseToTight_leptonSF_F_mu_2lss = NULL;
+TFile *_file_looseToTight_leptonSF_F_el_2lss = NULL;
+TH2F *_histo_looseToTight_leptonSF_F_el_2lss = NULL;
+TFile *_file_looseToTight_leptonSF_F_mu_3l = NULL;
+TH2F *_histo_looseToTight_leptonSF_F_mu_3l = NULL;
+TFile *_file_looseToTight_leptonSF_F_el_3l = NULL;
+TH2F *_histo_looseToTight_leptonSF_F_el_3l = NULL;
+
+
+
+float _get_looseToTight_leptonSF_ttH(int pdgid, float pt, float eta, int nlep, Int_t run, Int_t lumi, Int_t evt, float var=0){
+
+  int era = hashBasedRunDependentMC(false, run, lumi, evt);
+
+  // /nfs/fanae/user/sscruz/www/ttH/may31/SFs
+  
+  if (nlep == 2){
+    if (!_histo_looseToTight_leptonSF_B_mu_2lss) {
+      std::cout << "Openning files" << std::endl;
+      _file_looseToTight_leptonSF_B_mu_2lss = new TFile("/nfs/fanae/user/sscruz/www/ttH/may31/SFs/runB/lepMVAEffSF_m_2lss.root","read");
+      _file_looseToTight_leptonSF_CD_mu_2lss = new TFile("/nfs/fanae/user/sscruz/www/ttH/may31/SFs/runCD/lepMVAEffSF_m_2lss.root","read");
+      _file_looseToTight_leptonSF_E_mu_2lss = new TFile("/nfs/fanae/user/sscruz/www/ttH/may31/SFs/runE/lepMVAEffSF_m_2lss.root","read");
+      _file_looseToTight_leptonSF_F_mu_2lss = new TFile("/nfs/fanae/user/sscruz/www/ttH/may31/SFs/runF/lepMVAEffSF_m_2lss.root","read");
+
+      _histo_looseToTight_leptonSF_B_mu_2lss = (TH2F*)(_file_looseToTight_leptonSF_B_mu_2lss->Get("sf"));
+      _histo_looseToTight_leptonSF_CD_mu_2lss = (TH2F*)(_file_looseToTight_leptonSF_CD_mu_2lss->Get("sf"));
+      _histo_looseToTight_leptonSF_E_mu_2lss = (TH2F*)(_file_looseToTight_leptonSF_E_mu_2lss->Get("sf"));
+      _histo_looseToTight_leptonSF_F_mu_2lss = (TH2F*)(_file_looseToTight_leptonSF_F_mu_2lss->Get("sf"));
+    }
+    if (!_histo_looseToTight_leptonSF_B_el_2lss) {
+      std::cout << "Openning files2" << std::endl;
+      _file_looseToTight_leptonSF_B_el_2lss  = new TFile("/nfs/fanae/user/sscruz/www/ttH/may31/SFs/runB/lepMVAEffSF_e_2lss.root","read");
+      _file_looseToTight_leptonSF_CD_el_2lss = new TFile("/nfs/fanae/user/sscruz/www/ttH/may31/SFs/runCD/lepMVAEffSF_e_2lss.root","read");
+      _file_looseToTight_leptonSF_E_el_2lss  = new TFile("/nfs/fanae/user/sscruz/www/ttH/may31/SFs/runE/lepMVAEffSF_e_2lss.root","read");
+      _file_looseToTight_leptonSF_F_el_2lss  = new TFile("/nfs/fanae/user/sscruz/www/ttH/may31/SFs/runF/lepMVAEffSF_e_2lss.root","read");
+
+      _histo_looseToTight_leptonSF_B_el_2lss = (TH2F*)(_file_looseToTight_leptonSF_B_el_2lss->Get("sf"));
+      _histo_looseToTight_leptonSF_CD_el_2lss = (TH2F*)(_file_looseToTight_leptonSF_CD_el_2lss->Get("sf"));
+      _histo_looseToTight_leptonSF_E_el_2lss = (TH2F*)(_file_looseToTight_leptonSF_E_el_2lss->Get("sf"));
+      _histo_looseToTight_leptonSF_F_el_2lss = (TH2F*)(_file_looseToTight_leptonSF_F_el_2lss->Get("sf"));
+
+
+    }
   }
-  if (!_histo_looseToTight_leptonSF_mu_3l) {
-    _file_looseToTight_leptonSF_mu_3l = new TFile("../../data/leptonSF/lepMVAEffSF_m_3l.root","read");
-    _histo_looseToTight_leptonSF_mu_3l = (TH2F*)(_file_looseToTight_leptonSF_mu_3l->Get("sf"));
-  }
-  if (!_histo_looseToTight_leptonSF_el_3l) {
-    _file_looseToTight_leptonSF_el_3l = new TFile("../../data/leptonSF/lepMVAEffSF_e_3l.root","read");
-    _histo_looseToTight_leptonSF_el_3l = (TH2F*)(_file_looseToTight_leptonSF_el_3l->Get("sf"));
+  else{
+    std::cout << "3l selection is missing" << std::endl;
+    assert(0);
   }
 
   TH2F *hist = 0;
-  if (abs(pdgid)==13) hist = (nlep>2) ? _histo_looseToTight_leptonSF_mu_3l : _histo_looseToTight_leptonSF_mu_2lss;
-  else if (abs(pdgid)==11) hist = (nlep>2) ? _histo_looseToTight_leptonSF_el_3l : _histo_looseToTight_leptonSF_el_2lss;
-  if (!hist) {std::cout << "ERROR" << std::endl; std::abort();}
+  if (era == 0){
+    if (abs(pdgid)==13) hist = (nlep>2) ? _histo_looseToTight_leptonSF_B_mu_3l : _histo_looseToTight_leptonSF_B_mu_2lss;
+    else if (abs(pdgid)==11) hist = (nlep>2) ? _histo_looseToTight_leptonSF_B_el_3l : _histo_looseToTight_leptonSF_B_el_2lss;
+  }
+  else if (era ==1 || era ==2){
+    if (abs(pdgid)==13) hist = (nlep>2) ? _histo_looseToTight_leptonSF_CD_mu_3l : _histo_looseToTight_leptonSF_CD_mu_2lss;
+    else if (abs(pdgid)==11) hist = (nlep>2) ? _histo_looseToTight_leptonSF_CD_el_3l : _histo_looseToTight_leptonSF_CD_el_2lss;
+
+  }
+
+  else if (era == 3){
+    if (abs(pdgid)==13) hist = (nlep>2) ? _histo_looseToTight_leptonSF_E_mu_3l : _histo_looseToTight_leptonSF_E_mu_2lss;
+    else if (abs(pdgid)==11) hist = (nlep>2) ? _histo_looseToTight_leptonSF_E_el_3l : _histo_looseToTight_leptonSF_E_el_2lss;
+  }
+  else if (era ==4){
+    if (abs(pdgid)==13) hist = (nlep>2) ? _histo_looseToTight_leptonSF_F_mu_3l : _histo_looseToTight_leptonSF_F_mu_2lss;
+    else if (abs(pdgid)==11) hist = (nlep>2) ? _histo_looseToTight_leptonSF_F_el_3l : _histo_looseToTight_leptonSF_F_el_2lss;
+  }
+  else{
+    std::cout << "Some run era is missing" << std::endl;
+    assert(0);
+  }
+
+  // if (!hist) {std::cout << "ERROR" << std::endl; std::abort();}
+  if (!hist){ return -999999; } // it shoudlnt matter for non emu events
   int ptbin  = std::max(1, std::min(hist->GetNbinsX(), hist->GetXaxis()->FindBin(pt)));
   int etabin = std::max(1, std::min(hist->GetNbinsY(), hist->GetYaxis()->FindBin(fabs(eta))));
+
+
+
+
   return hist->GetBinContent(ptbin,etabin);
 
 }
 
-float leptonSF_ttH(int pdgid, float pt, float eta, int nlep, float var=0){
+float leptonSF_ttH(int pdgid, float pt, float eta, int nlep, Int_t run, Int_t lumi, Int_t evt, float var=0){
 
   float recoToLoose = _get_recoToLoose_leptonSF_ttH(pdgid,pt,eta,nlep,var);
-  float looseToTight = _get_looseToTight_leptonSF_ttH(pdgid,pt,eta,nlep,var);
+  float looseToTight = _get_looseToTight_leptonSF_ttH(pdgid,pt,eta,nlep,run, lumi, evt,var);
   float res = recoToLoose*looseToTight;
   if (!(res>0)) {std::cout << "ERROR" << std::endl; std::abort();}
   return res;
@@ -285,6 +403,12 @@ float triggerSF_ttH(int pdgid1, int pdgid2, int nlep){
   return 1;
 
 }
+
+
+
+
+
+
 
 //float triggerSF_ttH(int pdgid1, float pt1, int pdgid2, float pt2, int nlep, float var=0){
 //
@@ -339,4 +463,56 @@ float ttH_2lss_ifflavnb(int LepGood1_pdgId, int LepGood2_pdgId, int nBJetMedium2
   std::cerr << "ERROR: invalid input " << abs(LepGood1_pdgId) << ", " << abs(LepGood1_pdgId) <<  ", " << nBJetMedium25 << std::endl;
   assert(0);
 }
+
+
+TH1D* _histo_eff_el_2lss_pass  = 0;
+TH1D* _histo_eff_el_2lss_total = 0;
+TH1D* _histo_eff_mu_2lss_pass  = 0;
+TH1D* _histo_eff_mu_2lss_total = 0;
+TEfficiency* eff_el_2lss = 0;
+TEfficiency* eff_mu_2lss = 0;
+
+float getEff( float LepGood1_pt, int LepGood1_pdgId, int nlep  ){
+
+  if (!eff_el_2lss) {
+    TFile* _file_eff_el_2lss_pass   = new TFile("/nfs/fanae/user/sscruz/TTH/may03/CMSSW_9_4_4/src/CMGTools/TTHAnalysis/python/plotter/closure_withData/closure_withData_TagMuProbeEl_pass_group/closure_plots.root","read");
+    _histo_eff_el_2lss_pass  = (TH1D*) ((TH1D*)_file_eff_el_2lss_pass->Get("Electron_pt_TT_prompt"))->Clone("Electron_pt_TT_prompt_pass");
+    TFile* _file_eff_el_2lss_total  = new TFile("/nfs/fanae/user/sscruz/TTH/may03/CMSSW_9_4_4/src/CMGTools/TTHAnalysis/python/plotter/closure_withData/closure_withData_TagMuProbeEl_total_group/closure_plots.root","read");
+    _histo_eff_el_2lss_total = (TH1D*) ((TH1D*) _file_eff_el_2lss_total->Get("Electron_pt_TT_prompt"))->Clone("Electron_pt_TT_prompt_total");
+    _histo_eff_el_2lss_pass->Draw();
+    eff_el_2lss = new TEfficiency(*_histo_eff_el_2lss_pass, *_histo_eff_el_2lss_total);
+  }
+
+  if (!eff_mu_2lss) {
+    TFile* _file_eff_mu_2lss_pass   = new TFile("/nfs/fanae/user/sscruz/TTH/may03/CMSSW_9_4_4/src/CMGTools/TTHAnalysis/python/plotter/closure_withData/closure_withData_TagElProbeMu_pass_group/closure_plots.root","read");
+    _histo_eff_mu_2lss_pass  =  (TH1D*) ((TH1D*) _file_eff_mu_2lss_pass->Get("Muon_pt_TT_prompt"))->Clone("Muon_pt_TT_prompt_pass");
+    TFile* _file_eff_mu_2lss_total  = new TFile("/nfs/fanae/user/sscruz/TTH/may03/CMSSW_9_4_4/src/CMGTools/TTHAnalysis/python/plotter/closure_withData/closure_withData_TagElProbeMu_total_group/closure_plots.root","read");
+    _histo_eff_mu_2lss_total =  (TH1D*) ((TH1D*) _file_eff_mu_2lss_total->Get("Muon_pt_TT_prompt"))->Clone("Muon_pt_TT_prompt_total");
+
+    eff_mu_2lss = new TEfficiency(*_histo_eff_mu_2lss_pass, *_histo_eff_mu_2lss_total);
+  }
+  
+  if (nlep != 2) {
+    std::cerr << "ERROR: invalid input. nlep != 2 not supported yet" << std::endl;
+    assert(0);
+  }
+
+  TEfficiency *eff = 0;
+  if (abs(LepGood1_pdgId)==13) eff = eff_mu_2lss;
+  else                eff = eff_el_2lss;
+
+  return eff->GetEfficiency( eff->FindFixBin( LepGood1_pt ) );
+
+}
+
+
+
+float getAntiSF(int pdgid,float pt,float eta, int nlep, Int_t run, Int_t lumi, Int_t evt,int var=0){
+  float SF  = _get_looseToTight_leptonSF_ttH(pdgid,pt,eta,nlep,run, lumi, evt,var);
+  float eff =  getEff( pt, pdgid, nlep  );
+  //std::cout << (1-SF*eff)/(1-eff) << " " << eff << std::endl;
+  return (1-SF*eff)/(1-eff);
+
+}
+
 

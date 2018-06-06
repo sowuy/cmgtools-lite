@@ -14,7 +14,7 @@ def base():
 
     CORE=' '.join([TREES,TREESONLYSKIM])
 
-    CORE+=" -f -j 40 -l 41.4 --s2v -L ttH-multilepton/functionsTTH.cc --tree treeProducerSusyMultilepton --mcc ttH-multilepton/mcc-lepeff-closure.txt --mcc ttH-multilepton/lepchoice-ttH-FO.txt --split-factor=-1 --WA prescaleFromSkim --perBin "# --neg"
+    CORE+=" -f -j 30 -l 41.4 --s2v -L ttH-multilepton/functionsTTH.cc --tree treeProducerSusyMultilepton --mcc ttH-multilepton/mcc-lepeff-closure.txt --mcc ttH-multilepton/lepchoice-ttH-FO.txt --split-factor=-1 --WA prescaleFromSkim --perBin "# --neg"
     #CORE+=' '.join(["--plotgroup data_fakes%s+='.*_promptsub%s'"%(x,x) for x in ['','_FRe_norm_Up','_FRe_norm_Dn','_FRe_pt_Up','_FRe_pt_Dn','_FRe_be_Up','_FRe_be_Dn','_FRm_norm_Up','_FRm_norm_Dn','_FRm_pt_Up','_FRm_pt_Dn','_FRm_be_Up','_FRm_be_Dn']])+" --neglist '.*_promptsub.*' "
     RATIO= " --maxRatioRange 0.0  1.99 --ratioYNDiv 505 "
     RATIO2=" --showRatio --attachRatioPanel --fixRatioRange "
@@ -40,24 +40,33 @@ if __name__ == '__main__':
 
     x = base()
     #if '_data' in torun: x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata.txt')
+    x = x + " --xP '.*_pdgID' --xP '.*_pdgId' "
+    x = x + " --xP '.*_isTight' "
 
+    if '_OneB' in torun:
+        x  = x + " -E 1b "
+    
     for tag, probe in [ ('Mu','El'), ('El','Mu') ]:
-        for ty in ['pass','total']:
+        for ty in ['fail','total'] if '_anti' in torun else ['pass','total']:
             #for gr in ['group']:
             for gr in ['nom', 'group']:
-                x = x + " --xP '.*_pdgID' --xP '.*_pdgId' "
-                x = x + " --xP '.*_isTight' "
                 
                 if ty == 'pass' and not '_nosf' in torun:
-                    y = x.replace("-W 'vtxWeight2017'", " -W 'vtxWeight2017*_get_looseToTight_leptonSF_ttH({prob}_pdgId, {prob}_pt, {prob}_eta, 2)' ".format(prob='Electron' if probe == 'El' else 'Muon'))
+                    y = x.replace("-W 'vtxWeight2017'", " -W 'vtxWeight2017*_get_looseToTight_leptonSF_ttH({prob}_pdgId, {prob}_pt, {prob}_eta, 2, run, lumi, evt)' ".format(prob='Electron' if probe == 'El' else 'Muon'))
+                elif ty == 'fail' and not '_nosf' in torun: 
+                    y = x.replace("-W 'vtxWeight2017'", " -W 'vtxWeight2017*getAntiSF({prob}_pdgId, {prob}_pt, {prob}_eta, 2,run, lumi, evt)' ".format(prob='Electron' if probe == 'El' else 'Muon'))
                 else: 
                     y = x 
+
+
+
+                passing = '-E {probe}Tight'.format(probe=probe) if ty=='pass' else '-E {probe}Tight -I {probe}Tight'.format(probe=probe) if ty =='fail' else ''
                 runIt(y + '-E {tag}Tight -E {tag}Tag_pt2510 {passing} {gr}'.format(tag=tag,
-                                                                                   passing='-E {probe}Tight'.format(probe=probe) if ty=='pass' else '',
+                                                                                   passing=passing,
                                                                                    gr = ' --plotgroup TT_fake+=.*_fake --plotgroup TT_prompt+=.*_prompt ' if gr == 'group' else ''),
                       '%s_Tag%sProbe%s_%s_%s'%(torun,tag,probe,ty,gr))
                 runIt(y + '-E {tag}Tight -E {tag}Tag_pt2510 {passing} -I opposite-sign {gr}'.format(tag=tag,
-                                                                                                    passing='-E {probe}Tight'.format(probe=probe) if ty=='pass' else '',
+                                                                                                    passing=passing,
                                                                                                     gr = ' --plotgroup TT_fake+=.*_fake --plotgroup TT_prompt+=.*_prompt ' if gr == 'group' else ''),
                       '%s_Tag%sProbe%s_%s_%s_SS'%(torun,tag,probe,ty,gr))
             

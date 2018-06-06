@@ -10,17 +10,17 @@ dowhat = "plots"
 #dowhat = "yields" 
 #dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
 
-TREES = "--Fs {P}/1_recleaner_230418_v1 --Fs {P}/5_triggerDecision_230418_v1 --Fs {P}/7_tauTightSel_v1 --FMCs {P}/8_vtxWeight2017_v1"
-TREESONLYSKIM = "-P /data/peruzzi/TREES_TTH_190418_Fall17"# --Fs {P}/2_eventVars_060218_v1 --Fs {P}/3_kinMVA_noMEM_060218_v1"
-TREESONLYFULL = "-P /data/peruzzi/TREES_TTH_190418_Fall17"
+TREES = "--Fs {P}/1_recleaner_230418_v2 --Fs {P}/5_triggerDecision_230418_v1 --Fs {P}/7_tauTightSel_v2 --FMCs {P}/8_vtxWeight2017_v1"
+TREESONLYSKIM = "-P /pool/ciencias/HeppyTrees/ttH/LaEstructuraICHEP18/"# --Fs {P}/2_eventVars_060218_v1 --Fs {P}/3_kinMVA_noMEM_060218_v1"
+TREESONLYFULL = "-P /pool/ciencias/HeppyTrees/ttH/LaEstructuraICHEP18/"
 
 def base(selection):
 
     CORE=' '.join([TREES,TREESONLYSKIM])
     if 'cmsco01' not in os.environ['HOSTNAME'] and 'cmsphys10' not in os.environ['HOSTNAME']: 
-        CORE = CORE.replace('/data1/peruzzi','/afs/cern.ch/work/p/peruzzi/tthtrees')
+        CORE = CORE.replace('/data1/peruzzi','/pool/ciencias/HeppyTrees/ttH/LaEstructuraICHEP18/')
 
-    CORE+=" -f -j 8 -l 41.4 --s2v -L ttH-multilepton/functionsTTH.cc --tree treeProducerSusyMultilepton --mcc ttH-multilepton/lepchoice-ttH-FO.txt --split-factor=-1 --WA prescaleFromSkim "# --neg"
+    CORE+=" -f -j 40 -l 41.4 --s2v -L ttH-multilepton/functionsTTH.cc --tree treeProducerSusyMultilepton --mcc ttH-multilepton/lepchoice-ttH-FO.txt --split-factor=-1 --WA prescaleFromSkim "# --neg"
     CORE+=' '.join(["--plotgroup data_fakes%s+='.*_promptsub%s'"%(x,x) for x in ['','_FRe_norm_Up','_FRe_norm_Dn','_FRe_pt_Up','_FRe_pt_Dn','_FRe_be_Up','_FRe_be_Dn','_FRm_norm_Up','_FRm_norm_Dn','_FRm_pt_Up','_FRm_pt_Dn','_FRm_be_Up','_FRm_be_Dn']])+" --neglist '.*_promptsub.*' "
     RATIO= " --maxRatioRange 0.0  1.99 --ratioYNDiv 505 "
     RATIO2=" --showRatio --attachRatioPanel --fixRatioRange "

@@ -1,8 +1,10 @@
 alwaystrue: 1
 trigger: Trigger_2lss
 cleanup: minMllAFAS > 12
-dilep: nLepFO>=2
-exclusive: nLepFO<=2
+#dilep: nLepFO>=2
+#exclusive: nLepFO<=2
+dilep: nLepGood>=2
+exclusive: nLepGood<=2
 opposite-sign: LepGood1_charge*LepGood2_charge < 0
 em: abs(LepGood1_pdgId) != abs(LepGood2_pdgId)
 leq3j: nJet25<4
@@ -14,3 +16,4 @@ MuTight: Muon_isLepTight; Disable=True
 ElTight: Electron_isLepTight; Disable=True
 
 prompt: Muon_isMatchRightCharge && Electron_isMatchRightCharge; Disable=True
+1b    : nBJetLoose25>0 ; Disable=True

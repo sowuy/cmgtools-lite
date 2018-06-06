@@ -1,8 +1,8 @@
 data : DoubleMuon_2017B
-data : DoubleMuon_2017C_part1+DoubleMuon_2017C_part2
+data : DoubleMuon_2017C_PARTIAL
 data : DoubleMuon_2017D
-data : DoubleMuon_2017E_part1+DoubleMuon_2017E_part2
-data : DoubleMuon_2017F_part1+DoubleMuon_2017F_part2+DoubleMuon_2017F_part3
+data : DoubleMuon_2017E_PARTIAL
+data : DoubleMuon_2017F
 data : DoubleEG_2017B
 data : DoubleEG_2017C
 data : DoubleEG_2017D
@@ -10,16 +10,16 @@ data : DoubleEG_2017E
 data : DoubleEG_2017F
 data : MuonEG_2017B
 data : MuonEG_2017C
-data : MuonEG_2017D
+data : MuonEG_2017D_PARTIAL
 data : MuonEG_2017E
 data : MuonEG_2017F
-data : SingleMuon_2017B
-data : SingleMuon_2017C
-data : SingleMuon_2017D
-data : SingleMuon_2017E
-data : SingleMuon_2017F
-data : SingleElectron_2017B
-data : SingleElectron_2017C
-data : SingleElectron_2017D
-data : SingleElectron_2017E
-data : SingleElectron_2017F
+# data : SingleMuon_2017B
+# data : SingleMuon_2017C
+# data : SingleMuon_2017D
+# data : SingleMuon_2017E
+# data : SingleMuon_2017F
+# data : SingleElectron_2017B
+# data : SingleElectron_2017C
+# data : SingleElectron_2017D
+# data : SingleElectron_2017E
+# data : SingleElectron_2017F
