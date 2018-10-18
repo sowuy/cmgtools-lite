@@ -56,3 +56,9 @@ b2lss_bt: nBJetMedium25 >= 2 ; Disable=True
 fakeIsMu : if3((nLepFO>1)*(LepGood1_isLepTight+LepGood2_isLepTight==1),if3(LepGood1_isLepTight,(abs(LepGood2_pdgId)==13),(abs(LepGood1_pdgId)==13)),0); Disable=True
 fakeIsEl : if3((nLepFO>1)*(LepGood1_isLepTight+LepGood2_isLepTight==1),if3(LepGood1_isLepTight,(abs(LepGood2_pdgId)==11),(abs(LepGood1_pdgId)==11)),0); Disable=True
 muChargeConsistencyThree: (abs(LepGood1_pdgId)!=13 || LepGood1_chargeConsistency>=3) && (abs(LepGood2_pdgId)!=13 || LepGood2_chargeConsistency>=3); Disable=True
+
+eraB: $DATA{run >= 297046 && run <= 299329} $MC{1} ; Disable=True
+eraC: $DATA{run >= 299368 && run <= 302029} $MC{1} ; Disable=True
+eraD: $DATA{run >= 302030 && run <= 303434} $MC{1} ; Disable=True
+eraE: $DATA{run >= 303824 && run <= 304797} $MC{1} ; Disable=True
+eraF: $DATA{run >= 305040 && run <= 306462} $MC{1} ; Disable=True
