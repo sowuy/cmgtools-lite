@@ -302,7 +302,7 @@ from CMGTools.TTHAnalysis.tools.combinedObjectTaggerForCleaning import *
 from CMGTools.TTHAnalysis.tools.fastCombinedObjectRecleaner import *
 from CMGTools.TTHAnalysis.tools.objFloatCalc import ObjFloatCalc
 MODULES.append( ('jetPtRatiov3', lambda : ObjFloatCalc(None,"LepGood",
-                                                    dict(jetPtRatiov3 = lambda lep: lep.jetPtRatiov2 if lep.jetBTagCSV > -98 else 1.0/(1.0 + lep.relIso04)))) )
+                                                       dict(jetPtRatiov3 = lambda lep: lep.jetPtRatiov2 if lep.jetBTagCSV > -98 else 1.0/(1.0 + lep.relIso04)))) )
 
 def clean_and_FO_selection_TTH(lep):
     return lep.conept>10 and lep.jetBTagDeepCSV<0.4941 and (abs(lep.pdgId)!=11 or _ttH_idEmu_cuts_E3(lep)) \
@@ -312,12 +312,14 @@ def clean_and_FO_selection_TTH(lep):
                  )
 
 MODULES.append( ('leptonJetFastReCleanerTTH_step1', lambda : CombinedObjectTaggerForCleaning("InternalRecl",
-                                                                                       looseLeptonSel = lambda lep : lep.miniRelIso < 0.4 and lep.sip3d < 8,
+                                                                                       looseLeptonSel = lambda lep : lep.miniPFRelIso_all < 0.4 and lep.sip3d < 8,
                                                                                        cleaningLeptonSel = clean_and_FO_selection_TTH,
                                                                                        FOLeptonSel = clean_and_FO_selection_TTH,
-                                                                                       tightLeptonSel = lambda lep : clean_and_FO_selection_TTH(lep) and (abs(lep.pdgId)!=13 or lep.mediumMuonId>0) and lep.mvaTTH > 0.90,
-                                                                                       FOTauSel = lambda tau: tau.pt > 20 and abs(tau.eta)<2.3 and abs(tau.dxy) < 1000 and abs(tau.dz) < 0.2 and tauID_oldDMdR0p3wLT2017v2_WP(tau.pt,tau.mvaId2017,1) and tau.idDecayMode,
-                                                                                       tightTauSel = lambda tau: tauID_oldDMdR0p3wLT2017v2_WP(tau.pt,tau.mvaId2017,2),
+                                                                                       tightLeptonSel = lambda lep : clean_and_FO_selection_TTH(lep) and (abs(lep.pdgId)!=13 or lep.mediumId>0) and lep.mvaTTH > 0.90,
+                                                                                       FOTauSel = lambda tau: tau.pt > 20 and abs(tau.eta)<2.3 and abs(tau.dxy) < 1000 and abs(tau.dz) < 0.2 and idMVAoldDMdR032017v2 == 2 and tau.idDecayMode,
+                                                                                       tightTauSel = lambda tau: idMVAoldDMdR032017v2 == 4,
+                                                                                       #FOTauSel = lambda tau: tau.pt > 20 and abs(tau.eta)<2.3 and abs(tau.dxy) < 1000 and abs(tau.dz) < 0.2 and tauID_oldDMdR0p3wLT2017v2_WP(tau.pt,tau.mvaId2017,1) and tau.idDecayMode,
+                                                                                       #tightTauSel = lambda tau: tauID_oldDMdR0p3wLT2017v2_WP(tau.pt,tau.mvaId2017,2),
                                                                                        selectJet = lambda jet: abs(jet.eta)<2.4,
                                                                                        coneptdef = lambda lep: conept_TTH(lep) ) ))
 MODULES.append( ('leptonJetFastReCleanerTTH_step2_mc',lambda : fastCombinedObjectRecleaner(label="Recl",
@@ -448,7 +450,7 @@ MODULES.append( ('Trigger_3l', lambda : EvtTagger("Trigger_3l",[
 
 from CMGTools.TTHAnalysis.tools.objTagger import ObjTagger
 MODULES.append( ('TauTightFlag', lambda : ObjTagger("isTauTight","TauSel_Recl",
-                                                    [lambda tau : tauID_oldDMdR0p3wLT2017v2_WP(tau.pt,tau.mvaId2017,2)] )))
+                                                    [lambda tau : idMVAoldDMdR032017v2 == 4])))
 
 from CMGTools.TTHAnalysis.tools.bTagEventWeightsCSVFullShape import BTagEventWeightFriend
 MODULES.append( ('eventBTagWeight', lambda : BTagEventWeightFriend(csvfile=os.environ["CMSSW_BASE"]+"/src/CMGTools/TTHAnalysis/data/btag/DeepCSV_94XSF_V2_B_F.csv",

@@ -21,6 +21,7 @@ def getArrayReader(tree, branchName):
        if not tree.GetBranch(branchName): raise RuntimeError, "Can't find branch '%s'" % branchName
        leaf = tree.GetBranch(branchName).GetLeaf(branchName)
        if not bool(leaf.GetLeafCount()): raise RuntimeError, "Branch %s is not a variable-length value array" % branchName
+       
        typ = _rootType2Python[leaf.GetTypeName()]
        tree._ttras[branchName] = _makeArrayReader(tree, typ, branchName)
     return tree._ttras[branchName]
@@ -63,8 +64,8 @@ def readBranch(tree, branchName):
 
 ####### PRIVATE IMPLEMENTATION PART #######
 
-_rootType2Python = { 'Int_t':int, 'Long_t':long, 'UInt_t':int, 'ULong_t':long, 'ULong64_t':"unsigned long long",
-                     'Float_t':float, 'Double_t':float }
+_rootType2Python = { 'Int_t':int, 'Long_t':long, 'UInt_t': "unsigned int",  'ULong_t':long, 'ULong64_t':"unsigned long long",
+                     'Float_t':float, 'Double_t':float , 'UChar_t': int, 'Bool_t' : bool}
 
 def _makeArrayReader(tree, typ, nam):
     if not tree._ttreereader._isClean: _remakeAllReaders(tree)

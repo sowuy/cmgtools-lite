@@ -46,7 +46,7 @@ void CollectionSkimmer::copyInt(const std::string &varname, TTreeReaderArray<Int
     _copyVar(varname, src, copyInts_);
 }
 
-void CollectionSkimmer::srcCount(TTreeReaderValue<Int_t> * src)
+void CollectionSkimmer::srcCount(TTreeReaderValue<unsigned int> * src)
 {
   srcCount_ = src;
 }

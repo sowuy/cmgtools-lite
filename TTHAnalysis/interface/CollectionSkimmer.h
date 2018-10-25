@@ -40,7 +40,7 @@ class CollectionSkimmer {
         /// to be called first to register the branches, and possibly re-called if the treeReaderArrays are remade
         void copyFloat(const std::string &varname, TTreeReaderArray<Float_t> * src = nullptr) ; 
         void copyInt(const std::string &varname, TTreeReaderArray<Int_t> * src = nullptr) ;
-	void srcCount(TTreeReaderValue<Int_t> * src);
+	void srcCount(TTreeReaderValue<unsigned int> * src);
 
         /// to be called once on the tree, after a first call to copyFloat and copyInt
         void makeBranches(TTree *tree, unsigned int maxEntries, bool padSelectedIndicesCollection = false, int padSelectedIndicesCollectionWith = -1) ;
@@ -95,14 +95,14 @@ class CollectionSkimmer {
         Int_t nOut_;
         bool hasBranched_;
         std::unique_ptr<int[]> iOut_;
-	TTreeReaderValue<Int_t> *srcCount_;
+	TTreeReaderValue<unsigned int> *srcCount_;
         std::vector<CopyFloat> copyFloats_;
         std::vector<CopyInt> copyInts_;
 	bool saveSelectedIndices_;
 	bool padSelectedIndicesCollection_;
 	int padSelectedIndicesCollectionWith_;
 	bool saveTagForAll_;
-	Int_t nIn_;
+	unsigned int nIn_;
         std::unique_ptr<int[]> iTagOut_;
 	uint maxEntries_;
 

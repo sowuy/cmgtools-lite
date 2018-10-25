@@ -24,16 +24,15 @@ class CombinedObjectTaggerForCleaning:
         return []
 
     def __call__(self,event):
-
         leps = [l for l in Collection(event,"LepGood","nLepGood")]
-        taus = [t for t in Collection(event,"TauGood","nTauGood")]
+        taus = [t for t in Collection(event,"Tau","nTau")]
         jets = [j for j in Collection(event,"Jet","nJet")]
 
         tags = ROOT.CombinedObjectTags(len(leps),len(taus),len(jets))
 
         if not self.coneptdef: raise RuntimeError, 'Choose the definition to be used for cone pt'
         for lep in leps: lep.conept = self.coneptdef(lep)
-
+        
         for i,lep in enumerate(leps):
             if self.looseLeptonSel(lep): tags.setLepFlags(i,True,self.cleanLeptonSel(lep),self.fkbleLeptonSel(lep),self.tightLeptonSel(lep),lep.conept)
         for i,tau in enumerate(taus):

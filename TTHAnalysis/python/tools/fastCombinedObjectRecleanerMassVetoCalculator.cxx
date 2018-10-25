@@ -26,6 +26,7 @@ struct MassVetoCalculatorOutput {
 class fastCombinedObjectRecleanerMassVetoCalculator {
 public:
   typedef TTreeReaderValue<int>   rint;
+  typedef TTreeReaderValue<unsigned int>   ruint;
   typedef TTreeReaderArray<float> rfloats;
   typedef TTreeReaderArray<int> rints;
 
@@ -34,7 +35,7 @@ public:
   
   fastCombinedObjectRecleanerMassVetoCalculator(CollectionSkimmer &skim_lepsF, CollectionSkimmer &skim_lepsT, bool doVetoZ, bool doVetoLMf, bool doVetoLMt) : skim_lepsF_(skim_lepsF), skim_lepsT_(skim_lepsT), doVetoZ_(doVetoZ), doVetoLMf_(doVetoLMf), doVetoLMt_(doVetoLMt){}
   
-  void setLeptons(rint *nLep, rfloats *lepPt, rfloats *lepEta, rfloats *lepPhi, rfloats *lepMass, rints *lepPdgId) {
+  void setLeptons(ruint *nLep, rfloats *lepPt, rfloats *lepEta, rfloats *lepPhi, rfloats *lepMass, rints *lepPdgId) {
     nLep_ = nLep; Lep_pt_ = lepPt; Lep_eta_ = lepEta; Lep_phi_ = lepPhi; Lep_mass_ = lepMass; Lep_pdgid_ = lepPdgId;
   }
 
@@ -107,7 +108,7 @@ public:
   void loadTags(CombinedObjectTags *tags){
     std::copy(tags->lepsL.get(),tags->lepsL.get()+**nLep_,leps_loose.get());
     for (auto i : tags->getLepsF_byConePt()) leps_fo.push_back(i);
-    for (int i=0; i<**nLep_; i++) if (tags->lepsT[i]) leps_tight.push_back(i);
+    for (unsigned int i=0; i<**nLep_; i++) if (tags->lepsT[i]) leps_tight.push_back(i);
   }
 
   void setLeptonFlagLoose(int i){
@@ -124,7 +125,7 @@ public:
 
 private:
   CollectionSkimmer &skim_lepsF_, &skim_lepsT_;
-  rint *nLep_;
+  ruint *nLep_;
   rfloats *Lep_pt_, *Lep_eta_, *Lep_phi_, *Lep_mass_;
   rints *Lep_pdgid_;
   std::vector<LeptonPairInfo> pairs;

@@ -20,6 +20,7 @@ struct JetSumCalculatorOutput {
 class fastCombinedObjectRecleanerHelper {
 public:
   typedef TTreeReaderValue<int>   rint;
+  typedef TTreeReaderValue<unsigned int>   ruint;
   typedef TTreeReaderArray<float> rfloats;
   typedef TTreeReaderArray<int> rints;
   
@@ -28,14 +29,16 @@ public:
     _cj.reset(new std::vector<int>);
 }
   
-  void setLeptons(rint *nLep, rfloats* lepPt, rfloats *lepEta, rfloats *lepPhi) {
+  void setLeptons(ruint *nLep, rfloats* lepPt, rfloats *lepEta, rfloats *lepPhi) {
     nLep_ = nLep; Lep_pt_ = lepPt; Lep_eta_ = lepEta; Lep_phi_ = lepPhi;
   }
-  void setTaus(rint *nTau, rfloats *tauPt, rfloats *tauEta, rfloats *tauPhi) {
+  void setTaus(ruint *nTau, rfloats *tauPt, rfloats *tauEta, rfloats *tauPhi) {
     nTau_ = nTau; Tau_pt_ = tauPt; Tau_eta_ = tauEta; Tau_phi_ = tauPhi;
   }
-  void setJets(rint *nJet, rfloats *jetPt, rfloats *jetEta, rfloats *jetPhi, rfloats *jetbtagCSV, rfloats *jetcorr, rfloats *jetcorr_JECUp, rfloats *jetcorr_JECDown) {
-    nJet_ = nJet; Jet_pt_ = jetPt; Jet_eta_ = jetEta; Jet_phi_ = jetPhi; Jet_btagCSV_ = jetbtagCSV; Jet_corr_ = jetcorr; Jet_corr_JECUp_ = jetcorr_JECUp; Jet_corr_JECDown_ = jetcorr_JECDown;
+  void setJets(ruint *nJet, rfloats *jetPt, rfloats *jetEta, rfloats *jetPhi, rfloats *jetbtagCSV){//, rfloats *jetcorr, rfloats *jetcorr_JECUp, rfloats *jetcorr_JECDown) {
+    nJet_ = nJet; Jet_pt_ = jetPt; Jet_eta_ = jetEta; Jet_phi_ = jetPhi; Jet_btagCSV_ = jetbtagCSV; 
+    // SERGIO Jet_corr_ = jetcorr; Jet_corr_JECUp_ = jetcorr_JECUp; Jet_corr_JECDown_ = jetcorr_JECDown;
+
   }
 
   void addJetPt(int pt){
@@ -51,7 +54,7 @@ public:
     
     crvec _mht(0,0,0,0);
     
-    for (int i=0; i<**nLep_; i++) {
+    for (unsigned int i=0; i<**nLep_; i++) {
       if (!sel_leps[i]) continue;
       crvec lep(ptvec((*Lep_pt_)[i],0,(*Lep_phi_)[i],0));
       _mht = _mht - lep;
@@ -74,8 +77,8 @@ public:
       
       for (auto j : *_cj){
 	float pt = (*Jet_pt_)[j];
-	if (variation==1) pt *= (*Jet_corr_JECUp_)[j] / (*Jet_corr_)[j];
-	if (variation==-1) pt *= (*Jet_corr_JECDown_)[j] / (*Jet_corr_)[j];
+	// SERGIO if (variation==1) pt *= (*Jet_corr_JECUp_)[j] / (*Jet_corr_)[j];
+	// SERGIO if (variation==-1) pt *= (*Jet_corr_JECDown_)[j] / (*Jet_corr_)[j];
 	if (pt<=thr) continue;
 	float phi = (*Jet_phi_)[j];
 	float csv = (*Jet_btagCSV_)[j];
@@ -176,7 +179,7 @@ public:
 private:
   std::unique_ptr<bool[]> sel_leps, sel_leps_extrafortau, sel_taus, sel_jets;
   CollectionSkimmer &clean_taus_, &clean_jets_;
-  rint *nLep_, *nTau_, *nJet_;
+  ruint *nTau_, *nLep_, *nJet_;
   rfloats *Lep_pt_, *Lep_eta_, *Lep_phi_;
   rfloats *Tau_pt_, *Tau_eta_, *Tau_phi_;
   rfloats *Jet_pt_, *Jet_phi_, *Jet_eta_, *Jet_btagCSV_, *Jet_corr_, *Jet_corr_JECUp_, *Jet_corr_JECDown_;
