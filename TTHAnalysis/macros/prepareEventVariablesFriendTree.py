@@ -211,17 +211,19 @@ if options.checkrunning:
 jobs = []
 for D in sorted(glob(args[0]+"/*")):
     treename = options.tree
-    fname    = "%s/%s/%s_tree.root" % (D,options.tree,options.tree)
-    if (not os.path.exists(fname)) and (os.path.exists("%s/%s/tree.root" % (D,options.tree)) ):
-        treename = "tree"
-        fname    = "%s/%s/tree.root" % (D,options.tree)
+    fname    = "%s/%s/%s_Events.root" % (D,options.tree,options.tree)
+    print "%s/%s/Events.root" % (D,options.tree)
+    if (not os.path.exists(fname)) and (os.path.exists("%s/%s/Events.root" % (D,options.tree)) ):
+        print 'we are here'
+        treename = "Events"
+        fname    = "%s/%s/Events.root" % (D,options.tree)
 
-    if (not os.path.exists(fname)) and (os.path.exists("%s/%s/tree.root.url" % (D,options.tree)) ):
-        treename = "tree"
-        fname    = "%s/%s/tree.root" % (D,options.tree)
+    if (not os.path.exists(fname)) and (os.path.exists("%s/%s/Events.root.url" % (D,options.tree)) ):
+        treename = "Events"
+        fname    = "%s/%s/Events.root" % (D,options.tree)
         fname    = open(fname+".url","r").readline().strip()
 
-    if os.path.exists(fname) or (os.path.exists("%s/%s/tree.root.url" % (D,options.tree))):
+    if os.path.exists(fname) or (os.path.exists("%s/%s/Events.root.url" % (D,options.tree))):
         short = os.path.basename(D)
         if options.datasets != []:
             if short not in options.datasets: continue
@@ -445,7 +447,7 @@ def _runIt(myargs):
     print "getting tree.."
     tb = fb.Get(options.tree)
 
-    if not tb: tb = fb.Get("tree") # new trees
+    if not tb: tb = fb.Get("Events") # new trees
     if options.vectorTree:
         tb.vectorTree = True
     else:

@@ -30,8 +30,8 @@ tot_comp = 0
 for dset in dsets:
     if '.url' in dset: continue
 #    print "running " + dset
-    f_t = openRootOrUrl(sys.argv[1]+'/'+dset+'/treeProducerSusyMultilepton/tree.root')
-    t_t = f_t.Get("tree")
+    f_t = openRootOrUrl(sys.argv[1]+'/'+dset+'/nanoAODskim/Events.root')
+    t_t = f_t.Get("Events")
     n_t = t_t.GetEntries()
     f_t.Close()
     f_f = openRootOrUrl(sys.argv[2]+'/evVarFriend_'+dset+'.root')

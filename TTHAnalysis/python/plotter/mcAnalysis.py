@@ -189,17 +189,17 @@ class MCAnalysis:
                 if not basepath:
                     raise RuntimeError("%s -- ERROR: %s process not found in paths (%s)" % (__name__, cname, repr(options.path)))
 
-                rootfile = "%s/%s/%s/%s_tree.root" % (basepath, cname, treename, treename)
+                rootfile = "%s/%s/%s/%s.root" % (basepath, cname, treename, treename)
                 if options.remotePath:
-                    rootfile = "root:%s/%s/%s_tree.root" % (options.remotePath, cname, treename)
+                    rootfile = "root:%s/%s/%s.root" % (options.remotePath, cname, treename)
                 elif os.path.exists(rootfile+".url"): #(not os.path.exists(rootfile)) and :
                     rootfile = open(rootfile+".url","r").readline().strip()
-                elif (not os.path.exists(rootfile)) and os.path.exists("%s/%s/%s/tree.root" % (basepath, cname, treename)):
+                elif (not os.path.exists(rootfile)) and os.path.exists("%s/%s/%s/Events.root" % (basepath, cname, treename)):
                     # Heppy calls the tree just 'tree.root'
-                    rootfile = "%s/%s/%s/tree.root" % (basepath, cname, treename)
-                elif (not os.path.exists(rootfile)) and os.path.exists("%s/%s/%s/tree.root.url" % (basepath, cname, treename)):
+                    rootfile = "%s/%s/%s/Events.root" % (basepath, cname, treename)
+                elif (not os.path.exists(rootfile)) and os.path.exists("%s/%s/%s/Events.root.url" % (basepath, cname, treename)):
                     # Heppy calls the tree just 'tree.root'
-                    rootfile = "%s/%s/%s/tree.root" % (basepath, cname, treename)
+                    rootfile = "%s/%s/%s/Events.root" % (basepath, cname, treename)
                     rootfile = open(rootfile+".url","r").readline().strip()
                 pckfile = basepath+"/%s/skimAnalyzerCount/SkimReport.pck" % cname
 

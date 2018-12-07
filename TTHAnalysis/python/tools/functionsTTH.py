@@ -21,18 +21,18 @@ def _ttH_idEmu_cuts_E2_obj(lep):
 
 def _ttH_idEmu_cuts_E3(lep):
     if (abs(lep.pdgId)!=11): return True
-    if (lep.hadronicOverEm>=(0.10-0.00*(abs(lep.etaSc)>1.479))): return False
+    if (lep.hoe>=(0.10-0.00*(abs(lep.deltaEtaSC+lep.eta)>1.479))): return False
     if (lep.eInvMinusPInv<=-0.04): return False
-    if (lep.sigmaIEtaIEta>=(0.011+0.019*(abs(lep.etaSc)>1.479))): return False
+    if (lep.sieie>=(0.011+0.019*(abs(lep.deltaEtaSC+lep.eta)>1.479))): return False
     return True
-def _ttH_idEmu_cuts_E3_obj(lep):
-    if (abs(lep.pdgId())!=11): return True
-    etasc = lep.superCluster().eta()
-    if (lep.hadronicOverEm()>=(0.10-0.00*(abs(etasc)>1.479))): return False
-    eInvMinusPInv = (1.0/lep.ecalEnergy() - lep.eSuperClusterOverP()/lep.ecalEnergy()) if lep.ecalEnergy()>0. else 9e9
-    if (eInvMinusPInv<=-0.04): return False
-    if (lep.full5x5_sigmaIetaIeta()>=(0.011+0.019*(abs(etasc)>1.479))): return False
-    return True
+# def _ttH_idEmu_cuts_E3_obj(lep):
+#     if (abs(lep.pdgId())!=11): return True
+#     etasc = lep.superCluster().eta()
+#     if (lep.hadronicOverEm()>=(0.10-0.00*(abs(etasc)>1.479))): return False
+#     eInvMinusPInv = (1.0/lep.ecalEnergy() - lep.eSuperClusterOverP()/lep.ecalEnergy()) if lep.ecalEnergy()>0. else 9e9
+#     if (eInvMinusPInv<=-0.04): return False
+#     if (lep.full5x5_sigmaIetaIeta()>=(0.011+0.019*(abs(etasc)>1.479))): return False
+#     return True
 
 def _soft_MuonId_2016ICHEP(lep):
     if (abs(lep.pdgId())!=13): return False
@@ -58,241 +58,6 @@ def _medium_MuonId_2016ICHEP(lep):
     return True
 
 
-import bisect
-tauID_oldDMdR0p3wLT2017v2_WP_arrays = [None]*7
-tauID_oldDMdR0p3wLT2017v2_WP_arrays[6]=[ #Efficiency: 0.4, idx = 6, VVT
-( 21.499, 0.975201 ),
-( 23.99, 0.976925 ),
-( 26.4932, 0.978126 ),
-( 28.9839, 0.979079 ),
-( 31.4852, 0.980054 ),
-( 33.97, 0.980684 ),
-( 36.4678, 0.981174 ),
-( 38.9167, 0.981206 ),
-( 42.7948, 0.981461 ),
-( 47.7929, 0.981953 ),
-( 52.8021, 0.982025 ),
-( 57.8094, 0.981996 ),
-( 64.9841, 0.981836 ),
-( 75.0272, 0.981335 ),
-( 85.0626, 0.981096 ),
-( 95.0522, 0.981808 ),
-( 110.744, 0.982142 ),
-( 136.024, 0.982425 ),
-( 161.245, 0.982149 ),
-( 186.384, 0.982817 ),
-( 220.564, 0.98124 ),
-( 271.301, 0.98211 ),
-( 338.565, 0.98132 ),
-( 439.535, 0.97752 ),
-( 537.345, 0.97394 ),
-( 644.707, 0.98568 ),
-( 748.5, 0.96764 ),
-( 860.167, 0.94798 ),
-( 1036.5, 0.94676 ),
-]
-tauID_oldDMdR0p3wLT2017v2_WP_arrays[5]=[ #Efficiency: 0.5, idx = 5, VT
-( 21.499, 0.96405 ),
-( 23.99, 0.966388 ),
-( 26.4932, 0.967992 ),
-( 28.9839, 0.969311 ),
-( 31.4852, 0.970579 ),
-( 33.97, 0.971421 ),
-( 36.4678, 0.972104 ),
-( 38.9167, 0.972131 ),
-( 42.7948, 0.9725 ),
-( 47.7929, 0.9732 ),
-( 52.8021, 0.973181 ),
-( 57.8094, 0.973095 ),
-( 64.9841, 0.972736 ),
-( 75.0272, 0.971856 ),
-( 85.0626, 0.97127 ),
-( 95.0522, 0.97241 ),
-( 110.744, 0.972898 ),
-( 136.024, 0.973729 ),
-( 161.245, 0.973609 ),
-( 186.384, 0.9735 ),
-( 220.564, 0.972611 ),
-( 271.301, 0.972925 ),
-( 338.565, 0.971817 ),
-( 439.535, 0.970575 ),
-( 537.345, 0.9689 ),
-( 644.707, 0.9587 ),
-( 748.5, 0.9676 ),
-( 860.167, 0.94795 ),
-( 1036.5, 0.94675 ),
-]
-tauID_oldDMdR0p3wLT2017v2_WP_arrays[4]=[ #Efficiency: 0.6, idx = 4, T
-( 21.499, 0.946846 ),
-( 23.99, 0.949968 ),
-( 26.4932, 0.952147 ),
-( 28.9839, 0.954008 ),
-( 31.4852, 0.955488 ),
-( 33.97, 0.956636 ),
-( 36.4678, 0.957598 ),
-( 38.9167, 0.957705 ),
-( 42.7948, 0.958113 ),
-( 47.7929, 0.959017 ),
-( 52.8021, 0.958952 ),
-( 57.8094, 0.958817 ),
-( 64.9841, 0.958186 ),
-( 75.0272, 0.95702 ),
-( 85.0626, 0.95589 ),
-( 95.0522, 0.957823 ),
-( 110.744, 0.958922 ),
-( 136.024, 0.960023 ),
-( 161.245, 0.960685 ),
-( 186.384, 0.96048 ),
-( 220.564, 0.959643 ),
-( 271.301, 0.95834 ),
-( 338.565, 0.957595 ),
-( 439.535, 0.95428 ),
-( 537.345, 0.95166 ),
-( 644.707, 0.94132 ),
-( 748.5, 0.73726 ),
-( 860.167, 0.94792 ),
-( 1036.5, 0.94674 ),
-]
-tauID_oldDMdR0p3wLT2017v2_WP_arrays[3]=[ #Efficiency: 0.7, idx = 3, M
-( 21.499, 0.915749 ),
-( 23.99, 0.920235 ),
-( 26.4932, 0.923359 ),
-( 28.9839, 0.926021 ),
-( 31.4852, 0.928059 ),
-( 33.97, 0.929552 ),
-( 36.4678, 0.930896 ),
-( 38.9167, 0.931294 ),
-( 42.7948, 0.931757 ),
-( 47.7929, 0.932821 ),
-( 52.8021, 0.932758 ),
-( 57.8094, 0.932772 ),
-( 64.9841, 0.931815 ),
-( 75.0272, 0.930305 ),
-( 85.0626, 0.92877 ),
-( 95.0522, 0.932007 ),
-( 110.744, 0.933343 ),
-( 136.024, 0.935642 ),
-( 161.245, 0.937768 ),
-( 186.384, 0.937144 ),
-( 220.564, 0.938407 ),
-( 271.301, 0.933715 ),
-( 338.565, 0.93301 ),
-( 439.535, 0.93021 ),
-( 537.345, 0.91652 ),
-( 644.707, 0.92184 ),
-( 748.5, 0.73722 ),
-( 860.167, 0.85279 ),
-( 1036.5, 0.94673 ),
-]
-tauID_oldDMdR0p3wLT2017v2_WP_arrays[2]=[ #Efficiency: 0.8, idx = 2, L
-( 21.499, 0.847098 ),
-( 23.99, 0.854083 ),
-( 26.4932, 0.859018 ),
-( 28.9839, 0.863439 ),
-( 31.4852, 0.866511 ),
-( 33.97, 0.86949 ),
-( 36.4678, 0.872027 ),
-( 38.9167, 0.872313 ),
-( 42.7948, 0.872895 ),
-( 47.7929, 0.875152 ),
-( 52.8021, 0.874756 ),
-( 57.8094, 0.874508 ),
-( 64.9841, 0.873462 ),
-( 75.0272, 0.872467 ),
-( 85.0626, 0.870138 ),
-( 95.0522, 0.875467 ),
-( 110.744, 0.878422 ),
-( 136.024, 0.882307 ),
-( 161.245, 0.886487 ),
-( 186.384, 0.89019 ),
-( 220.564, 0.88874 ),
-( 271.301, 0.87986 ),
-( 338.565, 0.88464 ),
-( 439.535, 0.88904 ),
-( 537.345, 0.86388 ),
-( 644.707, 0.87306 ),
-( 748.5, 0.43968 ),
-( 860.167, 0.85276 ),
-( 1036.5, 0.94672 ),
-]
-tauID_oldDMdR0p3wLT2017v2_WP_arrays[1]=[ #Efficiency: 0.9, idx = 1, VL
-( 21.499, 0.650359 ),
-( 23.99, 0.663417 ),
-( 26.4932, 0.671989 ),
-( 28.9839, 0.678143 ),
-( 31.4852, 0.683681 ),
-( 33.97, 0.690357 ),
-( 36.4678, 0.696038 ),
-( 38.9167, 0.696698 ),
-( 42.7948, 0.698674 ),
-( 47.7929, 0.703422 ),
-( 52.8021, 0.703852 ),
-( 57.8094, 0.704777 ),
-( 64.9841, 0.703983 ),
-( 75.0272, 0.705216 ),
-( 85.0626, 0.700663 ),
-( 95.0522, 0.712623 ),
-( 110.744, 0.717677 ),
-( 136.024, 0.725085 ),
-( 161.245, 0.73068 ),
-( 186.384, 0.74214 ),
-( 220.564, 0.74444 ),
-( 271.301, 0.72251 ),
-( 338.565, 0.74697 ),
-( 439.535, 0.74597 ),
-( 537.345, 0.61034 ),
-( 644.707, 0.61898 ),
-( 748.5, 0.43964 ),
-( 860.167, 0.85273 ),
-( 1036.5, 0.94671 ),
-]
-tauID_oldDMdR0p3wLT2017v2_WP_arrays[0]=[ #Efficiency: 0.95, idx = 0, VVL
-( 21.499, 0.416049 ),
-( 23.99, 0.424832 ),
-( 26.4932, 0.434589 ),
-( 28.9839, 0.439006 ),
-( 31.4852, 0.445049 ),
-( 33.97, 0.454461 ),
-( 36.4678, 0.461244 ),
-( 38.9167, 0.466298 ),
-( 42.7948, 0.468553 ),
-( 47.7929, 0.474322 ),
-( 52.8021, 0.477965 ),
-( 57.8094, 0.479831 ),
-( 64.9841, 0.477952 ),
-( 75.0272, 0.487271 ),
-( 85.0626, 0.479775 ),
-( 95.0522, 0.495259 ),
-( 110.744, 0.502725 ),
-( 136.024, 0.512396 ),
-( 161.245, 0.51634 ),
-( 186.384, 0.54127 ),
-( 220.564, 0.55302 ),
-( 271.301, 0.514655 ),
-( 338.565, 0.586185 ),
-( 439.535, 0.558635 ),
-( 537.345, 0.50942 ),
-( 644.707, 0.56734 ),
-( 748.5, 0.43962 ),
-( 860.167, 0.852715 ),
-( 1036.5, 0.946705 ),
-]
-import ROOT
-RecoTauTag_tauIdMVAIsoDBoldDMdR0p3wLT2017v2_mvaOutput_normalization = ROOT.TFormula("RecoTauTag_tauIdMVAIsoDBoldDMdR0p3wLT2017v2_mvaOutput_normalization",
-                                                                                    "1./(1.+4944671.000000*((1./(0.5*TMath::Max(1.e-6,x+1.)))-1.)/13174771.000000)")
-def tauID_oldDMdR0p3wLT2017v2_WP(pt,score,WP):
-    xMin = tauID_oldDMdR0p3wLT2017v2_WP_arrays[WP][0][0]
-    xMax = tauID_oldDMdR0p3wLT2017v2_WP_arrays[WP][-1][0]
-    cutVar = pt
-    cutVar = max(cutVar,xMin+1e-3)
-    cutVar = min(cutVar,xMax-1e-3)
-    idx = bisect.bisect(tauID_oldDMdR0p3wLT2017v2_WP_arrays[WP],(cutVar,0))-1
-    x1,c1 = tauID_oldDMdR0p3wLT2017v2_WP_arrays[WP][idx]
-    x2,c2 = tauID_oldDMdR0p3wLT2017v2_WP_arrays[WP][idx+1]
-    x = (cutVar-x1)/(x2-x1)
-    if max(0,min(1,x))!=x: raise RuntimeError
-    return RecoTauTag_tauIdMVAIsoDBoldDMdR0p3wLT2017v2_mvaOutput_normalization.Eval(score)>(c1*x+c2*(1-x))
-
 from CMGTools.TTHAnalysis.tools.leptonJetReCleaner import LeptonJetReCleaner
 from CMGTools.TTHAnalysis.tools.conept import conept_TTH
 
@@ -301,26 +66,102 @@ MODULES=[]
 from CMGTools.TTHAnalysis.tools.combinedObjectTaggerForCleaning import *
 from CMGTools.TTHAnalysis.tools.fastCombinedObjectRecleaner import *
 from CMGTools.TTHAnalysis.tools.objFloatCalc import ObjFloatCalc
+
+
+
+
+def preselectMuon(lep):
+    return lep.pt > 5 and abs(lep.eta) < 2.4 and abs(lep.dxy) < 0.05 and abs(lep.dz) < 0.1 and lep.miniPFRelIso_all < 0.4 and lep.sip3d < 8
+
+def preselectElectron(lep):
+    return lep.pt > 7 and abs(lep.eta) < 2.5 and abs(lep.dxy) < 0.05 and abs(lep.dz) < 0.1 and lep.miniPFRelIso_all < 0.4  and lep.sip3d < 8 and lep.mvaFall17V1noIso_WPL and lep.lostHits <=1 
+
+def preselectLepton(lep):
+    return preselectElectron(lep) if abs(lep.pdgId) == 11 else preselectMuon(lep)
+
+
+# def jetLepAwareJEC(lep,jet): 
+
+#     l = ROOT.TLorentzVector(); l.SetPtEtaPhiM(lep.pt, lep.eta, lep.phi, lep.mass)
+#     j = ROOT.TLorentzVector(); j.SetPtEtaPhiM(jet.pt, jet.eta, jet.phi, jet.mass) 
+
+#     corrFactor = 1 / (1-jet.rawFactor)
+
+#     if ((j*(1-jet.rawFactor)-l).Rho()<1e-4): 
+#         return l # matched to jet containing only the lepton
+
+    
+#     j = (j*(1-jet.rawFactor)-l*(1.0/jet.l1corrFactor))*corrFactor+l
+
+#     return j
+# #    return j.Pt(), 1-jet.rawFactor, jet.l1corrFactor, corrFactor
+
+
+
+# def _pratio(lep,jet):
+#     return lep.pt / jetLepAwareJEC(lep, jet).Pt() 
+
+# def _ptrel(lep,jet):
+#     m = jetLepAwareJEC(lep,jet)
+#     l = ROOT.TLorentzVector(); l.SetPtEtaPhiM(lep.pt, lep.eta, lep.phi, lep.mass)
+#     if ((m-l).Rho() < 1e-4): return 0 
+#     return l.Perp((m-l).Vect())
+
+ 
+
+
+
 MODULES.append( ('jetPtRatiov3', lambda : ObjFloatCalc(None,"LepGood",
-                                                       dict(jetPtRatiov3 = lambda lep: lep.jetPtRatiov2 if lep.jetBTagCSV > -98 else 1.0/(1.0 + lep.relIso04)))) )
+                                                       dict(jetPtRatiov3 = lambda lep: 1/(1+lep.jetRelIso),)
+                                                       )))
+
+
+
+from CMGTools.TTHAnalysis.tools.lepJetVars import LepJetVars
+MODULES.append( ('lepJetVars', lambda : LepJetVars(None, 
+                                                   dict( jetBTagDeepCSV = (lambda lep, jet: jet.btagDeepB, lambda lep : 0 )))))
+
+
+
+
+from CMGTools.TTHAnalysis.tools.genLepVars import GenLepVars
+
+MODULES.append( ('genLepVars', lambda : GenLepVars(None, 
+                                                    dict( isMatchRightCharge = (lambda lep, gen: (lep.genPartFlav == 1 or lep.genPartFlav == 15) and (gen.pdgId == lep.pdgId), lambda lep : 0),
+                                                          )
+)))
+
+
+
+
+
+
+def _bitFromInt(num, idx):
+    # returns the bit in the idx's position of num 
+    bitMap = "{0:b}".format(num)
+    if idx > len(bitMap): return False
+    return bool(int(bitMap[-idx]))
+
 
 def clean_and_FO_selection_TTH(lep):
-    return lep.conept>10 and lep.jetBTagDeepCSV<0.4941 and (abs(lep.pdgId)!=11 or _ttH_idEmu_cuts_E3(lep)) \
+    return lep.conept>10 and lep.jetBTagDeepCSV<0.4941 and (abs(lep.pdgId)!=11 or (_ttH_idEmu_cuts_E3(lep) and lep.convVeto and lep.lostHits==0) \
+    ) \
         and (lep.mvaTTH>0.90 or \
-                 (abs(lep.pdgId)==13 and lep.jetBTagDeepCSV<0.07 and lep.segmentCompatibility>0.3 and lep.jetPtRatiov3>0.60) or \
-                 (abs(lep.pdgId)==11 and lep.jetBTagDeepCSV<0.07 and lep.mvaIdFall17noIso>0.5 and lep.jetPtRatiov3>0.60) \
+                 (abs(lep.pdgId)==13 and lep.jetBTagDeepCSV<0.07 and lep.segmentComp>0.3 and lep.jetPtRatiov3>0.60) or \
+                 (abs(lep.pdgId)==11 and lep.jetBTagDeepCSV<0.07 and lep.mvaFall17V1noIso>0.5 and lep.jetPtRatiov3>0.60) \
                  )
 
+def _FOTauSel(tau):
+    return tau.pt > 20 and abs(tau.eta)<2.3 and abs(tau.dxy) < 1000 and abs(tau.dz) < 0.2 and _bitFromInt(tau.idMVAoldDMdR032017v2,2) and tau.idDecayMode
+
 MODULES.append( ('leptonJetFastReCleanerTTH_step1', lambda : CombinedObjectTaggerForCleaning("InternalRecl",
-                                                                                       looseLeptonSel = lambda lep : lep.miniPFRelIso_all < 0.4 and lep.sip3d < 8,
+                                                                                       looseLeptonSel = lambda lep : preselectLepton(lep),
                                                                                        cleaningLeptonSel = clean_and_FO_selection_TTH,
                                                                                        FOLeptonSel = clean_and_FO_selection_TTH,
                                                                                        tightLeptonSel = lambda lep : clean_and_FO_selection_TTH(lep) and (abs(lep.pdgId)!=13 or lep.mediumId>0) and lep.mvaTTH > 0.90,
-                                                                                       FOTauSel = lambda tau: tau.pt > 20 and abs(tau.eta)<2.3 and abs(tau.dxy) < 1000 and abs(tau.dz) < 0.2 and idMVAoldDMdR032017v2 == 2 and tau.idDecayMode,
-                                                                                       tightTauSel = lambda tau: idMVAoldDMdR032017v2 == 4,
-                                                                                       #FOTauSel = lambda tau: tau.pt > 20 and abs(tau.eta)<2.3 and abs(tau.dxy) < 1000 and abs(tau.dz) < 0.2 and tauID_oldDMdR0p3wLT2017v2_WP(tau.pt,tau.mvaId2017,1) and tau.idDecayMode,
-                                                                                       #tightTauSel = lambda tau: tauID_oldDMdR0p3wLT2017v2_WP(tau.pt,tau.mvaId2017,2),
-                                                                                       selectJet = lambda jet: abs(jet.eta)<2.4,
+                                                                                       FOTauSel = lambda tau: _FOTauSel(tau), #  
+                                                                                       tightTauSel = lambda tau: _bitFromInt(tau.idMVAoldDMdR032017v2,3), 
+                                                                                       selectJet = lambda jet: abs(jet.eta)<2.4 and _bitFromInt(jet.jetId,2),
                                                                                        coneptdef = lambda lep: conept_TTH(lep) ) ))
 MODULES.append( ('leptonJetFastReCleanerTTH_step2_mc',lambda : fastCombinedObjectRecleaner(label="Recl",
                                                                                            inlabel="_InternalRecl",
@@ -345,8 +186,24 @@ MODULES.append( ('leptonJetFastReCleanerTTH_step2_data',lambda : fastCombinedObj
                                                                                              btagM_thr=0.4941,
                                                                                              isMC = False) ))
 
+
+
+
+
+
+
+# 1_recleaner: 
+# run mc: jetPtRatiov3 lepJetVars genLepVars leptonJetFastReCleanerTTH_step1 leptonJetFastReCleanerTTH_step2_mc
+# run data: jetPtRatiov3 lepJetVars  leptonJetFastReCleanerTTH_step1 leptonJetFastReCleanerTTH_step2_data
+
+# 2_TauTightFlag:
+# LooseLepTag TauTightFlag
+
+# 4_eventVars: LooseLepTag eventVars
 from CMGTools.TTHAnalysis.tools.eventVars_2lss import EventVars2LSS
 MODULES.append( ('eventVars', lambda : EventVars2LSS('','Recl')) )
+
+
 
 from CMGTools.TTHAnalysis.tools.kinMVA_2D_2lss_3l import KinMVA_2D_2lss_3l
 MODULES.append( ('kinMVA_2D_2lss_3l', lambda : KinMVA_2D_2lss_3l(os.environ["CMSSW_BASE"]+"/src/CMGTools/TTHAnalysis/data/kinMVA/tth/%s_BDTG.weights.xml", useTT_2lss='v8,rTT,httTT', useMEM_3l = False)) )
@@ -414,43 +271,54 @@ MODULES.append( ('BDThttTT_Hj', lambda : BDT_eventReco(os.environ["CMSSW_BASE"]+
 from CMGTools.TTHAnalysis.tools.evtTagger import EvtTagger
 
 MODULES.append( ('Trigger_1e', lambda : EvtTagger("Trigger_1e",[
-                lambda ev : ev.HLT_BIT_HLT_Ele32_WPTight_Gsf_v or ev.HLT_BIT_HLT_Ele35_WPTight_Gsf_v
+                lambda ev : (ev.HLT_Ele32_WPTight_Gsf if hasattr(ev, 'HLT_Ele32_WPTight_Gsf')  else False) or ev.HLT_Ele35_WPTight_Gsf
                     ])))
 MODULES.append( ('Trigger_1m', lambda : EvtTagger("Trigger_1m",[
-                lambda ev : ev.HLT_BIT_HLT_IsoMu24_v or ev.HLT_BIT_HLT_IsoMu27_v
+                lambda ev : ev.HLT_IsoMu24 or ev.HLT_IsoMu27
                     ])))
 MODULES.append( ('Trigger_2e', lambda : EvtTagger("Trigger_2e",[
-                lambda ev : ev.HLT_BIT_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v or ev.HLT_BIT_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v
+                lambda ev : ev.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or ev.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
                     ])))
 MODULES.append( ('Trigger_2m', lambda : EvtTagger("Trigger_2m",[
-                lambda ev : ev.HLT_BIT_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v or ev.HLT_BIT_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8_v
+                lambda ev : ev.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ or ( ev.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8 if hasattr(ev, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8') else False)
                     ])))
 MODULES.append( ('Trigger_em', lambda : EvtTagger("Trigger_em",[
-                lambda ev : ev.HLT_BIT_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v or \
-                    ev.HLT_BIT_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v or \
-                    ev.HLT_BIT_HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v
+                lambda ev : (ev.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL if hasattr(ev,'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL') else False) or \
+                    ev.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or \
+                    ev.HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
                     ])))
 MODULES.append( ('Trigger_3e', lambda : EvtTagger("Trigger_3e",[
-                lambda ev : ev.HLT_BIT_HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v
+                lambda ev : ev.HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL
                     ])))
 MODULES.append( ('Trigger_3m', lambda : EvtTagger("Trigger_3m",[
-                lambda ev : ev.HLT_BIT_HLT_TripleMu_12_10_5_v
+                lambda ev : ev.HLT_TripleMu_12_10_5
                     ])))
 MODULES.append( ('Trigger_mee', lambda : EvtTagger("Trigger_mee",[
-                lambda ev : ev.HLT_BIT_HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v
+                lambda ev : ev.HLT_Mu8_DiEle12_CaloIdL_TrackIdL
                     ])))
 MODULES.append( ('Trigger_mme', lambda : EvtTagger("Trigger_mme",[
-                lambda ev : ev.HLT_BIT_HLT_DiMu9_Ele9_CaloIdL_TrackIdL_DZ_v
+                lambda ev : ev.HLT_DiMu9_Ele9_CaloIdL_TrackIdL_DZ
                     ])))
 MODULES.append( ('Trigger_2lss', lambda : EvtTagger("Trigger_2lss",[
                 lambda ev : ev.Trigger_1e or ev.Trigger_1m or ev.Trigger_2e or ev.Trigger_2m or ev.Trigger_em ])))
 MODULES.append( ('Trigger_3l', lambda : EvtTagger("Trigger_3l",[
                 lambda ev : ev.Trigger_2lss or ev.Trigger_3e or ev.Trigger_3m or ev.Trigger_mee or ev.Trigger_mme ])))
 
+# -m 'Trigger_1e' -m 'Trigger_1m' -m 'Trigger_2e' -m 'Trigger_2m' -m 'Trigger_em' -m 'Trigger_3e' -m 'Trigger_3m' -m 'Trigger_mee' -m 'Trigger_mme' -m 'Trigger_2lss' -m 'Trigger_3l'
+    
 
 from CMGTools.TTHAnalysis.tools.objTagger import ObjTagger
 MODULES.append( ('TauTightFlag', lambda : ObjTagger("isTauTight","TauSel_Recl",
-                                                    [lambda tau : idMVAoldDMdR032017v2 == 4])))
+                                                    [lambda tau : _bitFromInt(tau.idMVAoldDMdR032017v2,3)]
+                                                )))
+
+MODULES.append( ('LooseLepTag', lambda : ObjTagger("isLooseLep","LepGood",
+                                                    [lambda lep : preselectLepton(lep) ]
+                                                )))
+
+
+
+                                                    
 
 from CMGTools.TTHAnalysis.tools.bTagEventWeightsCSVFullShape import BTagEventWeightFriend
 MODULES.append( ('eventBTagWeight', lambda : BTagEventWeightFriend(csvfile=os.environ["CMSSW_BASE"]+"/src/CMGTools/TTHAnalysis/data/btag/DeepCSV_94XSF_V2_B_F.csv",
@@ -477,3 +345,11 @@ MODULES.append( ('vtxWeight', lambda : VertexWeightFriend(myfile=None, targetfil
 
 from CMGTools.TTHAnalysis.tools.bestHmmFriend import BestHmm
 MODULES.append( ('bestHmm', lambda : BestHmm(label="_Recl")) )
+
+from CMGTools.TTHAnalysis.tools.synchNtuples import SynchNtuples
+MODULES.append( ('synchNtuples', lambda : SynchNtuples()))
+
+
+
+
+

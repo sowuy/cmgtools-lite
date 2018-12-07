@@ -55,12 +55,13 @@ def _runIt(args):
         timer = ROOT.TStopwatch(); timer.Start()
         # now we do
         os.system("mkdir -p "+myoutpath)
-        os.system("cp -r %s/skimAnalyzerCount %s/" % (mysource,myoutpath))
+        print 'still to add this'
+        #os.system("cp -r %s/skimAnalyzerCount %s/" % (mysource,myoutpath))
         os.system("mkdir -p %s/%s" % (myoutpath,options.tree))
         histo = ROOT.gROOT.FindObject("Count")
         histo_w = ROOT.gROOT.FindObject("SumGenWeights")
         if not options.oldstyle:
-            fout = ROOT.TFile("%s/%s/tree.root" % (myoutpath,options.tree), "RECREATE", "", options.compression);
+            fout = ROOT.TFile("%s/%s/Events.root" % (myoutpath,options.tree), "RECREATE", "", options.compression);
         else:
             fout = ROOT.TFile("%s/%s/%s_tree.root" % (myoutpath,options.tree,options.tree), "RECREATE", "", options.compression);
         mytree.Draw('>>elist',mycut)
@@ -109,7 +110,7 @@ def _runIt(args):
         while friends and friends.GetSize() > 0:
             out.RemoveFriend(friends.At(0).GetTree())
             friends = out.GetListOfFriends() or []
-        fout.WriteTObject(out,options.tree if options.oldstyle else "tree")
+        fout.WriteTObject(out,options.tree if options.oldstyle else "Events")
         if histo: histo.Write()
         if histo_w: histo_w.Write()
         fout.Close(); timer.Stop()
