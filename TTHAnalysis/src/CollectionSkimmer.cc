@@ -9,6 +9,7 @@ void CollectionSkimmer::CopyVar<T1,T2>::branch(TTree *tree, unsigned int maxLeng
     std::string typecode = "?";
     if      (typeid(T2) == typeid(int))   typecode = "I";
     else if (typeid(T2) == typeid(float)) typecode = "F";
+    else if (typeid(T2) == typeid(unsigned char)) typecode = "b";
     else throw std::logic_error("Unsupported type");
     tree->Branch( (collName_ + "_" + varName_).c_str(),
                   out_.get(),
@@ -33,6 +34,7 @@ CollectionSkimmer::makeBranches(TTree *tree, unsigned int maxEntries, bool padSe
     }
     for (auto & c : copyFloats_) c.branch(tree, maxEntries);
     for (auto & c : copyInts_) c.branch(tree, maxEntries);
+    for (auto & c : copyUChars_) c.branch(tree, maxEntries);
     hasBranched_ = true;
 }
 
@@ -44,6 +46,11 @@ void CollectionSkimmer::copyFloat(const std::string &varname, TTreeReaderArray<F
 void CollectionSkimmer::copyInt(const std::string &varname, TTreeReaderArray<Int_t> * src) 
 {
     _copyVar(varname, src, copyInts_);
+}
+
+void CollectionSkimmer::copyUChar(const std::string &varname, TTreeReaderArray<UChar_t> * src) 
+{
+    _copyVar(varname, src, copyUChars_);
 }
 
 void CollectionSkimmer::srcCount(TTreeReaderValue<unsigned int> * src)

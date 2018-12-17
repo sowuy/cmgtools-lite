@@ -92,6 +92,7 @@ class Object:
                     val = getattr(ROOT,name)
                 except AttributeError, e2:
                     raise e
+        val = ord(val) if type(val)==str else val
         self.__dict__[name] = val ## cache
         return val
     def __getitem__(self,attr):
