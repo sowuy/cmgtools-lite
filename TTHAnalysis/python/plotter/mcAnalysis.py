@@ -201,7 +201,6 @@ class MCAnalysis:
                     # Heppy calls the tree just 'tree.root'
                     rootfile = "%s/%s/%s/Events.root" % (basepath, cname, treename)
                     rootfile = open(rootfile+".url","r").readline().strip()
-                pckfile = basepath+"/%s/skimAnalyzerCount/SkimReport.pck" % cname
 
                 tty = TreeToYield(rootfile, options, settings=extra, name=pname, cname=cname, objname=objname, variation_inputs=variations.values()); ttys.append(tty)
                 if signal: 
@@ -215,17 +214,17 @@ class MCAnalysis:
                 if pname in self._allData: self._allData[pname].append(tty)
                 else                     : self._allData[pname] =     [tty]
                 if "data" not in pname:
-                    pckobj  = pickle.load(open(pckfile,'r'))
-                    counters = dict(pckobj)
-                    if ('Sum Weights' in counters) and options.weight:
-                        if (is_w==0): raise RuntimeError, "Can't put together a weighted and an unweighted component (%s)" % cnames
-                        is_w = 1; 
-                        total_w += counters['Sum Weights']
+                    rFile = ROOT.TFile.Open(rootfile)
+                    if options.weight:
+                        SumWeights = rFile.Get("SumWeights")
+                        is_w = 1
+                        total_w += SumWeights.Integral()
                         scale = "genWeight*(%s)" % field[2]
                     else:
                         if (is_w==1): raise RuntimeError, "Can't put together a weighted and an unweighted component (%s)" % cnames
                         is_w = 0;
-                        total_w += counters['All Events']
+                        Count = rFile.Get("Count")
+                        total_w += Count.Integral()
                         scale = "(%s)" % field[2]
                     if len(field) == 4: scale += "*("+field[3]+")"
                     for p0,s in options.processesToScale:
