@@ -6,6 +6,7 @@
 #include "CMGTools/TTHAnalysis/interface/CollectionSkimmer.h"
 #include "CMGTools/TTHAnalysis/interface/CombinedObjectTags.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
+#include <DataFormats/Math/interface/deltaR.h>
 
 struct LeptonPairInfo {
   int i;
@@ -33,7 +34,7 @@ public:
   typedef math::PtEtaPhiMLorentzVectorD ptvec;
   typedef math::XYZTLorentzVectorD crvec;
   
-  fastCombinedObjectRecleanerMassVetoCalculator(CollectionSkimmer &skim_lepsF, CollectionSkimmer &skim_lepsT, bool doVetoZ, bool doVetoLMf, bool doVetoLMt) : skim_lepsF_(skim_lepsF), skim_lepsT_(skim_lepsT), doVetoZ_(doVetoZ), doVetoLMf_(doVetoLMf), doVetoLMt_(doVetoLMt){}
+  fastCombinedObjectRecleanerMassVetoCalculator(CollectionSkimmer &skim_lepsF, CollectionSkimmer &skim_lepsT, bool doVetoZ, bool doVetoLMf, bool doVetoLMt) : skim_lepsF_(skim_lepsF), skim_lepsT_(skim_lepsT), doVetoZ_(doVetoZ), doVetoLMf_(doVetoLMf), doVetoLMt_(doVetoLMt), deltaRcutForElecs_(0.3){}
   
   void setLeptons(ruint *nLep, rfloats *lepPt, rfloats *lepEta, rfloats *lepPhi, rfloats *lepMass, rints *lepPdgId) {
     nLep_ = nLep; Lep_pt_ = lepPt; Lep_eta_ = lepEta; Lep_phi_ = lepPhi; Lep_mass_ = lepMass; Lep_pdgid_ = lepPdgId;
@@ -63,6 +64,7 @@ public:
   void run() {
 
     int nLep = **nLep_;
+    std::set<int> vetos;
     for (int i=0; i<nLep; i++) if (leps_loose[i]) leps_p4[i] = ptvec((*Lep_pt_)[i],(*Lep_eta_)[i],(*Lep_phi_)[i],(*Lep_mass_)[i]);
     for (int i=0; i<nLep; i++){
       if (!leps_loose[i]) continue;
@@ -74,7 +76,19 @@ public:
 	pair.m = Mass(i,j);
 	pair.isOS = ((*Lep_pdgid_)[i]*(*Lep_pdgid_)[j]<0);
 	pair.isSF = (abs((*Lep_pdgid_)[i])==abs((*Lep_pdgid_)[j]));
+	float dr = deltaR(leps_p4[i],leps_p4[j]);
+	if (dr < deltaRcutForElecs_){ 
+          if ( abs((*Lep_pdgid_)[i]) == 11 && abs((*Lep_pdgid_)[j]) == 13){
+	    vetos.insert( i);
+	    continue;
+	  }
+	  else if  ( abs((*Lep_pdgid_)[i]) == 13 && abs((*Lep_pdgid_)[j]) == 11){
+            vetos.insert( j);
+	    continue;
+	  }
+	}
 	pairs.push_back(pair);
+
       }
     }
 
@@ -86,6 +100,9 @@ public:
     }
     for (auto i: veto_FO) leps_fo.erase(std::remove(leps_fo.begin(),leps_fo.end(),i),leps_fo.end());
     for (auto i: veto_tight) leps_tight.erase(std::remove(leps_tight.begin(),leps_tight.end(),i),leps_tight.end());
+
+    for (auto i: vetos) leps_fo.erase(std::remove(leps_fo.begin(),leps_fo.end(),i),leps_fo.end());
+    for (auto i: vetos) leps_tight.erase(std::remove(leps_tight.begin(),leps_tight.end(),i),leps_tight.end());
 
     for (auto i : leps_fo) skim_lepsF_.push_back(i);
     for (auto i : leps_tight) skim_lepsT_.push_back(i);
@@ -136,4 +153,6 @@ private:
   bool doVetoZ_;
   bool doVetoLMf_;
   bool doVetoLMt_;
+  float deltaRcutForElecs_;
+
 };
