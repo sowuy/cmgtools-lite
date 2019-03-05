@@ -10,19 +10,19 @@ dowhat = "plots"
 #dowhat = "yields" 
 #dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
 
-P0="/afs/cern.ch/work/p/peruzzi/tthtrees"
+P0="/pool/ciencias/userstorage/sscruz/NanoAOD/"
 if 'cmsco01'   in os.environ['HOSTNAME']: P0="/data/peruzzi"
 if 'cmsphys10' in os.environ['HOSTNAME']: P0="/data1/g/gpetrucc"
-TREES = "--Fs {P}/5_triggerDecision_230418_v1 --Fs {P}/7_tauTightSel_v2 --FMCs {P}/8_vtxWeight2017_v1 --FMCs {P}/6_bTagSF_v2"
-TREESONLYSKIM = "-P "+P0+"/TREES_TTH_190418_Fall17_skim2lss3l --Fs {P}/1_recleaner_180518_v2 --Fs {P}/2_eventVars_230418_v2 --Fs {P}/3_kinMVA_noMEM_200618_v5 --Fs {P}/4_BDTv8_Hj_200618_v1 --Fs {P}/4_BDTrTT_Hj_200618_v1 --Fs {P}/4_BDThttTT_Hj_200618_v4"
-TREESONLYFULL = "-P "+P0+"/TREES_TTH_190418_Fall17 --Fs {P}/1_recleaner_230418_v2"
-TREESONLYMEMZVETO = "-P "+P0+"/TREES_TTH_190418_Fall17_skim_3l_2j_2b1B_Zveto_presc --Fs {P}/1_recleaner_180518_v2 --Fs {P}/2_eventVars_230418_v2 --Fs {P}/3_kinMVA_withMEM_200618_v5 --Fs {P}/4_BDTv8_Hj_200618_v1 --Fs {P}/4_BDTrTT_Hj_200618_v1 --Fs {P}/4_BDThttTT_Hj_200618_v4 --Fs {P}/4_MEM_v4 --FMCs {P}/4_MEM_JECs_v1"
-TREESONLYMEMZPEAK = "-P "+P0+"/TREES_TTH_190418_Fall17_skim_3l_2j_2b1B_Zpeak_presc --Fs {P}/1_recleaner_180518_v2 --Fs {P}/2_eventVars_230418_v2 --Fs {P}/3_kinMVA_withMEM_200618_v5 --Fs {P}/4_BDTv8_Hj_200618_v1 --Fs {P}/4_BDTrTT_Hj_200618_v1 --Fs {P}/4_BDThttTT_Hj_200618_v4 --Fs {P}/4_MEM_v4 --FMCs {P}/4_MEM_JECs_v1"
+TREES = ""
+
+#TREESONLYSKIM = "-P "+P0+"/NanoAODtest_v2 --Fs {P}/1_recleaner --Fs {P}/2_TauTightFlag --Fs {P}/3_triggerResult  --Fs {P}/4_eventVars "
+TREESONLYSKIM = "-P "+P0+"/NanoAOD_v4_Dec2018_2017_v2_2loose_ss_3l --Fs {P}/1_recl --Fs {P}/2_trig --FMCs {P}/3_btag --Fs {P}/4_tauflag"
+TREESONLYFULL = TREESONLYSKIM
 
 def base(selection):
 
     CORE=' '.join([TREES,TREESONLYSKIM])
-    CORE+=" -f -j 8 -l 41.4 --s2v -L ttH-multilepton/functionsTTH.cc --tree treeProducerSusyMultilepton --mcc ttH-multilepton/lepchoice-ttH-FO.txt --split-factor=-1 --WA prescaleFromSkim "# --neg"
+    CORE+=" -f -j 8 -l 41.4 --s2v -L ttH-multilepton/functionsTTH.cc --tree nanoAODskim --mcc ttH-multilepton/lepchoice-ttH-FO.txt --split-factor=-1  "# --neg"
     RATIO= " --maxRatioRange 0.0  1.99 --ratioYNDiv 505 "
     RATIO2=" --showRatio --attachRatioPanel --fixRatioRange "
     LEGEND=" --legendColumns 2 --legendWidth 0.25 "
@@ -32,20 +32,20 @@ def base(selection):
 
     if selection=='2lss':
         GO="%s ttH-multilepton/mca-2lss-mc.txt ttH-multilepton/2lss_tight.txt "%CORE
-        GO="%s -W 'vtxWeight2017*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],2)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],2)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],2)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],2)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^lep(3|4)_.*' --xP '^(3|4)lep_.*' --xP 'kinMVA_3l_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 3 --legendWidth 0.52 ")
         if dowhat == "plots": GO=GO.replace(RATIO,  " --maxRatioRange 0.6  1.99 --ratioYNDiv 210 ")
         GO += " --binname 2lss "
     elif selection=='3l':
         GO="%s ttH-multilepton/mca-3l-mc.txt ttH-multilepton/3l_tight.txt "%CORE
-        GO="%s -W 'vtxWeight2017*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[2]],LepGood_pt[iLepFO_Recl[2]],LepGood_eta[iLepFO_Recl[2]],3)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[2]],LepGood_pt[iLepFO_Recl[2]],LepGood_eta[iLepFO_Recl[2]],3)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^(2|4)lep_.*' --xP '^lep4_.*' --xP 'kinMVA_2lss_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 3 --legendWidth 0.42 ")
         GO += " --binname 3l "
     elif selection=='4l':
         GO="%s ttH-multilepton/mca-4l-mc.txt ttH-multilepton/4l_tight.txt "%CORE
-        GO="%s -W 'vtxWeight2017*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[2]],LepGood_pt[iLepFO_Recl[2]],LepGood_eta[iLepFO_Recl[2]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[3]],LepGood_pt[iLepFO_Recl[3]],LepGood_eta[iLepFO_Recl[3]],3)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[2]],LepGood_pt[iLepFO_Recl[2]],LepGood_eta[iLepFO_Recl[2]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[3]],LepGood_pt[iLepFO_Recl[3]],LepGood_eta[iLepFO_Recl[3]],3)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^(2|3)lep_.*' --xP '^lep(1|2|3|4)_.*' --xP 'kinMVA_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 2 --legendWidth 0.3 ")
         if dowhat == "plots": GO=GO.replace(RATIO,  " --maxRatioRange 0.0  2.99 --ratioYNDiv 505 ")
@@ -94,6 +94,7 @@ if __name__ == '__main__':
     if '2lss_' in torun:
         x = base('2lss')
         if '_appl' in torun: x = add(x,'-I ^TT ')
+        if '_flip' in torun: x = add(x,'-I ^same-sign')
         if '_1fo' in torun:
             x = add(x,"-A alwaystrue 1FO 'LepGood1_isLepTight+LepGood2_isLepTight==1'")
             x = x.replace("--xP 'nT_.*'","")
@@ -116,6 +117,12 @@ if __name__ == '__main__':
 
         if '_mll200' in torun:
             x = add(x,"-E ^mll200 ")
+
+        if '_synch' in torun:
+            x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
+            x = add(x, ' --Fs {P}/8_synch')
+
+
 
         if '_splitfakes' in torun:
             x = x.replace('mca-2lss-mc.txt','mca-2lss-mc-flavsplit.txt')
@@ -187,6 +194,10 @@ if __name__ == '__main__':
     if '3l_' in torun:
         x = base('3l')
         if '_appl' in torun: x = add(x,'-I ^TTT ')
+        if '_synch' in torun: 
+            x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
+            x = add(x, ' --Fs {P}/8_synch')
+
         if '_1fo' in torun:
             x = add(x,"-A alwaystrue 1FO 'LepGood1_isLepTight+LepGood2_isLepTight+LepGood3_isLepTight==2'")
             x = x.replace("--xP 'nT_.*'","")
@@ -261,6 +272,11 @@ if __name__ == '__main__':
         if '_appl' in torun: x = add(x,'-I ^TTTT ')
         if '_relax' in torun: x = add(x,'-X ^TTTT ')
         if '_data' in torun: x = x.replace('mca-4l-mc.txt','mca-4l-mcdata.txt')
+        if '_extr' in torun: x = x.replace('mca-4l-mc.txt','mca-4l-mc-sigextr.txt')
+        if '_synch' in torun: 
+            x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
+            x = add(x, ' --Fs {P}/8_synch')
+
         if '_frdata' in torun:
             x = promptsub(x)
             raise RuntimeError, 'Fakes estimation not implemented for 4l'
@@ -271,6 +287,15 @@ if __name__ == '__main__':
     if 'cr_3j' in torun:
         x = base('2lss')
         if '_data' in torun: x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata.txt')
+        if '_appl' in torun: x = add(x,'-I ^TT ')
+        if '_relax' in torun: x = add(x,'-X ^TT ')
+        if '_flip' in torun: x = add(x,'-I ^same-sign')
+        if '_synch' in torun: 
+            x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
+            x = add(x, ' --Fs {P}/8_synch')
+        if '_extr' in torun:
+            x = x.replace('mca-2lss-mc.txt','mca-2lss-mc-sigextr.txt').replace('--showRatio --maxRatioRange 0 2','--showRatio --maxRatioRange 0 1 --ratioYLabel "S/B"')
+
         if '_frdata' in torun:
             x = promptsub(x)
             if not '_data' in torun: raise RuntimeError
@@ -322,6 +347,14 @@ if __name__ == '__main__':
 
     if 'cr_wz' in torun:
         x = base('3l')
+        if '_appl' in torun: x = add(x,'-I ^TTT ')
+        if '_synch' in torun:
+            x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
+            x = add(x, ' --Fs {P}/8_synch')
+        if '_extr' in torun:
+            x = x.replace('mca-3l-mc.txt','mca-3l-mc-sigextr.txt').replace('--showRatio --maxRatioRange 0 2','--showRatio --maxRatioRange 0 1 --ratioYLabel "S/B"')
+        if '_relax' in torun: x = add(x,'-X ^TTT ')
+
         x = x.replace("--binname 3l","--binname 3l_crwz")
         x = add(x,"-I 'Zveto' -I ^2b1B ")
         x = add(x, " --Fs {P}/7_bestMTW3l_v1 ")
@@ -349,6 +382,16 @@ if __name__ == '__main__':
 
     if 'cr_ttz' in torun:
         x = base('3l')
+        if '_appl' in torun: x = add(x,'-I ^TTT ')
+
+        if '_synch' in torun:
+            x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
+            x = add(x, ' --Fs {P}/8_synch')
+        if '_extr' in torun:
+            x = x.replace('mca-3l-mc.txt','mca-3l-mc-sigextr.txt').replace('--showRatio --maxRatioRange 0 2','--showRatio --maxRatioRange 0 1 --ratioYLabel "S/B"')
+
+        if '_relax' in torun: x = add(x,'-X ^TTT ')
+
         if '_data' in torun: x = x.replace('mca-3l-mc.txt','mca-3l-mcdata.txt')
         if '_frdata' in torun:
             x = promptsub(x)
@@ -356,7 +399,10 @@ if __name__ == '__main__':
             x = x.replace('mca-3l-mcdata.txt','mca-3l-mcdata-frdata.txt')
         plots = ['lep2_pt','met','nJet25','mZ1']
         plots += ['3lep_.*','nJet25','nBJetLoose25','nBJetMedium25','met','metLD','htJet25j','mhtJet25','mtWmin','htllv','kinMVA_3l_ttbar','kinMVA_3l_ttV','kinMVA_3l_ttV_withMEM','era']
-        x = add(x,"-I 'Zveto' -X ^2b1B -E ^gt2b -E ^1B ")
+        x = add(x,"-I 'Zveto'  ")
+        if '_tight' in torun:
+            x = add(x,'-X ^2b1B -E ^gt2b -E ^1B')
+
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
         if '_4j' in torun:
@@ -380,6 +426,11 @@ if __name__ == '__main__':
         x = base('4l')
         x = x.replace('mca-4l-mc.txt','mca-4l-mcdata-splitdecays.txt')
         x = x.replace("--binname 4l","--binname 4l_crzz")
+        if '_extr' in torun: x = x.replace('mca-4l-mc.txt','mca-4l-mc-sigextr.txt')
+        if '_synch' in torun: 
+            x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
+            x = add(x, ' --Fs {P}/8_synch')
+
         x = add(x,"-I ^Zveto -I ^2b1B")
         if '_data' not in torun: x = add(x, "--xp data ")
         if '_frdata' in torun:

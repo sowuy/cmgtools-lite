@@ -60,6 +60,7 @@ def _runIt(args):
         os.system("mkdir -p %s/%s" % (myoutpath,options.tree))
         histo = ROOT.gROOT.FindObject("Count")
         histo_w = ROOT.gROOT.FindObject("SumGenWeights")
+        histo_w2 = ROOT.gROOT.FindObject("SumWeights")
         if not options.oldstyle:
             fout = ROOT.TFile("%s/%s/Events.root" % (myoutpath,options.tree), "RECREATE", "", options.compression);
         else:
@@ -113,6 +114,7 @@ def _runIt(args):
         fout.WriteTObject(out,options.tree if options.oldstyle else "Events")
         if histo: histo.Write()
         if histo_w: histo_w.Write()
+        if histo_w2: histo_w2.Write()
         fout.Close(); timer.Stop()
         print "  Done   %-40s: %8d/%8d %8.1f min" % (tty.cname(), npass, ntot, timer.RealTime()/60.)
 

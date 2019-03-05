@@ -24,6 +24,8 @@ debug_higgsDecayMode : GenHiggsDecayMode : 30,-0.5,29.5 ; XTitle="Decay mode", L
 debug_badMuonFilter : Flag_badMuonMoriond2017 || Flag_badCloneMuonMoriond2017 : 2,-0.5,1.5; XTitle = "Bad muon event", Logy
 
 nJet25:	    	nJet25					: [1.5,2.5,3.5,4.5,5.5,6.5,7.5] ; XTitle='N(jet\, p_{T} > 25 GeV)', XNDiv=5, xBinLabels="2\,3\,4\,5\,6\,#geq 7"
+nJet25_from0:	    	nJet25					: [-0.5,0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5] ; XTitle='N(jet\, p_{T} > 25 GeV)', XNDiv=5, xBinLabels="0\,1\,2\,3\,4\,5\,6\,#geq 7"
+nJet40_from0:	    	nJet40					: [-0.5,0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5] ; XTitle='N(jet\, p_{T} > 40 GeV)', XNDiv=5, xBinLabels="0\,1\,2\,3\,4\,5\,6\,#geq 7"
 2lep_nJet25_from4:  	nJet25					: [3.5,4.5,5.5,6.5,7.5] ; XTitle='N(jet\, p_{T} > 25 GeV)', XNDiv=5, xBinLabels="4\,5\,6\,#geq 7"
 3lep_nJet25:	    	nJet25					: [1.5,2.5,3.5,4.5,5.5,6.5,7.5] ; XTitle='N(jet\, p_{T} > 25 GeV)', XNDiv=5, xBinLabels="2\,3\,4\,5\,6\,#geq 7"
 4lep_nJet25:	    	nJet25					: [1.5,2.5,3.5,4.5,5.5] ; XTitle='N(jet\, p_{T} > 25 GeV)', XNDiv=5, xBinLabels="2\,3\,4\,#geq 5"
@@ -90,14 +92,14 @@ nTauFO:	    	nTauFO					: [-0.5,0.5,1.5,2.5] ; XTitle='N(#tau FO\, p_{T} > 20 Ge
 
 htJet25j:   	htJet25j 				: 40,0,1000 ; XTitle="H_{T}(jet p_{T} > 25) (GeV)"
 mhtJet25:   	mhtJet25 				: 40,0,400 ; XTitle="H_{T}^{miss}(p_{T} > 25) (GeV)"
-met: 		met_pt					: 40,0,400 ; XTitle="E_{T}^{miss} (GeV)"
+met: 		METFixEE2017_pt				: 40,0,400 ; XTitle="E_{T}^{miss} (GeV)"
 metLD:		met_pt*0.6 + mhtJet25*0.4  	        : 40,0,400; XTitle="E_{T}^{miss} LD (GeV)"
 minMllAFAS:	minMllAFAS				: 20,0,200; XTitle="min M_{ll} (GeV)", Legend='TR'
 minMllAFOS:     minMllAFOS                              : 20,0,200; XTitle="min M_{ll} (GeV)", Legend='TR'
 minMllSFOS:     minMllSFOS                              : 20,0,200; XTitle="min M_{ll} (GeV)", Legend='TR'
 mZ1:		mZ1					: 80,50,130; XTitle="Best Z candidate mass (GeV)"
 mH1mm:		mH1mm					: 60,110,140; XTitle="Best H #rightarrow #mu #mu candidate mass (GeV)", IncludeOverflows=False, MoreY=2.0
-nVert:		nVert					: 240,0.5,60.5; XTitle="N_{vtx}"
+nVert:		PV_npvsGood				: 240,0.5,60.5; XTitle="N_{vtx}"
 
 
 #kinMVA_opt_2lss_2Dplot : kinMVA_2lss_ttV\:kinMVA_2lss_ttbar : 40,-1,1,40,-1,1; XTitle="BDT (ttH\,tt)", YTitle="BDT (ttH\,ttV)"

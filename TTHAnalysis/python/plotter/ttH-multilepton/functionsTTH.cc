@@ -229,8 +229,12 @@ float _get_recoToLoose_leptonSF_ttH(int pdgid, float pt, float eta, int nlep, fl
       float eta1 = std::max(float(hist1->GetXaxis()->GetXmin()+1e-5), std::min(float(hist1->GetXaxis()->GetXmax()-1e-5), eta));
       out *= hist1->Eval(eta1); // uncertainty ignored here
     }
-
-    if (out<=0) std::cout << "ERROR in muon recoToLoose SF: " << out << std::endl;
+    
+    if (abs(eta) > 2.4) return 0.;
+    if (out<=0){
+      std::cout << "pdg pt eta " <<  pdgid << " " << pt << " " << eta << endl;
+      std::cout << "ERROR in muon recoToLoose SF: " << out << std::endl;
+    }
     return out;
 
   }
@@ -323,6 +327,7 @@ float leptonSF_ttH(int pdgid, float pt, float eta, int nlep, float var=0){
   float recoToLoose = _get_recoToLoose_leptonSF_ttH(pdgid,pt,eta,nlep,var);
   float looseToTight = _get_looseToTight_leptonSF_ttH(pdgid,pt,eta,nlep); // var is ignored in all cases for the tight part (systematics handled as nuisance parameter)
   float res = recoToLoose*looseToTight;
+  if (abs(eta) > 2.4 && abs(pdgid)==13) return 0;
   if (!(res>0)) {std::cout << "ERROR in leptonSF " << res << std::endl; std::abort();}
   return res;
 
