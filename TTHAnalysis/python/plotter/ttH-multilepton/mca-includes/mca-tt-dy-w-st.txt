@@ -1,12 +1,11 @@
-TT      : TTJets_DiLepton_part1+TTJets_DiLepton_part2 : xsec ; FillColor=ROOT.kGray
-TT      : TTJets_SingleLeptonFromT : xsec ; FillColor=ROOT.kGray
-TT      : TTJets_SingleLeptonFromTbar : xsec ; FillColor=ROOT.kGray
-DY      : DYJetsToLL_M10to50_LO: xsec  ; FillColor=ROOT.kCyan
-DY      : DYJetsToLL_M50_LO: xsec  ; FillColor=ROOT.kCyan
-WJets   : WJetsToLNu_LO  : xsec  ; FillColor=ROOT.kCyan+2
+TT2L : TTTo2L2Nu_part1+TTTo2L2Nu_part2+TTTo2L2Nu_part3 : xsec ; FillColor=ROOT.kRed, Label="tt to 2l"
+TT1L : TTToSemiLeptonic_PSweights : xsec ; FillColor=ROOT.kGray, Label="tt to 1l"
+DY : DYJetsToLL_M50_part1+DYJetsToLL_M50_part2+DYJetsToLL_M50_part3+DYJetsToLL_M50_part4 : xsec ; FillColor=ROOT.kCyan
+DY      : DYJetsToLL_M10to50 : xsec ; FillColor=ROOT.kCyan
+WJets   : WJetsToLNu  : xsec  ; FillColor=ROOT.kCyan+2
 SingleTop: T_tch: xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
-SingleTop: TBar_tch: xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
-SingleTop: T_sch_lep: xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
-SingleTop: T_tWch_noFullyHad: xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
-SingleTop: TBar_tWch_noFullyHad: xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
-WW: WWTo2L2Nu: xsec  ; FillColor=ROOT.kGray+1
+SingleTop: Tbar_tch: xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop: T_sch: xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop: TW_NoFullyHadronic : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop: TbarW_NoFullyHadronic : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
+WW: WWTo2L2Nu : xsec  ; FillColor=ROOT.kYellow+1

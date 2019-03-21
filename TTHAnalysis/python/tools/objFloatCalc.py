@@ -1,4 +1,4 @@
-from CMGTools.TTHAnalysis.treeReAnalyzer import *
+from CMGTools.TTHAnalysis.treeReAnalyzer2 import *
 
 class ObjFloatCalc:
     def __init__(self,label,coll,newvars,sizelimit=10):
@@ -27,14 +27,15 @@ class ObjFloatCalc:
 if __name__ == '__main__':
     from sys import argv
     file = ROOT.TFile(argv[1])
-    tree = file.Get("tree")
+    tree = file.Get("Events")
     tree.vectorTree = True
     class Tester(Module):
         def __init__(self, name):
             Module.__init__(self,name,None)
-            self.sf1 = ObjFloatCalc("LepPtPlusCalibration","LepGood",{"PtPlus1": (lambda lep : lep.pt*1.01), "PtPlus2": (lambda lep : lep.pt*1.02)})
+            self.sf1 = ObjFloatCalc(None,"LepGood", dict(jetPtRatiov3 = lambda lep: 1,#1/(1+lep.jetRelIso),
+                                                          ))
         def analyze(self,ev):
-            print "\nrun %6d lumi %4d event %d: leps %d" % (ev.run, ev.lumi, ev.evt, ev.nLepGood)
+            print "\nrun %6d lumi %4d event %d: leps %d" % (ev.run, ev.luminosityBlock, ev.event, ev.nLepGood)
             print self.sf1(ev)
     el = EventLoop([ Tester("tester") ])
     el.loop([tree], maxEvents = 50)

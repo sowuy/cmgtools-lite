@@ -35,7 +35,7 @@ class fastCombinedObjectRecleaner:
         self._helper_lepsF = CollectionSkimmer("LepFO"+self.label, "LepGood", floats=[], maxSize=20, saveSelectedIndices=True,padSelectedIndicesWith=0)
         self._helper_lepsT = CollectionSkimmer("LepTight"+self.label, "LepGood", floats=[], maxSize=20, saveTagForAll=True)
         self._helper_taus = CollectionSkimmer("TauSel"+self.label, "Tau", floats=self.vars+self.vars_taus, ints=self.vars_taus_int, uchars=self.vars_taus_uchar, maxSize=20)
-        self._helper_jets = CollectionSkimmer("%sSel"%self.jc+self.label, self.jc, floats=self.vars+self.vars_jets, ints=self.vars_jets_int, maxSize=30)
+        self._helper_jets = CollectionSkimmer("%sSel"%self.jc+self.label, self.jc, floats=self.vars+self.vars_jets, ints=self.vars_jets_int, maxSize=100)
         self._helpers = [self._helper_lepsF,self._helper_lepsT,self._helper_taus,self._helper_jets]
         if "/fastCombinedObjectRecleanerHelper_cxx.so" not in ROOT.gSystem.GetLibraries():
             print "Load C++ recleaner worker module"
@@ -94,10 +94,6 @@ class fastCombinedObjectRecleaner:
         self._worker.clear()
         self._worker.loadTags(tags,self.cleanTausWithLooseLeptons)
         a = self._worker.run()
-        print '####'
-        for i in range(a.first.size()):
-            print a.first.at(i)
-        print '####'
         for delta,varname in self.systsJEC.iteritems():
             for x in self._worker.GetJetSums(delta):
                 for var in self._outjetvars: ret[var%x.thr+varname+self.label]=getattr(x,var.replace('%d','').replace(self.jc,'Jet'))

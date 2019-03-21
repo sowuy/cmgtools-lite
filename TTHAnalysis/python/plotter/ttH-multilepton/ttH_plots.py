@@ -16,7 +16,7 @@ if 'cmsphys10' in os.environ['HOSTNAME']: P0="/data1/g/gpetrucc"
 TREES = ""
 
 #TREESONLYSKIM = "-P "+P0+"/NanoAODtest_v2 --Fs {P}/1_recleaner --Fs {P}/2_TauTightFlag --Fs {P}/3_triggerResult  --Fs {P}/4_eventVars "
-TREESONLYSKIM = "-P "+P0+"/NanoAOD_v4_Dec2018_2017_v2_2loose_ss_3l --Fs {P}/1_recl --Fs {P}/2_trig --FMCs {P}/3_btag --Fs {P}/4_tauflag"
+TREESONLYSKIM = "-P "+P0+"/ttH_production_v3_merged_skim2lss_3l --Fs {P}/1_triggerDecision_2017_new --Fs {P}/3_lepVars --Fs {P}/4_taus --FMCs {P}/4_btagWeight" 
 TREESONLYFULL = TREESONLYSKIM
 
 def base(selection):
@@ -32,20 +32,20 @@ def base(selection):
 
     if selection=='2lss':
         GO="%s ttH-multilepton/mca-2lss-mc.txt ttH-multilepton/2lss_tight.txt "%CORE
-        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],2)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],2)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],2)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],2)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^lep(3|4)_.*' --xP '^(3|4)lep_.*' --xP 'kinMVA_3l_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 3 --legendWidth 0.52 ")
         if dowhat == "plots": GO=GO.replace(RATIO,  " --maxRatioRange 0.6  1.99 --ratioYNDiv 210 ")
         GO += " --binname 2lss "
     elif selection=='3l':
         GO="%s ttH-multilepton/mca-3l-mc.txt ttH-multilepton/3l_tight.txt "%CORE
-        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[2]],LepGood_pt[iLepFO_Recl[2]],LepGood_eta[iLepFO_Recl[2]],3)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],3)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],3)*leptonSF_ttH(LepFO_pdgId[2],LepFO_pt[2],LepFO_eta[2],3)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^(2|4)lep_.*' --xP '^lep4_.*' --xP 'kinMVA_2lss_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 3 --legendWidth 0.42 ")
         GO += " --binname 3l "
     elif selection=='4l':
         GO="%s ttH-multilepton/mca-4l-mc.txt ttH-multilepton/4l_tight.txt "%CORE
-        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_eta[iLepFO_Recl[0]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],LepGood_eta[iLepFO_Recl[1]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[2]],LepGood_pt[iLepFO_Recl[2]],LepGood_eta[iLepFO_Recl[2]],3)*leptonSF_ttH(LepGood_pdgId[iLepFO_Recl[3]],LepGood_pt[iLepFO_Recl[3]],LepGood_eta[iLepFO_Recl[3]],3)*triggerSF_ttH(LepGood_pdgId[iLepFO_Recl[0]],LepGood_pt[iLepFO_Recl[0]],LepGood_pdgId[iLepFO_Recl[1]],LepGood_pt[iLepFO_Recl[1]],nLepTight_Recl,0)'"%GO
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],3)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],3)*leptonSF_ttH(LepFO_pdgId[2],LepFO_pt[2],LepFO_eta[2],3)*leptonSF_ttH(LepFO_pdgId[3],LepFO_pt[3],LepFO_eta[3],3)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^(2|3)lep_.*' --xP '^lep(1|2|3|4)_.*' --xP 'kinMVA_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 2 --legendWidth 0.3 ")
         if dowhat == "plots": GO=GO.replace(RATIO,  " --maxRatioRange 0.0  2.99 --ratioYNDiv 505 ")
@@ -96,9 +96,9 @@ if __name__ == '__main__':
         if '_appl' in torun: x = add(x,'-I ^TT ')
         if '_flip' in torun: x = add(x,'-I ^same-sign')
         if '_1fo' in torun:
-            x = add(x,"-A alwaystrue 1FO 'LepGood1_isLepTight+LepGood2_isLepTight==1'")
+            x = add(x,"-A alwaystrue 1FO 'LepFO_isTight[0]+LepGood_isTight[1]==1'")
             x = x.replace("--xP 'nT_.*'","")
-        if '_2fo' in torun: x = add(x,"-A alwaystrue 2FO 'LepGood1_isLepTight+LepGood2_isLepTight==0'")
+        if '_2fo' in torun: x = add(x,"-A alwaystrue 2FO 'LepFO_isTight[0]+LepFO_isTight[1]==0'")
         if '_relax' in torun: x = add(x,'-X ^TT ')
         if '_extr' in torun:
             x = x.replace('mca-2lss-mc.txt','mca-2lss-mc-sigextr.txt').replace('--showRatio --maxRatioRange 0 2','--showRatio --maxRatioRange 0 1 --ratioYLabel "S/B"')
@@ -144,8 +144,8 @@ if __name__ == '__main__':
                     x = add(x,"--su 'CMS_ttHl16_FR.*' ")
                 elif '_unc' in torun:
                     x = add(x,"--su 'CMS_ttHl16_Clos_[em].*_norm' ")
-            if '_mufake' in torun: x = add(x,"-A alwaystrue mufake '(abs(LepGood1_pdgId)==13 && LepGood1_mcMatchId==0) || (abs(LepGood2_pdgId)==13 && LepGood2_mcMatchId==0)'")
-            if '_elfake' in torun: x = add(x,"-A alwaystrue elfake '(abs(LepGood1_pdgId)==11 && LepGood1_mcMatchId==0) || (abs(LepGood2_pdgId)==11 && LepGood2_mcMatchId==0)'")
+            if '_mufake' in torun: x = add(x,"-A alwaystrue mufake '(abs(LepFO_pdgId[0])==13 && LepFO_mcMatchId[0]==0) || (abs(LepFO_pdgId[1])==13 && LepFO_mcMatchId[1]==0)'")
+            if '_elfake' in torun: x = add(x,"-A alwaystrue elfake '(abs(LepFO_pdgId[0])==11 && LepFO_mcMatchId[0]==0) || (abs(LepFO_pdgId[1])==11 && LepFO_mcMatchId[1]==0)'")
             if '_bloose' in torun: x = add(x,'-E ^BLoose ')
             if '_btight' in torun: x = add(x,'-E ^BTight ')
             if '_nobcut' in torun: x = add(x,'-X ^2b1B ')
@@ -199,7 +199,7 @@ if __name__ == '__main__':
             x = add(x, ' --Fs {P}/8_synch')
 
         if '_1fo' in torun:
-            x = add(x,"-A alwaystrue 1FO 'LepGood1_isLepTight+LepGood2_isLepTight+LepGood3_isLepTight==2'")
+            x = add(x,"-A alwaystrue 1FO 'LepFO_isTight[0]+LepFO_isTight[1]+LepFO_isTight[2]==2'")
             x = x.replace("--xP 'nT_.*'","")
         if '_relax' in torun: x = add(x,'-X ^TTT ')
         if '_extr' in torun:
@@ -235,8 +235,8 @@ if __name__ == '__main__':
                     x = add(x,"--su 'CMS_ttHl16_FR.*' ")
                 elif '_unc' in torun:
                     x = add(x,"--su 'CMS_ttHl16_Clos_[em].*_norm' ")
-            if '_mufake' in torun: x = add(x,"-A alwaystrue mufake '(abs(LepGood1_pdgId)==13 && LepGood1_mcMatchId==0) || (abs(LepGood2_pdgId)==13 && LepGood2_mcMatchId==0) || (abs(LepGood3_pdgId)==13 && LepGood3_mcMatchId==0)'")
-            if '_elfake' in torun: x = add(x,"-A alwaystrue elfake '(abs(LepGood1_pdgId)==11 && LepGood1_mcMatchId==0) || (abs(LepGood2_pdgId)==11 && LepGood2_mcMatchId==0) || (abs(LepGood3_pdgId)==11 && LepGood3_mcMatchId==0)'")
+            if '_mufake' in torun: x = add(x,"-A alwaystrue mufake '(abs(LepFO_pdgId[0])==13 && LepFO_mcMatchId[0]==0) || (abs(LepFO_pdgId[1])==13 && LepFO_mcMatchId[1]==0) || (abs(LepFO_pdgId[2])==13 && LepFO_mcMatchId[2]==0)'")
+            if '_elfake' in torun: x = add(x,"-A alwaystrue elfake '(abs(LepFO_pdgId[0])==11 && LepFO_mcMatchId[0]==0) || (abs(LepFO_pdgId[1])==11 && LepFO_mcMatchId[1]==0) || (abs(LepFO_pdgId[2])==11 && LepFO_mcMatchId[2]==0)'")
             if '_bloose' in torun: x = add(x,'-E ^BLoose ')
             if '_btight' in torun: x = add(x,'-E ^BTight ')
             if '_nobcut' in torun: x = add(x,'-X ^2b1B ')
@@ -316,8 +316,8 @@ if __name__ == '__main__':
         x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata-ttbar.txt')
         if '_data' not in torun: x = add(x,'--xp data')
         if '_appl' in torun: x = add(x,'-I ^TT ')
-        if '_1fo' in torun: x = add(x,"-A alwaystrue 1FO 'LepGood1_isLepTight+LepGood2_isLepTight==1'")
-        if '_leadmupt25' in torun: x = add(x,"-A 'entry point' leadmupt25 'abs(LepGood1_pdgId)==13 && LepGood1_pt>25'")
+        if '_1fo' in torun: x = add(x,"-A alwaystrue 1FO 'LepFO_isTight[0]+LepFO_isTight[0]==1'")
+        if '_leadmupt25' in torun: x = add(x,"-A 'entry point' leadmupt25 'abs(LepFO_pdgId[0])==13 && LepFO_pt[0]>25'")
         if '_norm' in torun:
             x = add(x,"--sp '.*' --scaleSigToData")
         x = add(x,"-I same-sign -X ^4j -X ^2b1B -E ^2j -E ^em ")
@@ -338,7 +338,7 @@ if __name__ == '__main__':
         else:
             x = add(x,"-X ^metLDee")
         if '_data' not in torun: x = add(x,'--xp data')
-        x = add(x,"-X ^2b1B -X ^Zee_veto -A alwaystrue mllonZ 'mass_2(LepGood1_conePt,LepGood1_eta,LepGood1_phi,LepGood1_mass,LepGood2_conePt,LepGood2_eta,LepGood2_phi,LepGood2_mass)>60 && mass_2(LepGood1_conePt,LepGood1_eta,LepGood1_phi,LepGood1_mass,LepGood2_conePt,LepGood2_eta,LepGood2_phi,LepGood2_mass)<120'")
+        x = add(x,"-X ^2b1B -X ^Zee_veto -A alwaystrue mllonZ 'mass_2(LepFO_conePt[0],LepFO_eta[0],LepFO_phi[0],LepFO_mass[0],LepFO_conePt[1],LepFO_eta[1],LepFO_phi[1],LepFO_mass[1])>60 && mass_2(LepFO_conePt[0],LepFO1_eta[0],LepFO_phi[0],LepFO_mass[0],LepFO_conePt[1],LepFO_eta[1],LepFO_phi[1],LepFO_mass[1])<120'")
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
         for flav in ['mm','ee']:
