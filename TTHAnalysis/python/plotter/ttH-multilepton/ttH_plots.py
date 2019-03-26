@@ -16,7 +16,7 @@ if 'cmsphys10' in os.environ['HOSTNAME']: P0="/data1/g/gpetrucc"
 TREES = ""
 
 #TREESONLYSKIM = "-P "+P0+"/NanoAODtest_v2 --Fs {P}/1_recleaner --Fs {P}/2_TauTightFlag --Fs {P}/3_triggerResult  --Fs {P}/4_eventVars "
-TREESONLYSKIM = "-P "+P0+"/ttH_production_v3_merged_skim2lss_3l --Fs {P}/1_triggerDecision_2017_new --Fs {P}/3_lepVars --Fs {P}/4_taus --FMCs {P}/4_btagWeight" 
+TREESONLYSKIM = "-P "+P0+"/ttH_production_v3_merged_skim2lss_3l --Fs {P}/1_triggerDecision_2017_new --Fs {P}/3_lepVars --Fs /pool/cienciasrw/userstorage/sscruz/NanoAOD/ttH_production_v3_merged_skim2lss_3l/4_taus --FMCs {P}/4_btagWeight" 
 TREESONLYFULL = TREESONLYSKIM
 
 def base(selection):
