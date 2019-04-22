@@ -1,8 +1,8 @@
 cut-change: LepFO_isTight\[0\]: 1
 cut-change: LepFO_isTight\[1\]: 1
 cut-change: LepFO_isTight\[2\]: 1
-weight: fakeRateWeight_3l(fetchFR_i(LepFO_pt[0],LepFO_eta[0],LepFO_pdgId[0],21), LepFO_isTight[0], \
-                          fetchFR_i(LepFO_pt[1],LepFO_eta[1],LepFO_pdgId[1],21), LepFO_isTight[1], \
-                          fetchFR_i(LepFO_pt[2],LepFO_eta[2],LepFO_pdgId[2],21), LepFO_isTight[2] )
+weight: fakeRateWeight_3l(fetchFR_i(LepFO_conePt[0],LepFO_eta[0],LepFO_pdgId[0],21), LepFO_isTight[0], \
+                          fetchFR_i(LepFO_conePt[1],LepFO_eta[1],LepFO_pdgId[1],21), LepFO_isTight[1], \
+                          fetchFR_i(LepFO_conePt[2],LepFO_eta[2],LepFO_pdgId[2],21), LepFO_isTight[2] )
 load-histo: FR_mu_i21 : $DATA/fakerate/FR_data_ttH_mva.root : FR_mva090_mu_data_comb_be1
 load-histo: FR_el_i21 : $DATA/fakerate/FR_data_ttH_mva.root : FR_mva090_el_data_comb_NC

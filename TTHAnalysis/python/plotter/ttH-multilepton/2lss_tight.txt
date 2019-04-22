@@ -6,7 +6,7 @@ cleanup: minMllAFAS > 12
 dilep: nLepFO>=2
 pt2515: LepGood1_conePt>25 && LepGood2_conePt>15
 #htllv100 : LepGood1_conept+LepGood2_conept+MET_pt > 100
-metfilters: Flag_goodVertices & Flag_globalTightHalo2016Filter & Flag_HBHENoiseFilter & Flag_HBHENoiseIsoFilter & Flag_EcalDeadCellTriggerPrimitiveFilter & Flag_BadPFMuonFilter & Flag_BadChargedCandidateFilter & Flag_ecalBadCalibFilter
+metfilters: Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && (Flag_ecalBadCalibFilter || year == 2016) && $DATA{Flag_eeBadScFilter} $MC{1}
 TT: LepGood1_isTight && LepGood2_isTight
 exclusive: nLepFO_isTight<=2
 same-sign: LepGood1_charge*LepGood2_charge > 0

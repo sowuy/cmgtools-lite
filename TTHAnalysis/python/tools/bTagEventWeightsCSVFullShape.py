@@ -8,24 +8,26 @@ from BTagCSVFullShape import BTagCSVFullShape
 
 class BTagEventWeightFriend:
     def __init__(self,
-                 csvfile,
+                 csvfiles,
                  label='eventBTagSF',
                  recllabel='',
                  mcOnly=True,
                  discrname='btagCSV'):
 
-        self.reader = BTagCSVFullShape(csvfile=csvfile)
+        self.reader_2016 = BTagCSVFullShape(csvfile=csvfiles['2016'])
+        self.reader_2017 = BTagCSVFullShape(csvfile=csvfiles['2017'])
+        self.reader_2018 = BTagCSVFullShape(csvfile=csvfiles['2018'])
 
-        self.systsJEC = {0:"",  1:"_jesTotalUp", -1:"_jetTotalDown"}
+        self.systsJEC = {0:"_nom",  1:"_jesTotalUp", -1:"_jetTotalDown"}
         self.recllabel = recllabel
         self.label = label
         self.mcOnly = mcOnly
         self.discrname = discrname
 
-        # Automatically add the iterative systs from the reader
+        # Automatically add the iterative systs from the reader from 2017
         self.btag_systs = ["central"]
-        self.btag_systs += ["up_%s"  %s for s in self.reader.iterative_systs]
-        self.btag_systs += ["down_%s"%s for s in self.reader.iterative_systs]
+        self.btag_systs += ["up_%s"  %s for s in self.reader_2017.iterative_systs]
+        self.btag_systs += ["down_%s"%s for s in self.reader_2017.iterative_systs]
 
         # JEC to use for each syst:
         # Central one for all btag variations except up_jes and down_jes
@@ -51,6 +53,13 @@ class BTagEventWeightFriend:
         ret = {k:1.0 for k in self.branches}
         #if self.mcOnly and event.isData: return ret
         jetscoll = {}
+        if event.year == 2016:
+            reader = self.reader_2016
+        if event.year == 2017:
+            reader = self.reader_2017
+        if event.year == 2018:
+            reader = self.reader_2018
+
         for _var in self.systsJEC:
             jets = [j for j in Collection(event,"JetSel"+self.recllabel,"nJetSel"+self.recllabel)]
             jetptcut = 25
@@ -73,9 +82,9 @@ class BTagEventWeightFriend:
             weight = 1.0
             jets,jetcorr = jetscoll[_var]
             for i,jet in enumerate(jets):
-                weight *= self.reader.get_SF(pt=jet.pt*jetcorr[i], eta=jet.eta,
-                                      flavor=jet.hadronFlavour, val=getattr(jet,self.discrname),
-                                      syst=syst)
+                weight *= reader.get_SF(pt=jet.pt*jetcorr[i], eta=jet.eta,
+                                        flavor=jet.hadronFlavour, val=getattr(jet,self.discrname),
+                                        syst=syst)
             ret[label] = weight
 
         return ret

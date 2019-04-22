@@ -201,8 +201,9 @@ from CMGTools.TTHAnalysis.tools.countJets import CountJets
 MODULES.append( ('countJets',lambda : CountJets(jetPts=[25,40],
                                                 jetSel={ "JetCentral" : lambda x : abs(x.eta) < 2.4,
                                                          "JetForward" : lambda x : abs(x.eta) > 2.4 } ,
-                                                btagL_thr=0.1522,
-                                                btagM_thr=0.4941,
+                                                btagL_thr = { '2016' : 0.0614, '2017' : 0.0521, '2018' : 0.0494} ,
+                                                btagM_thr = { '2016' : 0.3093, '2017' : 0.3033, '2018' : 0.2770},
+                                                btag='btagDeepFlavB',
                                                 doJetSums=True,
                                                 )))
 
@@ -340,8 +341,10 @@ MODULES.append( ('MassCalculator', lambda : MassCalculator("LepFO","LepLoose")))
 # -m 'LepTightFlag' -m 'LepConePt' -m 'MassCalculator'
                                                     
 
-from CMGTools.TTHAnalysis.tools.bTagEventWeightsCSVFullShape import BTagEventWeightFriend
-MODULES.append( ('eventBTagWeight', lambda : BTagEventWeightFriend(csvfile=os.environ["CMSSW_BASE"]+"/src/CMGTools/TTHAnalysis/data/btag/DeepCSV_94XSF_V4_B_F.csv",
+from CMGTools.TTHAnalysis.tools.bTagEventWeightsCSVFullShape import BTagEventWeightFriend  
+MODULES.append( ('eventBTagWeight', lambda : BTagEventWeightFriend(csvfiles={'2016' : os.environ["CMSSW_BASE"]+"/src/CMGTools/TTHAnalysis/data/btag/DeepJet_2016LegacySF_V1.csv",
+                                                                             '2017' : os.environ["CMSSW_BASE"]+"/src/CMGTools/TTHAnalysis/data/btag/DeepFlavour_94XSF_V2_B_F.csv",
+                                                                             '2018' : os.environ["CMSSW_BASE"]+"/src/CMGTools/TTHAnalysis/data/btag/DeepJet_102XSF_V1.csv"},
                                                                    discrname="btagDeepB")))
 
 from CMGTools.TTHAnalysis.tools.higgsRecoTTH import HiggsRecoTTH
