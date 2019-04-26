@@ -1,0 +1,16 @@
+data : MuonEG_Run2018A_2018
+data : MuonEG_Run2018B_2018
+data : MuonEG_Run2018C_2018
+data : MuonEG_Run2018D_2018
+data : SingleMuon_Run2018A_2018
+data : SingleMuon_Run2018B_2018
+data : SingleMuon_Run2018C_2018
+data : SingleMuon_Run2018D_2018
+data : DoubleMuon_Run2018A_2018
+data : DoubleMuon_Run2018B_2018
+data : DoubleMuon_Run2018C_2018
+data : DoubleMuon_Run2018D_2018
+data : EGamma_Run2018A_2018
+data : EGamma_Run2018B_2018
+data : EGamma_Run2018C_2018
+data : EGamma_Run2018D_2018

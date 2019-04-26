@@ -28,15 +28,15 @@ tightMVA080: LepGood1_mvaTTH>0.80 && LepGood2_mvaTTH>0.80 ; Disable=True
 tightMVA085: LepGood1_mvaTTH>0.85 && LepGood2_mvaTTH>0.85 ; Disable=True
 tightMVA090: LepGood1_mvaTTH>0.90 && LepGood2_mvaTTH>0.90 ; Disable=True
 tightMVA095: LepGood1_mvaTTH>0.95 && LepGood2_mvaTTH>0.95 ; Disable=True
-1B: nBJetMedium25 >= 1 ; Disable=True
-2B: nBJetMedium25 >= 2 ; Disable=True
-BLoose: nBJetMedium25 < 2 ; Disable=True
-BTight: nBJetMedium25 >= 2 ; Disable=True
-2j: nJet25>=2 ; Disable=True
-x3j: nJet25==3 ; Disable=True
-6j: nJet25>=6 ; Disable=True
-2j40: nJet40>=2 ; Disable=True
-1B40: nBJetMedium40 >= 1 ; Disable=True
+1B: nBJetCentralMedium25 >= 1 ; Disable=True
+2B: nBJetCentralMedium25 >= 2 ; Disable=True
+BLoose: nBJetCentralMedium25 < 2 ; Disable=True
+BTight: nBJetCentralMedium25 >= 2 ; Disable=True
+2j: nJetCentral25>=2 ; Disable=True
+x3j: nJetCentral25==3 ; Disable=True
+6j: nJetCentral25>=6 ; Disable=True
+2j40: nJetCentral40>=2 ; Disable=True
+1B40: nBJetCentralMedium40 >= 1 ; Disable=True
 
 ee: abs(LepGood1_pdgId)==11 && abs(LepGood2_pdgId)==11; Disable=True
 em: abs(LepGood1_pdgId) != abs(LepGood2_pdgId);         Disable=True

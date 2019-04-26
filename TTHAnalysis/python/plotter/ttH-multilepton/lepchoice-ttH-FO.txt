@@ -14,7 +14,7 @@ LepGood1_(\w+) : LepFO_\1[0]; AlsoData
 LepGood2_(\w+) : LepFO_\1[1]; AlsoData
 LepGood3_(\w+) : LepFO_\1[2]; AlsoData
 LepGood4_(\w+) : LepFO_\1[3]; AlsoData
-MET_pt\b: METFixEE2017_pt; AlsoData
+MET_pt\b: MET_years_pt_nom; AlsoData
 dTakingEra\b : if3(isData,(run>=275657)+(run>=276315)+(run>=276831)+(run>=277772)+(run>=278820)+(run>=280919),-1); AlsoData # 2016B==0,C,D,E,F,G,H
 elLooseUnc_2lss_up\b : leptonSF_ttH_var(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],2,1,0)*leptonSF_ttH_var(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],2,1,0)
 elLooseUnc_2lss_dn\b : leptonSF_ttH_var(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],2,-1,0)*leptonSF_ttH_var(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],2,-1,0)
@@ -30,20 +30,19 @@ muLooseUnc_4l_up\b : leptonSF_ttH_var(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],3,
 muLooseUnc_4l_dn\b : leptonSF_ttH_var(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],3,0,-1)*leptonSF_ttH_var(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],3,0,-1)*leptonSF_ttH_var(LepFO_pdgId[2],LepFO_pt[2],LepFO_eta[2],3,0,-1)*leptonSF_ttH_var(LepFO_pdgId[3],LepFO_pt[3],LepFO_eta[3],3,0,-1)
 triggerUnc_up\b : triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,1)/triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,0); AlsoData
 triggerUnc_dn\b : triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,-1)/triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,0); AlsoData
-
-nJetForward25\b : nJetForward25_Recl_nom
-nBJetForwardLoose25\b : nJetForwardLoose25_Recl_nom
-nBJetForwardMedium25\b : nJetForwardMedium25_Recl_no
-mnJetCentral25\b : nJetCentral25_Recl_nom
-nBJetCentralLoose25\b : nJetCentralLoose25_Recl_nom
-nBJetCentralMedium25\b : nJetCentralMedium25_Recl_nom
-ht25\b : ht25_Recl_nom
-ht25\b : mht25_Recl_nom
-nJetForward40\b : nJetForward40_Recl_nom
-nBJetForwardLoose40\b : nJetForwardLoose40_Recl_nom
-nBJetForwardMedium40\b : nJetForwardMedium40_Recl_no
-mnJetCentral40\b : nJetCentral40_Recl_nom
-nBJetCentralLoose40\b : nJetCentralLoose40_Recl_nom
-nBJetCentralMedium40\b : nJetCentralMedium40_Recl_nom
-ht40\b : ht40_Recl_nom
-ht40\b : mht40_Recl_nom
+nJetForward25\b : nJetForward25_Recl_nom; AlsoData
+nBJetForwardLoose25\b : nJetForwardLoose25_Recl_nom; AlsoData
+nBJetForwardMedium25\b : nJetForwardMedium25_Recl_no; AlsoData
+nJetCentral25\b : nJetCentral25_Recl_nom; AlsoData
+nBJetCentralLoose25\b : nBJetCentralLoose25_Recl_nom; AlsoData
+nBJetCentralMedium25\b : nBJetCentralMedium25_Recl_nom; AlsoData
+ht25\b : ht25_Recl_nom; AlsoData
+mht25\b : mht25_Recl_nom; AlsoData
+nJetForward40\b : nJetForward40_Recl_nom; AlsoData
+nBJetForwardLoose40\b : nJetForwardLoose40_Recl_nom; AlsoData
+nBJetForwardMedium40\b : nJetForwardMedium40_Recl_no; AlsoData
+nJetCentral40\b : nJetCentral40_Recl_nom; AlsoData
+nBJetCentralLoose40\b : nBJetCentralLoose40_Recl_nom; AlsoData
+nBJetCentralMedium40\b : nBJetCentralMedium40_Recl_nom; AlsoData
+ht40\b : ht40_Recl_nom; AlsoData
+mht40\b : mht40_Recl_nom; AlsoData
