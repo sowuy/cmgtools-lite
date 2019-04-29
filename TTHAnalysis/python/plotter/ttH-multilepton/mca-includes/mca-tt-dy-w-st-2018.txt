@@ -1,6 +1,6 @@
 TT2L : TTTo2L2Nu_2018_part1+TTTo2L2Nu_2018_part2+TTTo2L2Nu_2018_part3 : xsec ; FillColor=ROOT.kRed, Label="tt to 2l"
 TT1L : TTToSemiLeptonic_2018 : xsec ; FillColor=ROOT.kGray, Label="tt to 1l"
-DY : DYJetsToLL_M50_LO_2018_part1+DYJetsToLL_M50_LO_2018_part2+DYJetsToLL_M50_LO_2018_part3 : xsec ; FillColor=ROOT.kCyan
+DY : DYJetsToLL_M50_amc_2018 : xsec ; FillColor=ROOT.kCyan
 DY      : DYJetsToLL_M10to50_2018 : xsec ; FillColor=ROOT.kCyan
 WJets   : WJetsToLNu_2018  : xsec  ; FillColor=ROOT.kCyan+2
 SingleTop: T_tch_2018 : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
