@@ -2,9 +2,16 @@
 # * ; LegendCutoff=1e-5
 tot_weight: 1 : 1,0.5,1.5; XTitle = "Selected events", Legend='TR', MoreY=2.0
 era: hashBasedRunPeriod2017(isData,run,luminosityBlock,event) : [-0.5,0.5,1.5,2.5,3.5,4.5]; XTitle = "2017 data taking era", Legend='TR', MoreY=2.0,  xBinLabels="B\,C\,D\,E\,F"
-
+Trigger_2lss : Trigger_2lss : 2,-0.5,1.5; 
 debug_nL1PrefiringCandidate : Sum$(abs(genLep_pdgId)==11 && genLep_pt>25 && abs(genLep_eta)>2.4 && abs(genLep_eta)<3.0) + Sum$(abs(genLepFromTau_pdgId)==11 && genLepFromTau_pt>25 && abs(genLepFromTau_eta)>2.4 && abs(genLepFromTau_eta)<3.0) : [-0.5,0.5,1.5,2.5]; XTitle = "nL1PrefiringCandidate", Legend='TR', Logy
 debug_higgsDecayMode : GenHiggsDecayMode : 30,-0.5,29.5 ; XTitle="Decay mode", Logy, MoreY=20
+
+weight : puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],2,year)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],2,year)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,year,0) : 100,-0.1,4
+weight_pu : puWeight : 100,-0.1,4
+weight_b  : eventBTagSF : 100,-0.1,4
+weight_l1 : leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],2,year) : 100,-0.1,4
+weight_l2 : leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],2,year) : 100,-0.1,4
+weight_tr : triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,year,0) : 100,-0.1,4
 
 #debug_triggerFired_1e : HLT_BIT_HLT_Ele27_WPTight_Gsf_v || HLT_BIT_HLT_Ele25_eta2p1_WPTight_Gsf_v : 2,-0.5,1.5; XTitle = "Fired 1e trigger"
 #debug_triggerFired_2e : HLT_BIT_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v : 2,-0.5,1.5; XTitle = "Fired 2e trigger"
@@ -32,7 +39,7 @@ nJet40_from0:	    	nJetCentral40					: [-0.5,0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5] ; 
 nBJetLoose25:	nBJetCentralLoose25				: [-0.5,0.5,1.5,2.5,3.5,4.5] ; XTitle='N(jet\, p_{T} > 25 GeV\, CSVL)', XNDiv=5, xBinLabels="0\,1\,2\,3\,#geq 4", MoreY=1.7
 nBJetMedium25:	nBJetCentralMedium25				: [-0.5,0.5,1.5,2.5,3.5,4.5] ; XTitle='N(jet\, p_{T} > 25 GeV\, CSVM)', XNDiv=5, xBinLabels="0\,1\,2\,3\,#geq 4", MoreY=1.7
 
-nJnB_Central25Medium : nJnB(nJetCentral25,nBJetCentralMedium25) : [-0.5,0.5,1.5,2.5,3.5,4.5,5.5,6.5] ; XTitle='(Number of jets| number of b-tagged jets)', xBinLabels="(0|0)\,(1|0)\,(1|1)\,(2|0)\,(2|1)\,(2|2)\,(3+|0+)"
+nJnB_Central25Medium : nJnB(nJetCentral25,nBJetCentralMedium25) : [-0.5,0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5,10.5,11.5,12.5,13.5,14.5] ; XTitle='(Number of jets| number of b-tagged jets)'
 
 2lep_nTight: 	if3(nLepFO>1,LepGood1_isLepTight+LepGood2_isLepTight,-99)                                          : [-0.5,0.5,1.5,2.5]; XTitle="Tight leptons among the first two", XNDdiv=505, Legend='TL', IncludeOverflows=False
 2lep_charge:  	if3(nLepFO>1,LepGood1_charge,-99) 	     	     	      		     : [-2,0,2]; XTitle='lepton charge', XNDiv=205, Legend='TR', IncludeOverflows=False, MoreY=2.0, xBinLabels="#minus #minus\,+ +"
@@ -288,18 +295,18 @@ lep4_relIso03:	 LepGood4_relIso03				 : 40,0,0.5; XTitle="Fourth lepton relIso03
 
 
 # Jet variables
-jet1_pt: 	 JetSel_Recl_pt[0]			: 40,0,400; XTitle="1st jet p_{T} (GeV)"
-jet1_btagDeepFlavB: 	 JetSel_Recl_btagDeepFlavB[0]			: 40,0,1.0; XTitle="1st jet deep jet"
-jet1_eta: 	 abs(JetSel_Recl_eta[0])		: 40,0,2.5; XTitle="1st jet |#eta|"
-jet2_pt: 	 JetSel_Recl_pt[1]			: 40,0,200; XTitle="2nd jet p_{T} (GeV)"
-jet2_btagDeepFlavB: 	 JetSel_Recl_btagDeepFlavB[1]			: 40,0,1.0; XTitle="2nd jet deep jet"
-jet2_eta: 	 abs(JetSel_Recl_eta[1])		: 40,0,2.5; XTitle="2nd jet |#eta|"
-jet3_pt: 	 JetSel_Recl_pt[2]			: 40,0,120; XTitle="3rd jet p_{T} (GeV)"
-jet3_btagDeepFlavB: 	 JetSel_Recl_btagDeepFlavB[2]			: 40,0,1.0; XTitle="3rd jet deep jet"
-jet3_eta: 	 abs(JetSel_Recl_eta[2])		: 40,0,2.5; XTitle="3rd jet |#eta|"
-jet4_pt: 	 JetSel_Recl_pt[3]			: 40,0,120; XTitle="4th jet p_{T} (GeV)"
-jet4_btagDeepFlavB: 	 JetSel_Recl_btagDeepFlavB[3]			: 40,0,1.0; XTitle="4th jet deep jet"
-jet4_eta: 	 abs(JetSel_Recl_eta[3])		: 40,0,2.5; XTitle="4th jet |#eta|"
+jet1_pt: 	 Jet1_pt			: 40,0,400; XTitle="1st jet p_{T} (GeV)"
+jet1_btagDeepFlavB: Jet1_btagDeepFlavB			: 40,0,1.0; XTitle="1st jet deep jet"
+jet1_eta: 	    abs(Jet1_eta)		: 40,0,2.5; XTitle="1st jet |#eta|"
+jet2_pt: 	 Jet2_pt[1]			: 40,0,200; XTitle="2nd jet p_{T} (GeV)"
+jet2_btagDeepFlavB: 	 Jet2_btagDeepFlavB[1]			: 40,0,1.0; XTitle="2nd jet deep jet"
+jet2_eta: 	 abs(Jet2_eta[1])		: 40,0,2.5; XTitle="2nd jet |#eta|"
+jet3_pt: 	 Jet3_pt[1]			: 40,0,200; XTitle="3rd jet p_{T} (GeV)"
+jet3_btagDeepFlavB: 	 Jet3_btagDeepFlavB[1]			: 40,0,1.0; XTitle="3rd jet deep jet"
+jet3_eta: 	 abs(Jet3_eta[1])		: 40,0,2.5; XTitle="3rd jet |#eta|"
+jet4_pt: 	 Jet4_pt[1]			: 40,0,200; XTitle="4th jet p_{T} (GeV)"
+jet4_btagDeepFlavB: 	 Jet4_btagDeepFlavB[1]			: 40,0,1.0; XTitle="4th jet deep jet"
+jet4_eta: 	 abs(Jet4_eta[1])		: 40,0,2.5; XTitle="4th jet |#eta|"
 #jet123_lowestCSV:  min(min(JetSel_Recl_btagDeepFlavB[0],JetSel_Recl_btagDeepFlavB[1]),JetSel_Recl_btagDeepFlavB[2]): 40,0,1.0; XTitle="lowest b-tag of the first 3 jets"
 
 # MC variables for closure

@@ -40,9 +40,13 @@ ht25\b : ht25_Recl_nom; AlsoData
 mht25\b : mht25_Recl_nom; AlsoData
 nJetForward40\b : nJetForward40_Recl_nom; AlsoData
 nBJetForwardLoose40\b : nJetForwardLoose40_Recl_nom; AlsoData
-nBJetForwardMedium40\b : nJetForwardMedium40_Recl_no; AlsoData
+nBJetForwardMedium40\b : nJetForwardMedium40_Recl_nom; AlsoData
 nJetCentral40\b : nJetCentral40_Recl_nom; AlsoData
 nBJetCentralLoose40\b : nBJetCentralLoose40_Recl_nom; AlsoData
 nBJetCentralMedium40\b : nBJetCentralMedium40_Recl_nom; AlsoData
 ht40\b : ht40_Recl_nom; AlsoData
 mht40\b : mht40_Recl_nom; AlsoData
+Jet1_(\w+) : JetSel_\1[iJetCentral_Recl[0]]; AlsoData
+Jet2_(\w+) : JetSel_\1[iJetCentral_Recl[1]]; AlsoData
+Jet3_(\w+) : JetSel_\1[iJetCentral_Recl[2]]; AlsoData
+Jet4_(\w+) : JetSel_\1[iJetCentral_Recl[3]]; AlsoData
