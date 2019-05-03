@@ -1,0 +1,12 @@
+TT      : TTTo2L2Nu_2018_part1+TTTo2L2Nu_2018_part2+TTTo2L2Nu_2018_part3 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray
+TT      : TTToSemiLeptonic_2018 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray
+DY      : DYJetsToLL_M10to50_2018: xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kCyan
+DY      : DYJetsToLL_M50_amc_2018: xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kCyan
+WJets   : WJetsToLNu_2018  : xsec: ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kCyan+2
+SingleTop: T_tch_2018: xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop: Tbar_tch_2018: xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop: T_sch_2018: xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop: TW_2018 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop: TbarW_2018 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray+2, Label="Single T"
+WW: WWTo2L2Nu_2018 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray+1
+

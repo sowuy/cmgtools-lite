@@ -1,7 +1,7 @@
 TT2L : TTTo2L2Nu_2017_part1+TTTo2L2Nu_2017_part2+TTTo2L2Nu_2017_part3 : xsec ; FillColor=ROOT.kRed, Label="tt to 2l"
 TT1L : TTJets_amc_SingleLeptFromTbar_2017 : xsec ; FillColor=ROOT.kGray, Label="tt to 1l"
 TT1L : TTJets_amc_SingleLeptFromT_2017 : xsec ; FillColor=ROOT.kGray, Label="tt to 1l"
-DY : DYJetsToLL_M50_2017_part1+DYJetsToLL_M50_2017_part2+DYJetsToLL_M50_2017_part3+DYJetsToLL_M50_2017_part4+DYJetsToLL_M50_2017_part5 : xsec ; FillColor=ROOT.kCyan
+DY : DYJetsToLL_M50_2017_part1+DYJetsToLL_M50_2017_part2+DYJetsToLL_M50_2017_part3+DYJetsToLL_M50_2017_part4 : xsec ; FillColor=ROOT.kCyan
 DY      : DYJetsToLL_M10to50_2017 : xsec ; FillColor=ROOT.kCyan
 WJets   : WJetsToLNu_2017  : xsec  ; FillColor=ROOT.kCyan+2
 SingleTop: T_tch_2017_2017: xsec  ; FillColor=ROOT.kGray+2, Label="Single T"

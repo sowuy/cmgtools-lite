@@ -1,12 +1,13 @@
 TT2L : TTJets_DiLepton_2016 : xsec ; FillColor=ROOT.kRed, Label="tt to 2l"
 TT1L : TTJets_SingleLeptonFromTbar_2016 : xsec ; FillColor=ROOT.kGray, Label="tt to 1l"
 TT1L : TTJets_SingleLeptonFromT_2016 : xsec ; FillColor=ROOT.kGray, Label="tt to 1l"
-DY : DYJetsToLL_M50_LO_ext_2016 : xsec ; FillColor=ROOT.kCyan
+DY : DYJetsToLL_M50_LO_ext2_2016_part1+DYJetsToLL_M50_LO_ext2_2016_part2 : xsec ; FillColor=ROOT.kCyan
 DY      : DYJetsToLL_M10to50_LO_2016 : xsec ; FillColor=ROOT.kCyan
 WJets   : WJetsToLNu_LO_2016+WJetsToLNu_LO_ext1_2016  : xsec  ; FillColor=ROOT.kCyan+2
 SingleTop: Tbar_tch_2016 : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
 SingleTop: T_tch_2016 : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
 SingleTop: T_sch_2016 : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
 SingleTop: TbarW_2016 : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop: TW_2016 : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
 SingleTop: Tbar_tch_2016 : xsec  ; FillColor=ROOT.kGray+2, Label="Single T"
 WW: WWTo2L2Nu_2016 : xsec  ; FillColor=ROOT.kYellow+1

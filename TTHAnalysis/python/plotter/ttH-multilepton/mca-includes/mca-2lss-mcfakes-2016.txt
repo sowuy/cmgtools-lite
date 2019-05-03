@@ -1,0 +1,12 @@
+TT      : TTJets_DiLepton_2016+TTJets_DiLepton_ext_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray
+TT      : TTJets_SingleLeptonFromT_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray
+TT      : TTJets_SingleLeptonFromTbar_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray
+DY      : DYJetsToLL_M10to50_LO_2016  : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kCyan
+DY      : DYJetsToLL_M50_LO_ext_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kCyan
+WJets   : WJetsToLNu_LO_2016+WJetsToLNu_LO_ext1_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kCyan+2
+SingleTop : T_tch_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop : Tbar_tch_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop : T_sch_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop : TW_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray+2, Label="Single T"
+SingleTop : TbarW_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray+2, Label="Single T"
+WW : WWTo2L2Nu_2016 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0)) ; FillColor=ROOT.kGray+1

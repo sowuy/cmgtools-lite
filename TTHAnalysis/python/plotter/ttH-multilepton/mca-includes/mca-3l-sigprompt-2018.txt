@@ -5,10 +5,10 @@ ttH     : TTH_amc_2018 :xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 &&
 TTWW	: TTWW_2018 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ; FillColor=ROOT.kGreen
 
 TTW     : TTWToLNu_2018: xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ;  FillColor=ROOT.kGreen-5, Label="ttW   "
-TTZ+     : TTZToLLNuNu_2018 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ;  FillColor=ROOT.kSpring+2, Label="ttZ   "
-#TTZ+     : TTZToLLNuNu_m1to10_2017 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ;  FillColor=ROOT.kSpring+2
-TTZ+	: TTTo2L2Nu_2018_part1+TTTo2L2Nu_2018_part2+TTTo2L2Nu_2018_part3 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ; FillColor=ROOT.kSpring+2
-TTZ+   	: TTToSemiLeptonic_2018 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ; FillColor=ROOT.kSpring+2
+TTZ     : TTZToLLNuNu_2018 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ;  FillColor=ROOT.kSpring+2, Label="ttZ   "
+#TTZ     : TTZToLLNuNu_m1to10_2017 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ;  FillColor=ROOT.kSpring+2
+TTZ	: TTTo2L2Nu_2018_part1+TTTo2L2Nu_2018_part2+TTTo2L2Nu_2018_part3 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ; FillColor=ROOT.kSpring+2
+TTZ   	: TTToSemiLeptonic_2018 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ; FillColor=ROOT.kSpring+2
 
 WZ	: WZTo3LNu_2018+ WZTo3LNu_ext_2018  : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ;  FillColor=ROOT.kViolet-4
 WZ	: W1JetsToLNu_2018 : xsec : LepGood1_mcMatchId!=0 && LepGood2_mcMatchId!=0 && LepGood3_mcMatchId!=0 ;  FillColor=ROOT.kViolet-4
