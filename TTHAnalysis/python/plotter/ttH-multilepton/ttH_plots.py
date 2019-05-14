@@ -10,19 +10,24 @@ dowhat = "plots"
 #dowhat = "yields" 
 #dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
 
-P0="/pool/ciencias/userstorage/sscruz/NanoAOD/"
+P0="/pool/cienciasrw/userstorage/sscruz/NanoAOD/"
 if 'cmsco01'   in os.environ['HOSTNAME']: P0="/data/peruzzi"
 if 'cmsphys10' in os.environ['HOSTNAME']: P0="/data1/g/gpetrucc"
 TREES = ""
 
 #TREESONLYSKIM = "-P "+P0+"/NanoAODtest_v2 --Fs {P}/1_recleaner --Fs {P}/2_TauTightFlag --Fs {P}/3_triggerResult  --Fs {P}/4_eventVars "
-TREESONLYSKIM = "-P "+P0+"/ttH_production_v3_merged_skim2lss_3l --Fs {P}/1_triggerDecision_2017_new --Fs {P}/3_lepVars --Fs /pool/cienciasrw/userstorage/sscruz/NanoAOD/ttH_production_v3_merged_skim2lss_3l/4_taus --FMCs {P}/4_btagWeight" 
+#TREESONLYSKIM = "-P "+P0+"/ttH_EasterProduction/ --Fs {P}/1_triggerDecision --Fs {P}/2_countJets --Fs {P}/3_lepVars --FMCs {P}/4_bweight_new --Fs {P}/5_MET --Fs {P}/5_taus " 
+TREESONLYSKIM = "-P "+P0+"/ttH_EasterProduction_2lss_3l/ --Fs {P}/1_triggerDecision --Fs {P}/2_countJets --Fs {P}/3_lepVars --FMCs {P}/4_bweight_new --Fs {P}/5_MET --Fs {P}/5_taus --Fs {P}/6_eventVars " 
+#TREESONLYSKIM  = "-P ../../macros/synch_2016/ --Fs {P}/1_tight --Fs {P}/2_synch --Fs {P}/3_trigger --Fs {P}/4_mass "
 TREESONLYFULL = TREESONLYSKIM
 
-def base(selection):
+def base(selection, year):
 
     CORE=' '.join([TREES,TREESONLYSKIM])
-    CORE+=" -f -j 8 -l 41.4 --s2v -L ttH-multilepton/functionsTTH.cc --tree nanoAODskim --mcc ttH-multilepton/lepchoice-ttH-FO.txt --split-factor=-1  "# --neg"
+    if   year == '2016': lumi = 35.9
+    elif year == '2017': lumi = 41.4
+    elif year == '2018': lumi = 59.7
+    CORE+=" -f -j 88 -l {lumi} --s2v -L ttH-multilepton/functionsTTH.cc --tree nanoAODskim --mcc ttH-multilepton/lepchoice-ttH-FO.txt --split-factor=-1  ".format(lumi=lumi)# --neg"
     RATIO= " --maxRatioRange 0.0  1.99 --ratioYNDiv 505 "
     RATIO2=" --showRatio --attachRatioPanel --fixRatioRange "
     LEGEND=" --legendColumns 2 --legendWidth 0.25 "
@@ -31,21 +36,21 @@ def base(selection):
     if dowhat == "plots": CORE+=RATIO+RATIO2+LEGEND+LEGEND2+SPAM+"  --showMCError --rebin 4 --xP 'nT_.*' --xP 'debug_.*'"
 
     if selection=='2lss':
-        GO="%s ttH-multilepton/mca-2lss-mc.txt ttH-multilepton/2lss_tight.txt "%CORE
-        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],2)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],2)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,0)'"%GO
+        GO="{CORE} ttH-multilepton/mca-2lss-mc-{year}.txt ttH-multilepton/2lss_tight.txt ".format(year=year,CORE=CORE)
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],2,year)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],2,year)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,year,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^lep(3|4)_.*' --xP '^(3|4)lep_.*' --xP 'kinMVA_3l_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 3 --legendWidth 0.52 ")
         if dowhat == "plots": GO=GO.replace(RATIO,  " --maxRatioRange 0.6  1.99 --ratioYNDiv 210 ")
         GO += " --binname 2lss "
     elif selection=='3l':
-        GO="%s ttH-multilepton/mca-3l-mc.txt ttH-multilepton/3l_tight.txt "%CORE
-        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],3)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],3)*leptonSF_ttH(LepFO_pdgId[2],LepFO_pt[2],LepFO_eta[2],3)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,0)'"%GO
+        GO="{CORE} ttH-multilepton/mca-3l-mc-{year}.txt ttH-multilepton/3l_tight.txt ".format(year=year,CORE=CORE)
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],3,year)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],3,year)*leptonSF_ttH(LepFO_pdgId[2],LepFO_pt[2],LepFO_eta[2],3,year)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,year,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^(2|4)lep_.*' --xP '^lep4_.*' --xP 'kinMVA_2lss_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 3 --legendWidth 0.42 ")
         GO += " --binname 3l "
     elif selection=='4l':
         GO="%s ttH-multilepton/mca-4l-mc.txt ttH-multilepton/4l_tight.txt "%CORE
-        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],3)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],3)*leptonSF_ttH(LepFO_pdgId[2],LepFO_pt[2],LepFO_eta[2],3)*leptonSF_ttH(LepFO_pdgId[3],LepFO_pt[3],LepFO_eta[3],3)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,0)'"%GO
+        if dowhat != 'ntuple': GO="%s -W 'puWeight*eventBTagSF*leptonSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_eta[0],3,year)*leptonSF_ttH(LepFO_pdgId[1],LepFO_pt[1],LepFO_eta[1],3,year)*leptonSF_ttH(LepFO_pdgId[2],LepFO_pt[2],LepFO_eta[2],3,year)*leptonSF_ttH(LepFO_pdgId[3],LepFO_pt[3],LepFO_eta[3],3,year)*triggerSF_ttH(LepFO_pdgId[0],LepFO_pt[0],LepFO_pdgId[1],LepFO_pt[1],nLepFO_isTight,year,0)'"%GO
         if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^(2|3)lep_.*' --xP '^lep(1|2|3|4)_.*' --xP 'kinMVA_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 2 --legendWidth 0.3 ")
         if dowhat == "plots": GO=GO.replace(RATIO,  " --maxRatioRange 0.0  2.99 --ratioYNDiv 505 ")
@@ -90,11 +95,15 @@ allow_unblinding = True
 if __name__ == '__main__':
 
     torun = sys.argv[2]
+    
+    if '2016' in torun: year='2016'
+    if '2017' in torun: year='2017'
+    if '2018' in torun: year='2018'
 
     if (not allow_unblinding) and '_data' in torun and (not any([re.match(x.strip()+'$',torun) for x in ['.*_appl.*','cr_.*','3l.*_Zpeak.*']])): raise RuntimeError, 'You are trying to unblind!'
 
     if '2lss_' in torun:
-        x = base('2lss')
+        x = base('2lss',year)
         if '_appl' in torun: x = add(x,'-I ^TT ')
         if '_flip' in torun: x = add(x,'-I ^same-sign')
         if '_1fo' in torun:
@@ -103,7 +112,7 @@ if __name__ == '__main__':
         if '_2fo' in torun: x = add(x,"-A alwaystrue 2FO 'LepFO_isTight[0]+LepFO_isTight[1]==0'")
         if '_relax' in torun: x = add(x,'-X ^TT ')
         if '_extr' in torun:
-            x = x.replace('mca-2lss-mc.txt','mca-2lss-mc-sigextr.txt').replace('--showRatio --maxRatioRange 0 2','--showRatio --maxRatioRange 0 1 --ratioYLabel "S/B"')
+            x = x.replace('mca-2lss-mc-{year}.txt'.format(year=year),'mca-2lss-mc-sigextr.txt').replace('--showRatio --maxRatioRange 0 2','--showRatio --maxRatioRange 0 1 --ratioYLabel "S/B"')
         if '_data' in torun: x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata.txt')
         if '_table' in torun:
             x = x.replace('mca-2lss-mc.txt','mca-2lss-mc-table.txt')
@@ -122,7 +131,7 @@ if __name__ == '__main__':
 
         if '_synch' in torun:
             x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
-            x = add(x, ' --Fs {P}/8_synch')
+            x = x.replace('ttH-multilepton/mca-2lss-mc-sigextr.txt','ttH-multilepton/mca-synch.txt')
 
 
 
@@ -194,18 +203,18 @@ if __name__ == '__main__':
 
 
     if '3l_' in torun:
-        x = base('3l')
+        x = base('3l',year)
         if '_appl' in torun: x = add(x,'-I ^TTT ')
         if '_synch' in torun: 
             x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
-            x = add(x, ' --Fs {P}/8_synch')
+            x = x.replace('ttH-multilepton/mca-3l-mc-{year}.txt'.format(year=year),'ttH-multilepton/mca-synch-3l.txt' )
 
         if '_1fo' in torun:
             x = add(x,"-A alwaystrue 1FO 'LepFO_isTight[0]+LepFO_isTight[1]+LepFO_isTight[2]==2'")
             x = x.replace("--xP 'nT_.*'","")
         if '_relax' in torun: x = add(x,'-X ^TTT ')
         if '_extr' in torun:
-            x = x.replace('mca-3l-mc.txt','mca-3l-mc-sigextr.txt').replace('--showRatio --maxRatioRange 0 2','--showRatio --maxRatioRange 0 1 --ratioYLabel "S/B"')
+            x = x.replace('mca-3l-mc-{year}.txt'.format(year=year),'mca-3l-mc-sigextr.txt').replace('--showRatio --maxRatioRange 0 2','--showRatio --maxRatioRange 0 1 --ratioYLabel "S/B"')
         if '_data' in torun: x = x.replace('mca-3l-mc.txt','mca-3l-mcdata.txt')
         if '_frdata' in torun:
             x = promptsub(x)
@@ -287,8 +296,8 @@ if __name__ == '__main__':
         runIt(x,'%s'%torun)
 
     if 'cr_3j' in torun:
-        x = base('2lss')
-        if '_data' in torun: x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata.txt')
+        x = base('2lss',year)
+        if '_data' in torun: x = x.replace('mca-2lss-mc-{year}.txt'.format(year=year),'mca-2lss-mcdata-{year}.txt'.format(year=year))
         if '_appl' in torun: x = add(x,'-I ^TT ')
         if '_relax' in torun: x = add(x,'-X ^TT ')
         if '_flip' in torun: x = add(x,'-I ^same-sign')
@@ -302,7 +311,7 @@ if __name__ == '__main__':
             x = promptsub(x)
             if not '_data' in torun: raise RuntimeError
             x = x.replace('mca-2lss-mcdata.txt','mca-2lss-mcdata-frdata.txt')
-        x = add(x,"-R ^4j 3j 'nJet25==3'")
+        x = add(x,"-R ^4j 3j 'nJetCentral25==3'")
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
 
@@ -313,9 +322,10 @@ if __name__ == '__main__':
                 runIt(add(x,'-E ^%s'%flav).replace("--binname 2lss","--binname 2lss_"+flav),'%s/%s'%(torun,flav))
 
     if 'cr_ttbar' in torun:
-        x = base('2lss')
+        x = base('2lss',year)
         x = fulltrees(x) # for mc same-sign
-        x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata-ttbar.txt')
+
+        x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata-ttbar-{year}.txt'.format(year=year))
         if '_data' not in torun: x = add(x,'--xp data')
         if '_appl' in torun: x = add(x,'-I ^TT ')
         if '_1fo' in torun: x = add(x,"-A alwaystrue 1FO 'LepFO_isTight[0]+LepFO_isTight[0]==1'")
@@ -330,25 +340,42 @@ if __name__ == '__main__':
         plots = ['2lep_.*','met','metLD','nVert','nJet25','nBJetMedium25','nBJetLoose25','nBJetLoose40','nBJetMedium40','era']
         runIt(x,'%s'%torun)#,plots)
 
-    if 'cr_zjets' in torun:
-        x = base('2lss')
-        x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata-ttbar.txt')
-        x = x.replace('--maxRatioRange 0 3','--maxRatioRange 0.8 1.2')
-        if '_ss' not in torun:
-            x = fulltrees(x)
-            x = add(x,"-I same-sign")
-        else:
-            x = add(x,"-X ^metLDee")
+
+    if 'cr_ttbar' in torun:
+        x = base('2lss',year)
+        x = fulltrees(x) # for mc same-sign
+
+        x = x.replace('mca-2lss-mc.txt','mca-2lss-mcdata-ttbar-{year}.txt'.format(year=year))
         if '_data' not in torun: x = add(x,'--xp data')
-        x = add(x,"-X ^2b1B -X ^Zee_veto -A alwaystrue mllonZ 'mass_2(LepFO_conePt[0],LepFO_eta[0],LepFO_phi[0],LepFO_mass[0],LepFO_conePt[1],LepFO_eta[1],LepFO_phi[1],LepFO_mass[1])>60 && mass_2(LepFO_conePt[0],LepFO1_eta[0],LepFO_phi[0],LepFO_mass[0],LepFO_conePt[1],LepFO_eta[1],LepFO_phi[1],LepFO_mass[1])<120'")
+        if '_appl' in torun: x = add(x,'-I ^TT ')
+        if '_1fo' in torun: x = add(x,"-A alwaystrue 1FO 'LepFO_isTight[0]+LepFO_isTight[0]==1'")
+        if '_leadmupt25' in torun: x = add(x,"-A 'entry point' leadmupt25 'abs(LepFO_pdgId[0])==13 && LepFO_pt[0]>25'")
+        if '_norm' in torun:
+            x = add(x,"--sp '.*' --scaleSigToData")
+        x = add(x,"-I same-sign -X ^4j -X ^2b1B -E ^2j -E ^em ")
+        if '_highMetNoBCut' in torun: x = add(x,"-A 'entry point' highMET 'met_pt>60'")
+        else: x = add(x,"-E ^1B ")
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
-        for flav in ['mm','ee']:
-            plots = ['2lep_.*','tot_weight','era']
-            runIt(add(x,'-E ^%s -X ^4j'%flav),'%s/%s'%(torun,flav),plots)
+        plots = ['2lep_.*','met','metLD','nVert','nJet25','nBJetMedium25','nBJetLoose25','nBJetLoose40','nBJetMedium40','era']
+        runIt(x,'%s'%torun)#,plots)
+
+    if 'cr_dileptonic' in torun:
+        x = base('2lss',year)
+        x = x.replace('mca-2lss-mc-{year}.txt'.format(year=year),'mca-2lss-mcdata-ttbar-{year}.txt'.format(year=year))
+        x = x.replace('--maxRatioRange 0.6  1.99','--maxRatioRange 0.6 1.4')
+        x = x.replace('--rebin 4',' ')
+        if '_data' not in torun: x = add(x,'--xp data')
+        x = add(x,"-I same-sign -X Zee_veto -X metLDee -X 4j -X 2b1B -X tauveto ")
+        if '_norm' in torun: x = add(x, ' --scaleBkgToData TT2L --scaleBkgToData DY  --scaleBkgToData SingleTop --scaleBkgToData WW ')
+        if '_unc' in torun:
+            x = add(x,"--unc ttH-multilepton/systsUnc.txt")
+        for flav in ['em','mm','ee']:
+            plots =   ['mZ1','nVert','nJet.*_from0', 'tot_weight','lep1_.*', 'lep2_.*','nBJet.*','met','nJnB_Central25Medium'] # 'jet1_.*','jet2_.*','jet3_.*','jet4_.*', ]
+            runIt(add(x,'-E ^%s '%flav),'%s/%s'%(torun,flav),plots)
 
     if 'cr_wz' in torun:
-        x = base('3l')
+        x = base('3l',year)
         if '_appl' in torun: x = add(x,'-I ^TTT ')
         if '_synch' in torun:
             x = x.replace('ttH-multilepton/2lss_3l_plots.txt','ttH-multilepton/synchTuple.txt')
@@ -359,7 +386,7 @@ if __name__ == '__main__':
 
         x = x.replace("--binname 3l","--binname 3l_crwz")
         x = add(x,"-I 'Zveto' -I ^2b1B ")
-        x = add(x, " --Fs {P}/7_bestMTW3l_v1 ")
+        #x = add(x, " --Fs {P}/7_bestMTW3l_v1 ")
         if '_data' in torun: x = x.replace('mca-3l-mc.txt','mca-3l-mcdata.txt')
         if '_frdata' in torun:
             x = promptsub(x)
