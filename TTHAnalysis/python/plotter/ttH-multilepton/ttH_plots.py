@@ -13,6 +13,7 @@ dowhat = "plots"
 P0="/pool/cienciasrw/userstorage/sscruz/NanoAOD/"
 if 'cmsco01'   in os.environ['HOSTNAME']: P0="/data/peruzzi"
 if 'cmsphys10' in os.environ['HOSTNAME']: P0="/data1/g/gpetrucc"
+if 'ucl.ac.be' in os.environ['HOSTNAME']: P0="/nfs/user/pvischia/tth/"
 TREES = ""
 
 #TREESONLYSKIM = "-P "+P0+"/NanoAODtest_v2 --Fs {P}/1_recleaner --Fs {P}/2_TauTightFlag --Fs {P}/3_triggerResult  --Fs {P}/4_eventVars "
