@@ -17,7 +17,7 @@ TREES = ""
 
 #TREESONLYSKIM = "-P "+P0+"/NanoAODtest_v2 --Fs {P}/1_recleaner --Fs {P}/2_TauTightFlag --Fs {P}/3_triggerResult  --Fs {P}/4_eventVars "
 #TREESONLYSKIM = "-P "+P0+"/ttH_EasterProduction/ --Fs {P}/1_triggerDecision --Fs {P}/2_countJets --Fs {P}/3_lepVars --FMCs {P}/4_bweight_new --Fs {P}/5_MET --Fs {P}/5_taus " 
-TREESONLYSKIM = "-P "+P0+"/ttH_EasterProduction_2lss_3l/ --Fs {P}/1_triggerDecision --Fs {P}/2_countJets --Fs {P}/3_lepVars --FMCs {P}/4_bweight_new --Fs {P}/5_MET --Fs {P}/5_taus --Fs {P}/6_eventVars " 
+TREESONLYSKIM = "-P "+P0+"/ttH_EasterProduction/ --Fs {P}/1_triggerDecision --Fs {P}/2_countJets --Fs {P}/3_lepVars --FMCs {P}/4_bweight_new_new --Fs {P}/5_MET --Fs {P}/5_taus " #  --Fs {P}/6_eventVars
 #TREESONLYSKIM  = "-P ../../macros/synch_2016/ --Fs {P}/1_tight --Fs {P}/2_synch --Fs {P}/3_trigger --Fs {P}/4_mass "
 TREESONLYFULL = TREESONLYSKIM
 
