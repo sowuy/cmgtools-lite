@@ -197,6 +197,8 @@ class PyTree:
     def __init__(self,tree):
         self.tree = tree
         self._branches = {} ## must be the last line
+    def getEntries(self):
+        return(self.tree.GetEntries())
     def branch(self,name,type,n=1,lenVar=None):
         arr = array(type.lower(), n*[0 if type in 'iIl' else 0.])
         self._branches[name] = arr
