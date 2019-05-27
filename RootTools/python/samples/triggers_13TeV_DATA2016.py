@@ -66,7 +66,7 @@ triggers_1mu_noniso = [ 'HLT_Mu45_eta2p1_v*',
                         'HLT_TkMu50_v*' ]
 
 # note: here the WP75 is th name in MC, WPLoose and WPTight should be in data
-triggers_1e      = [ 
+triggers_1e_iso      = [ 
         #"HLT_Ele23_WPLoose_Gsf_v*", # only up to 5E33
         #"HLT_Ele27_WPLoose_Gsf_v*", # only up to 5E33
         "HLT_Ele25_WPTight_Gsf_v*",        # not in column 0
