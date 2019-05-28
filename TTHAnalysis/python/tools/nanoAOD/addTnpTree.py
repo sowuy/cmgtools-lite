@@ -153,6 +153,7 @@ class addTnpTree(Module):
                 if not self.probeSel(probe): continue
                 mass = (probe.p4()+tag.p4()).M()
                 if mass > self.kMaxMass or mass < self.kMinMass: continue    
+                if probe.charge*tag.charge > 0: continue
                 probes.append(probe)
             if len(probes) == 1: pair.append( (tag, probes[0]) )
 
