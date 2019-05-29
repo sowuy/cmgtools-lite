@@ -5,10 +5,10 @@ import os
 
 ODIR=sys.argv[1]
 
-#dowhat = "plots" 
+dowhat = "plots" 
 #dowhat = "dumps" 
 #dowhat = "yields" 
-dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
+#dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
 
 P0="/pool/cienciasrw/userstorage/sscruz/NanoAOD/"
 if 'cmsco01'   in os.environ['HOSTNAME']: P0="/data/peruzzi"
