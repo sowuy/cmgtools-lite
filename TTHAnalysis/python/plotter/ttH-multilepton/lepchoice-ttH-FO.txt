@@ -1,12 +1,12 @@
 Regions_extended\b: 1*(((nJetCentral25_Recl_nom==1))*(nBJetCentralMedium25_Recl_nom==0))+2*(((nJetCentral25_Recl_nom==2))*(nBJetCentralMedium25_Recl_nom==0))+3*(((nJetCentral25_Recl_nom==3))*(nBJetCentralMedium25_Recl_nom==0))+4*(((nJetCentral25_Recl_nom>3))*(nBJetCentralMedium25_Recl_nom==0))+5*(((nJetCentral25_Recl_nom==2))*(nBJetCentralMedium25_Recl_nom==1))+6*(((nJetCentral25_Recl_nom==3))*(nBJetCentralMedium25_Recl_nom==1))+7*(((nJetCentral25_Recl_nom==4))*(nBJetCentralMedium25_Recl_nom==1))+8*(((nJetCentral25_Recl_nom>4))*(nBJetCentralMedium25_Recl_nom==1))+9*(((nJetCentral25_Recl_nom==2))*(nBJetCentralMedium25_Recl_nom>1))+10*(((nJetCentral25_Recl_nom==3))*(nBJetCentralMedium25_Recl_nom>1))+11*(((nJetCentral25_Recl_nom==4))*(nBJetCentralMedium25_Recl_nom>1))+12*(((nJetCentral25_Recl_nom>4))*(nBJetCentralMedium25_Recl_nom>1)); AlsoData
-LepGood1_mcMatchId\b  : LepFO_genPartFlav[0] == 1 || LepFO_genPartFlav[0] == 15; AlsoData
-LepGood2_mcMatchId\b  : LepFO_genPartFlav[1] == 1 || LepFO_genPartFlav[1] == 15; AlsoData
-LepGood3_mcMatchId\b  : LepFO_genPartFlav[2] == 1 || LepFO_genPartFlav[2] == 15; AlsoData
-LepGood4_mcMatchId\b  : LepFO_genPartFlav[3] == 1 || LepFO_genPartFlav[3] == 15; AlsoData
-LepGood1_isMatchRightCharge : (LepFO_genPartFlav[0] == 1 || LepFO_genPartFlav[0] == 15) && (LepFO_pdgId[0] == GenPart_pdgId[LepFO_genPartIdx[0]]) ; AlsoData
-LepGood2_isMatchRightCharge : (LepFO_genPartFlav[1] == 1 || LepFO_genPartFlav[1] == 15) && (LepFO_pdgId[1] == GenPart_pdgId[LepFO_genPartIdx[1]]) ; AlsoData
-LepGood3_isMatchRightCharge : (LepFO_genPartFlav[2] == 1 || LepFO_genPartFlav[2] == 15) && (LepFO_pdgId[2] == GenPart_pdgId[LepFO_genPartIdx[2]]) ; AlsoData
-LepGood4_isMatchRightCharge : (LepFO_genPartFlav[3] == 1 || LepFO_genPartFlav[3] == 15) && (LepFO_pdgId[3] == GenPart_pdgId[LepFO_genPartIdx[3]]) ; AlsoData
+LepGood1_mcMatchId\b  : (LepFO_genPartFlav[0] == 1 && GenPart_statusFlags[LepFO_genPartIdx[0]]&1) || ( LepFO_genPartFlav[0] == 15&& GenPart_statusFlags[LepFO_genPartIdx[0]]&(1 << 5)); AlsoData
+LepGood2_mcMatchId\b  : (LepFO_genPartFlav[1] == 1 && GenPart_statusFlags[LepFO_genPartIdx[1]]&1) || ( LepFO_genPartFlav[1] == 15&& GenPart_statusFlags[LepFO_genPartIdx[1]]&(1 << 5)); AlsoData
+LepGood3_mcMatchId\b  : (LepFO_genPartFlav[2] == 1 && GenPart_statusFlags[LepFO_genPartIdx[2]]&1) || ( LepFO_genPartFlav[2] == 15&& GenPart_statusFlags[LepFO_genPartIdx[2]]&(1 << 5)); AlsoData
+LepGood4_mcMatchId\b  : (LepFO_genPartFlav[3] == 1 && GenPart_statusFlags[LepFO_genPartIdx[3]]&1) || ( LepFO_genPartFlav[3] == 15&& GenPart_statusFlags[LepFO_genPartIdx[3]]&(1 << 5)); AlsoData
+LepGood1_isMatchRightCharge : (LepFO_genPartFlav[0] == 1 && GenPart_statusFlags[LepFO_genPartIdx[0]]&1) || ( LepFO_genPartFlav[0] == 15&& GenPart_statusFlags[LepFO_genPartIdx[0]]&(1 << 5)) && (LepFO_pdgId[0] == GenPart_pdgId[LepFO_genPartIdx[0]]) ; AlsoData
+LepGood2_isMatchRightCharge : (LepFO_genPartFlav[1] == 1 && GenPart_statusFlags[LepFO_genPartIdx[1]]&1) || ( LepFO_genPartFlav[1] == 15&& GenPart_statusFlags[LepFO_genPartIdx[1]]&(1 << 5)) && (LepFO_pdgId[1] == GenPart_pdgId[LepFO_genPartIdx[1]]) ; AlsoData
+LepGood3_isMatchRightCharge : (LepFO_genPartFlav[2] == 1 && GenPart_statusFlags[LepFO_genPartIdx[2]]&1) || ( LepFO_genPartFlav[2] == 15&& GenPart_statusFlags[LepFO_genPartIdx[2]]&(1 << 5)) && (LepFO_pdgId[2] == GenPart_pdgId[LepFO_genPartIdx[2]]) ; AlsoData
+LepGood4_isMatchRightCharge : (LepFO_genPartFlav[3] == 1 && GenPart_statusFlags[LepFO_genPartIdx[3]]&1) || ( LepFO_genPartFlav[3] == 15&& GenPart_statusFlags[LepFO_genPartIdx[3]]&(1 << 5)) && (LepFO_pdgId[3] == GenPart_pdgId[LepFO_genPartIdx[3]]) ; AlsoData
 LepGood1_mcPromptGamma\b  : LepFO_genPartFlav[0] == 22; AlsoData
 LepGood2_mcPromptGamma\b  : LepFO_genPartFlav[1] == 22; AlsoData
 LepGood3_mcPromptGamma\b  : LepFO_genPartFlav[2] == 22; AlsoData

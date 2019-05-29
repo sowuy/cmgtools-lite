@@ -21,15 +21,12 @@ class EventVars2LSS:
 
         allret = {}
 
-        all_leps = [l for l in Collection(event,"LepGood","nLepGood")]
-        nFO = getattr(event,"nLepFO"+self.inputlabel)
-        chosen = getattr(event,"iLepFO"+self.inputlabel)
-        leps = [all_leps[chosen[i]] for i in xrange(nFO)]
+        leps = [l for l in Collection(event,"LepFO","nLepFO")]
 
         for var in self.systsJEC:
             _var = var
             if not hasattr(event,"nJet25"+self.systsJEC[var]+self.inputlabel): _var = 0
-            jets = [j for j in Collection(event,"JetSel"+self.inputlabel,"nJetSel"+self.inputlabel)]
+            jets = [j for j in Collection(event,"JetSel","nJetSel")]
             jetptcut = 25
             if (_var==0): jets = filter(lambda x : x.pt>jetptcut, jets)
             elif (_var==1): jets = filter(lambda x : x.pt*x.corr_JECUp/x.corr>jetptcut, jets)
@@ -37,8 +34,8 @@ class EventVars2LSS:
 
             ### USE ONLY ANGULAR JET VARIABLES IN THE FOLLOWING!!!
 
-            met = getattr(event,"met"+self.systsJEC[_var]+"_pt")
-            metphi = getattr(event,"met"+self.systsJEC[_var]+"_phi")
+            met = getattr(event,'MET_years_pt_nom')
+            metphi = getattr(event,'MET_years_phi_nom')
             njet = len(jets); nlep = len(leps)
             # prepare output
             ret = dict([(name,0.0) for name in self.namebranches])
@@ -54,7 +51,7 @@ class EventVars2LSS:
                         sumdr += deltaR(j,j2)
                 ret["avg_dr_jet"] = sumdr/ndr if ndr else 0;
             if nlep > 0:
-                ret["MT_met_lep1"] = sqrt( 2*leps[0].conePt*met*(1-cos(leps[0].phi-metphi)) )
+                ret["MT_met_lep1"] = sqrt( 2*leps[0].conept*met*(1-cos(leps[0].phi-metphi)) )
 #            if nlep > 1:
 #                px = leps[0].conePt*cos(leps[0].phi) + leps[1].conePt*cos(leps[1].phi) + met*cos(metphi) 
 #                py = leps[0].conePt*sin(leps[0].phi) + leps[1].conePt*sin(leps[1].phi) + met*sin(metphi) 

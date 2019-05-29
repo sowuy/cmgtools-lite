@@ -1,5 +1,5 @@
 TT      : TTTo2L2Nu_2018_part1+TTTo2L2Nu_2018_part2+TTTo2L2Nu_2018_part3 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray
-TT      : TTToSemiLeptonic_2018 : xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray
+TT      : TTJets_amc_SingleLeptFromTbar_2018 : 2*xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kGray
 DY      : DYJetsToLL_M10to50_2018: xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kCyan
 DY      : DYJetsToLL_M50_amc_2018: xsec : ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kCyan
 WJets   : WJetsToLNu_2018  : xsec: ((LepGood1_mcMatchId==0 && LepGood1_mcPromptGamma==0) || (LepGood2_mcMatchId==0 && LepGood2_mcPromptGamma==0))  ; FillColor=ROOT.kCyan+2
