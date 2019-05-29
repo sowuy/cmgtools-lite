@@ -1,5 +1,5 @@
 cut-change: LepFO_isTight\[0\]: 1
 cut-change: LepFO_isTight\[1\]: 1
-weight: fakeRateWeight_2lss(LepFO_conePt[0],LepFO_eta[0],LepFO_pdgId[0],LepFO_isTight[0], LepFO_conePt[1],LepFO_eta[1],LepFO_pdgId[1],LepFO_isTight[1])
+weight: fakeRateWeight_2lss(LepFO_conept[0],LepFO_eta[0],LepFO_pdgId[0],LepFO_isTight[0], LepFO_conept[1],LepFO_eta[1],LepFO_pdgId[1],LepFO_isTight[1])
 load-histo: FR_mu : $DATA/fakerate/FR_data_ttH_mva.root : FR_mva090_mu_data_comb
 load-histo: FR_el : $DATA/fakerate/FR_data_ttH_mva.root : FR_mva090_el_data_comb_NC
