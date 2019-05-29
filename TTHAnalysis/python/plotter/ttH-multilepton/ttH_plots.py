@@ -5,10 +5,10 @@ import os
 
 ODIR=sys.argv[1]
 
-dowhat = "plots" 
+#dowhat = "plots" 
 #dowhat = "dumps" 
 #dowhat = "yields" 
-#dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
+dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
 
 P0="/pool/cienciasrw/userstorage/sscruz/NanoAOD/"
 if 'cmsco01'   in os.environ['HOSTNAME']: P0="/data/peruzzi"
@@ -19,7 +19,8 @@ TREES = ""
 #TREESONLYSKIM = "-P "+P0+"/NanoAODtest_v2 --Fs {P}/1_recleaner --Fs {P}/2_TauTightFlag --Fs {P}/3_triggerResult  --Fs {P}/4_eventVars "
 #TREESONLYSKIM = "-P "+P0+"/ttH_EasterProduction/ --Fs {P}/1_triggerDecision --Fs {P}/2_countJets --Fs {P}/3_lepVars --FMCs {P}/4_bweight_new --Fs {P}/5_MET --Fs {P}/5_taus " 
 TREESONLYSKIM = "-P "+P0+"/ttH_EasterProduction_2lss_3l/ --Fs {P}/1_triggerDecision --Fs {P}/2_countJets --Fs {P}/3_lepVars --FMCs {P}/4_bweight_new --Fs {P}/5_MET --Fs {P}/5_taus --Fs {P}/6_eventVars " 
-#TREESONLYSKIM  = "-P ../../macros/synch_2016/ --Fs {P}/1_tight --Fs {P}/2_synch --Fs {P}/3_trigger --Fs {P}/4_mass "
+
+TREESONLYSKIM  = "-P "+P0+"/synch_2016/ --Fs {P}/1_tight --Fs {P}/2_synch --Fs {P}/3_trigger --Fs {P}/4_mass "
 TREESONLYFULL = TREESONLYSKIM
 
 def base(selection, year):
@@ -143,7 +144,7 @@ if __name__ == '__main__':
             x = x.replace('mca-2lss-mc.txt','mca-2lss-mc-closuretest.txt')
             x = x.replace("--maxRatioRange 0.6  1.99 --ratioYNDiv 210", "--maxRatioRange 0.0 1.99 --fixRatioRange ")
             x = x.replace("--legendColumns 3", "--legendColumns 2")
-            x = add(x,"--AP --plotmode nostack --sP 2lep_catIndex_nosign --sP 2lep_catIndex --sP kinMVA_2lss_ttbar --sP kinMVA_2lss_ttV --sP nBJetMedium25 --sP 2lep_nJet25_from4")
+            x = add(x,"--AP --plotmode nostack --sP 2lep_catIndex_nosign --sP 2lep_catIndex --sP kinMVA_2lss_ttbar --sP kinMVA_2lss_ttV --sP nBJetCentralMedium25 --sP 2lep_nJet25_from4")
             x = add(x,"-p TT_FR_QCD -p TT_FR_TT -p TT_fake --ratioDen TT_FR_QCD --ratioNums TT_fake,TT_FR_TT --errors ")
             if '_closuretest_norm' in torun:
                 x = x.replace("--plotmode nostack","--plotmode norm")
@@ -232,7 +233,7 @@ if __name__ == '__main__':
         if '_closuretest' in torun:
             x = x.replace('mca-3l-mc.txt','mca-3l-mc-closuretest.txt')
             #x = x.replace("--maxRatioRange 0 3","--maxRatioRange 0.5 1.5")
-            x = add(x,"--AP --plotmode nostack --sP kinMVA_3l_ttbar --sP kinMVA_3l_ttV --sP --sP 3lep_catIndex --sP nBJetMedium25 --sP 3lep_nJet25 --sP 3lep_n_ele")
+            x = add(x,"--AP --plotmode nostack --sP kinMVA_3l_ttbar --sP kinMVA_3l_ttV --sP --sP 3lep_catIndex --sP nBJetCentralMedium25 --sP 3lep_nJet25 --sP 3lep_n_ele")
             x = add(x,"-p TT_FR_QCD -p TT_FR_TT -p TT_fake --ratioDen TT_FR_QCD --ratioNums TT_fake,TT_FR_TT --errors ")
             x = x.replace('--showMCError','')
             x = x.replace('--legendWidth 0.42','--legendWidth 0.60')
@@ -316,7 +317,7 @@ if __name__ == '__main__':
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
 
-        plots = ['2lep_.*','nJet25','nBJetLoose25','nBJetMedium25','met','metLD','htJet25j','mhtJet25','mtWmin','htllv','kinMVA_2lss_ttbar.*','kinMVA_2lss_ttV.*','kinMVA_2lss_bins7','kinMVA_input.*','era']
+        plots = ['2lep_.*','nJet25','nBJetLoose25','nBJetCentralMedium25','met','metLD','htJet25j','mhtJet25','mtWmin','htllv','kinMVA_2lss_ttbar.*','kinMVA_2lss_ttV.*','kinMVA_2lss_bins7','kinMVA_input.*','era']
         runIt(x,'%s'%torun,plots)
         if '_flav' in torun:
             for flav in ['mm','ee','em']:
@@ -338,7 +339,7 @@ if __name__ == '__main__':
         else: x = add(x,"-E ^1B ")
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
-        plots = ['2lep_.*','met','metLD','nVert','nJet25','nBJetMedium25','nBJetLoose25','nBJetLoose40','nBJetMedium40','era']
+        plots = ['2lep_.*','met','metLD','nVert','nJet25','nBJetCentralMedium25','nBJetLoose25','nBJetLoose40','nBJetMedium40','era']
         runIt(x,'%s'%torun)#,plots)
 
 
@@ -358,7 +359,7 @@ if __name__ == '__main__':
         else: x = add(x,"-E ^1B ")
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
-        plots = ['2lep_.*','met','metLD','nVert','nJet25','nBJetMedium25','nBJetLoose25','nBJetLoose40','nBJetMedium40','era']
+        plots = ['2lep_.*','met','metLD','nVert','nJet25','nBJetCentralMedium25','nBJetLoose25','nBJetLoose40','nBJetMedium40','era']
         runIt(x,'%s'%torun)#,plots)
 
     if 'cr_dileptonic' in torun:
@@ -407,7 +408,7 @@ if __name__ == '__main__':
         plots = ['3lep_mtW','3lep_nJet25','tot_weight','met','metLD','htJet25j','nBJetLoose25']
         if '_more' in torun:
             plots += ['lep3_pt','metLD','nBJetLoose25','3lep_worseIso','minMllAFAS','3lep_worseMVA','3lep_mtW','kinMVA.*','htJet25j','nJet25','era']
-            plots += ['3lep_.*','nJet25','nBJetLoose25','nBJetMedium25','met','metLD','htJet25j','mhtJet25','mtWmin','htllv','kinMVA_3l_ttbar','kinMVA_3l_ttV','kinMVA_3l_ttV_withMEM']
+            plots += ['3lep_.*','nJet25','nBJetLoose25','nBJetCentralMedium25','met','metLD','htJet25j','mhtJet25','mtWmin','htllv','kinMVA_3l_ttbar','kinMVA_3l_ttV','kinMVA_3l_ttV_withMEM']
         runIt(x,'%s'%torun,plots)
 
     if 'cr_ttz' in torun:
@@ -428,7 +429,7 @@ if __name__ == '__main__':
             if not '_data' in torun: raise RuntimeError
             x = x.replace('mca-3l-mcdata.txt','mca-3l-mcdata-frdata.txt')
         plots = ['lep2_pt','met','nJet25','mZ1']
-        plots += ['3lep_.*','nJet25','nBJetLoose25','nBJetMedium25','met','metLD','htJet25j','mhtJet25','mtWmin','htllv','kinMVA_3l_ttbar','kinMVA_3l_ttV','kinMVA_3l_ttV_withMEM','era']
+        plots += ['3lep_.*','nJet25','nBJetLoose25','nBJetCentralMedium25','met','metLD','htJet25j','mhtJet25','mtWmin','htllv','kinMVA_3l_ttbar','kinMVA_3l_ttV','kinMVA_3l_ttV_withMEM','era']
         x = add(x,"-I 'Zveto'  ")
         if '_tight' in torun:
             x = add(x,'-X ^2b1B -E ^gt2b -E ^1B')
@@ -450,7 +451,7 @@ if __name__ == '__main__':
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
         x = add(x,"-I ^Zveto")
-        plots = ['lep4_pt','met','mZ1','4lep_m4l_noRecl','4lep_mZ2_noRecl','minMllAFAS','tot_weight','4lep_nJet25','nBJetMedium25']
+        plots = ['lep4_pt','met','mZ1','4lep_m4l_noRecl','4lep_mZ2_noRecl','minMllAFAS','tot_weight','4lep_nJet25','nBJetCentralMedium25']
         runIt(x,'%s'%torun,plots)
     if 'cr_zz' in torun:
         x = base('4l')

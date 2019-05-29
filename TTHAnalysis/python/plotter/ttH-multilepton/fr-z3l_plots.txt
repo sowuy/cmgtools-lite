@@ -1,6 +1,6 @@
 nJet25 : nJet25 : [-0.5,0.5,1.5,2.5,3.5] ; XTitle='N(jet\, p_{T} > 25)'
 nBJetLoose25  : nBJetLoose25  : [-0.5,0.5,1.5,2.5] ; XTitle='N(jet\, p_{T} > 25\, CVS Loose)',XNDiv=505
-nBJetMedium25 : nBJetMedium25 : [-0.5,0.5,1.5,2.5] ; XTitle='N(jet\, p_{T} > 25\, CVS Medium)',XNDiv=505
+nBJetCentralMedium25 : nBJetCentralMedium25 : [-0.5,0.5,1.5,2.5] ; XTitle='N(jet\, p_{T} > 25\, CVS Medium)',XNDiv=505
 #met:     met_pt: 40,0,100    ; XTitle="E_{T}^{miss}  [GeV]"
 met_log: met_pt: 40,0,100    ; XTitle="E_{T}^{miss}  [GeV]",Logy
 mZ1:        mZ1: 30,60,120   ; XTitle="best m(l^{+}l^{-})  [GeV]", Legend='TL'
