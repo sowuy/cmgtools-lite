@@ -7,11 +7,11 @@
 <use name="SimDataFormats/GeneratorProducts"/>
 <use name="RecoVertex/KalmanVertexFit"/>
 <use name="PhysicsTools/TensorFlow"/>
+<use name="boost_filesystem" />
+<use name="cppunit" />
 <use name="roottmva"/>
 <use name="rootminuit2"/>
 <use name="lhapdf"/>
-<use name="tensorflow"/>
-<use name="protobuf"/>
 <export>
   <lib   name="1"/>
 </export>
