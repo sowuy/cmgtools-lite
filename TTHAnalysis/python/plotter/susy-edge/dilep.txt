@@ -1,0 +1,8 @@
+alwaystrue : 1 
+twoLeptons : nPairLep_Edge > 0
+filters : Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && (Flag_ecalBadCalibFilter || (year == 2016))  $DATA{&& Flag_eeBadScFilter}
+triggers : (Trigger_2m && (abs(Lep1_pdgId_Edge * Lep2_pdgId_Edge) == 169)) || (Trigger_2e && (abs(Lep1_pdgId_Edge * Lep2_pdgId_Edge) == 121)) || (Trigger_em && (abs(Lep1_pdgId_Edge * Lep2_pdgId_Edge) == 143))
+pt2520 :  Lep1_pt_Edge > 25 && Lep2_pt_Edge > 20
+diLeptonPt : lepsZPt_Edge > 25
+lepDR : lepsDR_Edge > 0.1
+leptonsMll : lepsMll_Edge > 20 

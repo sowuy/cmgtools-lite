@@ -234,7 +234,7 @@ class MCAnalysis:
 
             cnames = [ x.strip() for x in field[1].split("+") ]
             total_w = 0.; to_norm = False; ttys = [];
-            genWeightName = extra["genWeightName"] if "genWeightName" in extra else "genWeight"
+            genWeightName = extra["genWeightName"] if "genWeightName" in extra else options.genWeightName if options.genWeightName != None else  "genWeight"
             genSumWeightName = extra["genSumWeightName"] if "genSumWeightName" in extra else "genEventSumw"
             is_w = -1
             pname0 = pname
@@ -269,6 +269,8 @@ class MCAnalysis:
                 elif (not os.path.exists(rootfile)) and os.path.exists("%s/%s/%s/tree.root" % (basepath, cname, treename)):
                     # Heppy calls the tree just 'tree.root'
                     rootfile = "%s/%s/%s/tree.root" % (basepath, cname, treename)
+                elif (not os.path.exists(rootfile)) and os.path.exists("%s/%s/%s/Events.root" % (basepath, cname, treename)):
+                    rootfile = "%s/%s/%s/Events.root" % (basepath, cname, treename)
                 elif (not os.path.exists(rootfile)) and os.path.exists("%s/%s/%s/tree.root.url" % (basepath, cname, treename)):
                     # Heppy calls the tree just 'tree.root'
                     rootfile = "%s/%s/%s/tree.root" % (basepath, cname, treename)
@@ -291,7 +293,7 @@ class MCAnalysis:
                 
                 for rootfile in rootfiles:
                     mycname = cname if len(rootfiles) == 1 else cname + "-" + os.path.basename(rootfile).replace(".root","") 
-                    tty = TreeToYield(rootfile, basepath, options, settings=extra, name=pname, cname=mycname, objname=objname, variation_inputs=variations.values(), nanoAOD=(treename == "NanoAOD")); 
+                    tty = TreeToYield(rootfile, basepath, options, settings=extra, name=pname, cname=mycname, objname=objname, variation_inputs=variations.values(), nanoAOD=(treename == "NanoAOD" or 'nano' in treename)); 
                     tty.pckfile = pckfile
                     ttys.append(tty)
 
@@ -307,7 +309,7 @@ class MCAnalysis:
                 if pname in self._allData: self._allData[pname].append(tty)
                 else                     : self._allData[pname] =     [tty]
                 if "data" not in pname:
-                    if treename != "NanoAOD":
+                    if treename != "NanoAOD" and os.path.isfile(tty.pckfile):
                         pckobj  = pickle.load(open(tty.pckfile,'r'))
                         counters = dict(pckobj)
                     else:
@@ -364,7 +366,7 @@ class MCAnalysis:
                     print "Overwrite the norm systematic for %s to make it correlated with %s" % (pname, tty.getOption('PegNormToProcess'))
                 if pname not in self._rank: self._rank[pname] = len(self._rank)
             if to_norm: 
-                if treename != "NanoAOD":
+                if treename != "NanoAOD" and 'nano' not in treename:
                     if total_w == 0: raise RuntimeError, "Zero total weight for %s" % pname
                     for tty in ttys: tty.setScaleFactor("%s*%g" % (scale, 1000.0/total_w))
                 else:
@@ -921,7 +923,8 @@ def addMCAnalysisOptions(parser,addTreeToYieldOnesToo=True):
     parser.add_option("--aefr", "--alt-external-fitResults", dest="altExternalFitResults", type="string", default=[], nargs=2, action="append", help="External fitResult")
     parser.add_option("--aefrl", "--alt-external-fitResult-labels", dest="altExternalFitResultLabels", type="string", default=[], nargs=1, action="append", help="External fitResult")
     parser.add_option("--check-friends-first", dest="checkFriendsFirst", action="store_true", default=False, help="At start, check that all friends are available, and raise an error otherwise.");
-
+    parser.add_option("--genWeightName", dest="genWeightName", action="store", type="string", default=None, help="Name of the gen weight");
+    
 if __name__ == "__main__":
     from optparse import OptionParser
     parser = OptionParser(usage="%prog [options] tree.root cuts.txt")
