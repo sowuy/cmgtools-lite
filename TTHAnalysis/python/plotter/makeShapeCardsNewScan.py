@@ -16,7 +16,7 @@ parser.add_option("--infile", dest="infile", action="store_true", default=False,
 parser.add_option("--savefile", dest="savefile", action="store_true", default=False, help="Save histos to file")
 parser.add_option("--categorize", dest="categ", type="string", nargs=3, default=None, help="Split in categories. Requires 3 arguments: expression, binning, bin labels")
 parser.add_option("--regularize", dest="regularize", action="store_true", default=False, help="Regularize templates")
-parser.add_option("--scanregex", dest="scanregex", type="string", default="ct_(?P<p1>.*?)_cv_(?P<p2>.*?)", help="Regex expression to parse parameters of the scan")
+parser.add_option("--scanregex", dest="scanregex", type="string", default="ct_(?P<p1>.*)_cv_(?P<p2>.*)", help="Regex expression to parse parameters of the scan")
 parser.add_option("--params", dest="params", type="string", default="p1,p2", help="List of parameters in the regex, separated by commas")
 (options, args) = parser.parse_args()
 options.weight = True
@@ -39,8 +39,9 @@ for psig in mca.listSignals(True):
     match = pattern.search( psig ) 
     if not match: 
         raise RuntimeError("Signal %s does not match the regexp"%psig)
-    scanpoints.append( [ match.group( p ) for p in options.parameters ] ) 
-scanpoints = list(set(scanpoints)) # remove duplicates
+    point = [ match.group( p ) for p in options.params.split(',') ]
+    if point not in scanpoints: scanpoints.append(  point ) 
+
 
 report={}
 if options.infile:
@@ -64,15 +65,16 @@ if options.savefile:
     savefile.Close()
 
 for scanpoint in scanpoints: 
-    pointname = ['_'.join( [ '%s_%s'%(x,y) for x,y in zip(parameters,scanpoint)])]
+    pointname = '_'.join( [ '%s_%s'%(x,y) for x,y in zip(options.params.split(','),scanpoint)])
     listSignals = [] 
     for psig in mca.listSignals(): 
         match = pattern.search(psig)
-        if scanpoint != [match.group(p) for p in options.parameters]: continue
-    
+        if scanpoint != [match.group(p) for p in options.params.split(',')]: continue
+        listSignals.append(psig)
+
     if options.asimov:
         if options.asimov in ("s","sig","signal","s+b"):
-            asimovprocesses = mca.listSignals() + mca.listBackgrounds()
+            asimovprocesses = listSignals + mca.listBackgrounds()
         elif options.asimov in ("b","bkg","background", "b-only"):
             asimovprocesses = mca.listBackgrounds()
         else: raise RuntimeError("the --asimov option requires to specify signal/sig/s/s+b or background/bkg/b/b-only")
@@ -109,10 +111,10 @@ for scanpoint in scanpoints:
     
       allyields = dict([(p,h.Integral()) for p,h in report.iteritems()])
       procs = []; iproc = {}
-      for i,s in enumerate(mca.listSignals()):
+      for i,s in enumerate(listSignals):
         if s not in allyields: continue
         if allyields[s] == 0: continue
-        procs.append(s); iproc[s] = i-len(mca.listSignals())+1
+        procs.append(s); iproc[s] = i-len(listSignals)+1
       for i,b in enumerate(mca.listBackgrounds()):
         if b not in allyields: continue
         if allyields[b] == 0: continue
@@ -169,7 +171,7 @@ for scanpoint in scanpoints:
       # make a new list with only the ones that have an effect
       nuisances = sorted(systs.keys())
     
-      datacard = open(outdir+'_'+pointname+binname+".card.txt", "w"); 
+      datacard = open(outdir+pointname+binname+".card.txt", "w"); 
       datacard.write("## Datacard for cut file %s and scan point %s\n"%(args[1],pointname))
       datacard.write("shapes *        * %s.input.root x_$PROCESS x_$PROCESS_$SYSTEMATIC\n" % pointname + binname)
       datacard.write('##----------------------------------\n')
@@ -201,5 +203,5 @@ for scanpoint in scanpoints:
           workspace.WriteTObject(h,h.GetName())
       workspace.Close()
     
-      print "Wrote to {0}.card.txt and {0}.input.root ".format(outdir+binname)
+      print "Wrote to {0}.card.txt and {0}.input.root ".format(outdir+pointname+binname)
     

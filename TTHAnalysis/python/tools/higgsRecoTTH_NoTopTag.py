@@ -7,15 +7,14 @@ from CMGTools.TTHAnalysis.treeReAnalyzer import *
 from CMGTools.TTHAnalysis.tools.genParticleProducer import *
 import ROOT, itertools
 from math import *
-
 #bTagCut = 0.3093 if year==2016 else 0.3033 if year==2017 else 0.2770
 class HiggsRecoTTH(Module):
-    #def __init__(self,label="_Recl",cut_BDT_rTT_score = 0.0, cuts_mW_had = (50.,110.), cuts_mH_vis = (90.,130.), btagDeepCSVveto = 0.4941, doSystJEC=True): #TODO update the values here
-    def __init__(self,label="_Recl",cut_BDT_rTT_score = 0.0, cuts_mW_had = (50.,110.), cuts_mH_vis = (90.,130.), btagDeepCSVveto = 0.2770, doSystJEC=True): 
+    #def __init__(self,label="_Recl",cut_BDT_rTT_score = 0.0, cuts_mW_had = (50.,110.), cuts_mH_vis = (90.,130.), btagDeepCSVveto = 0.4941, doSystJEC=True): 
+    def __init__(self,label="_Recl",cut_BDT_rTT_score = 0.0, cuts_mW_had = (50.,110.), cuts_mH_vis = (90.,130.), btagDeepCSVveto = 0.2770, doSystJEC=True): #TODO update the values here
         self.label = label
         self.branches = []
         self.systsJEC = {0:"", 1:"_jesTotalUp", -1:"_jesTotalDown"} if doSystJEC else {0:""}
-        for var in self.systsJEC: self.branches.extend(["Hreco_%s%s"%(x,self.systsJEC[var]) for x in ["minDRlj","visHmass","Wmass","lepIdx","j1Idx","j2Idx","pTHvis","matchedpartons","bothmatchedpartons","mismatchedtoptaggedjets","pTHgen"]]) # added new branches here
+        for var in self.systsJEC: self.branches.extend(["Hreco_%s%s"%(x,self.systsJEC[var]) for x in ["minDRlj","visHmass","Wmass","lepIdx","j1Idx","j2Idx","pTHvis","matchedpartons","bothmatchedpartons","pTHgen"]]) # added new branches here
         self.cut_BDT_rTT_score = cut_BDT_rTT_score
         self.cuts_mW_had = cuts_mW_had
         self.cuts_mH_vis = cuts_mH_vis
@@ -54,9 +53,7 @@ class HiggsRecoTTH(Module):
         #gengoodJets = []
         matchedpartons          = 0
         bothmatchedpartons      = 0 
-        mismatchedtoptaggedjets = 0
-        pTHgen = 0
-        
+        pTHgen                  = 0
 
     #def isAncestor(a,p): #TODO need to modify this function for my purpose fitting the loop below
         #if a == p:
@@ -70,7 +67,7 @@ class HiggsRecoTTH(Module):
     # -----------------------
         for part in genpar:
             if part.pdgId == 25:
-               if part.statusFlags &(1 << statusFlagsMap['isHardProcess']):
+               if part.statusFlags &(1 << statusFlagsMap['isHardProcess']): 
                   pTHgen = part.p4().Pt()
             if abs(part.pdgId) in range (1,8):
                #print "it is a quark"
@@ -116,20 +113,20 @@ class HiggsRecoTTH(Module):
         ret    = {} 
 
         for var in self.systsJEC:
-            score = getattr(event,"BDThttTT_eventReco_mvaValue%s"%self.systsJEC[var]) 
+            score = 1
+            #score = getattr(event,"BDThttTT_eventReco_mvaValue%s"%self.systsJEC[var]) 
             candidates=[]
             if score>self.cut_BDT_rTT_score:
 
-                j1top = getattr(event,"BDThttTT_eventReco_iJetSel1%s"%self.systsJEC[var])
-                j2top = getattr(event,"BDThttTT_eventReco_iJetSel2%s"%self.systsJEC[var])
-                j3top = getattr(event,"BDThttTT_eventReco_iJetSel3%s"%self.systsJEC[var])
-                jetsTopNoB   = [b for a,b in enumerate(jets) if a in [j1top,j2top,j3top] and b.btagDeepB<self.btagDeepCSVveto] #it is a jet coming from top and not a b-jet
-                jetsNoTopNoB = [j for i,j in enumerate(jets) if i not in [j1top,j2top,j3top] and j.btagDeepB<self.btagDeepCSVveto]
+                #j1top = getattr(event,"BDThttTT_eventReco_iJetSel1%s"%self.systsJEC[var])
+                #j2top = getattr(event,"BDThttTT_eventReco_iJetSel2%s"%self.systsJEC[var])
+                #j3top = getattr(event,"BDThttTT_eventReco_iJetSel3%s"%self.systsJEC[var])
+                #jetsTopNoB   = [b for a,b in enumerate(jets) if a in [j1top,j2top,j3top] and b.btagDeepB<self.btagDeepCSVveto] #it is a jet coming from top and not a b-jet
+                #jetsNoTopNoB = [j for i,j in enumerate(jets) if i not in [j1top,j2top,j3top] and j.btagDeepB<self.btagDeepCSVveto]
+                jetsNoTopNoB = [j for i,j in enumerate(jets) if j.btagDeepB<self.btagDeepCSVveto]
                 for _lep,lep in [(ix,x.p4()) for ix,x in enumerate(lepsFO)]:
-                    # need to remove #TODO
-                    # --------------
-                    #if not len(lepsFO)==2: continue #these are redundant cuts when you do the plotting
-                    #if not lepsFO[0].charge==lepsFO[1].charge: continue 
+                    if not len(lepsFO)==2: continue #these are redundant cuts when you do the plotting
+                    if not lepsFO[0].charge==lepsFO[1].charge: continue 
                     for _j1,_j2,j1,j2 in [(jets.index(x1),jets.index(x2),x1.p4(),x2.p4()) for x1,x2 in itertools.combinations(jetsNoTopNoB,2)]:
                         j1.SetPtEtaPhiM(getattr(jets[jets.index(x1)],'pt%s'%self.systsJEC[var]),j1.Eta(), j1.Phi(), j1.M())
                         j2.SetPtEtaPhiM(getattr(jets[jets.index(x2)],'pt%s'%self.systsJEC[var]),j2.Eta(), j2.Phi(), j2.M())
@@ -143,7 +140,7 @@ class HiggsRecoTTH(Module):
 			pTHvisconstr = Hvisconstr.Pt()
 			if mHvisconstr<self.cuts_mH_vis[0] or mHvisconstr>self.cuts_mH_vis[1]: continue
 			mindR = min(lep.DeltaR(j1),lep.DeltaR(j2))
-		        candidates.append((mindR,mHvisconstr,mW,_lep,_j1,_j2,pTHvisconstr))
+			candidates.append((mindR,mHvisconstr,mW,_lep,_j1,_j2,pTHvisconstr))
                         # need to remove #TODO
                         # --------------
                         #for jet in gengoodJets:
@@ -153,21 +150,15 @@ class HiggsRecoTTH(Module):
                             #elif deltaR(jet.p4().Eta(),jet.p4().Phi(), j1.Eta(),j1.Phi()) < 0.3 and deltaR(jet.p4().Eta(),jet.p4().Phi(), j2.Eta(),j2.Phi()) < 0.3:
                                  #print "both detector level jets match with both true ones --> counting it"
                                  #bothmatchedjets +=1
-                for topjet in jetsTopNoB:
-                    for gentopquark in QFromWFromT:
-                        if deltaR(topjet.p4().Eta(),topjet.p4().Phi(), gentopquark.p4().Eta(),gentopquark.p4().Phi()) > 0.5:
-                           #jets tagged as coming from top didn't match with true partons coming from top"
-                           mismatchedtoptaggedjets +=1 #only with respect to the hadronic top where the W is going to qq and this is what I am matching here
             best = min(candidates) if len(candidates) else None
-            if best:
-               jetmat1 = jets[best[4]] 
+            if best: 
+               jetmat1 = jets[best[4]]
                jetmat2 = jets[best[5]]
-	       for quark in QFromWFromH: 
-	           if deltaR(quark.p4().Eta(),quark.p4().Phi(), jetmat1.p4().Eta(),jetmat1.p4().Phi()) < 0.3 or deltaR(quark.p4().Eta(),quark.p4().Phi(), jetmat2.p4().Eta(),jetmat2.p4().Phi()) < 0.3:
-	              matchedpartons +=1
-	           elif deltaR(quark.p4().Eta(),quark.p4().Phi(), jetmat1.p4().Eta(),jetmat1.p4().Phi()) < 0.3 and deltaR(quark.p4().Eta(),quark.p4().Phi(), jetmat2.p4().Eta(),jetmat2.p4().Phi()) < 0.3:
-		        bothmatchedpartons +=1
-            else: pass   
+               for quark in QFromWFromH:
+                   if deltaR(quark.p4().Eta(),quark.p4().Phi(), jetmat1.p4().Eta(),jetmat1.p4().Phi()) < 0.3 or deltaR(quark.p4().Eta(),quark.p4().Phi(), jetmat2.p4().Eta(),jetmat2.p4().Phi()) < 0.3:
+                      matchedpartons +=1
+                   elif deltaR(quark.p4().Eta(),quark.p4().Phi(), jetmat1.p4().Eta(),jetmat1.p4().Phi()) < 0.3 and deltaR(quark.p4().Eta(),quark.p4().Phi(), jetmat2.p4().Eta(),jetmat2.p4().Phi()) < 0.3:
+                        bothmatchedpartons +=1
             ret["Hreco_minDRlj%s"                   %self.systsJEC[var]] = best[0 ] if best else -99
             ret["Hreco_visHmass%s"                  %self.systsJEC[var]] = best[1 ] if best else -99
             ret["Hreco_Wmass%s"                     %self.systsJEC[var]] = best[2 ] if best else -99
@@ -175,8 +166,7 @@ class HiggsRecoTTH(Module):
             ret["Hreco_j1Idx%s"                     %self.systsJEC[var]] = best[4 ] if best else -99
             ret["Hreco_j2Idx%s"                     %self.systsJEC[var]] = best[5 ] if best else -99
             ret["Hreco_pTHvis%s"                    %self.systsJEC[var]] = best[6 ] if best else -99
-            ret["Hreco_matchedpartons%s"            %self.systsJEC[var]] = matchedpartons if best else -99 
-            ret["Hreco_bothmatchedpartons%s"        %self.systsJEC[var]] = bothmatchedpartons if best else -99
-            ret["Hreco_pTHgen%s"                    %self.systsJEC[var]] = pTHgen 
-            ret["Hreco_mismatchedtoptaggedjets%s"   %self.systsJEC[var]] = mismatchedtoptaggedjets 
+            ret["Hreco_matchedpartons%s"            %self.systsJEC[var]] = matchedpartons if best else -99
+            ret["Hreco_bothmatchedpartons%s"        %self.systsJEC[var]] = bothmatchedpartons if best else -99 
+            ret["Hreco_pTHgen%s"                    %self.systsJEC[var]] = pTHgen
         return ret
