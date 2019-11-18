@@ -11,24 +11,37 @@ lumis = {
 '2018': '59.7',
 }
 
-submit = '{command}' 
-dowhat = "plots" 
-#dowhat = "dumps" 
-#dowhat = "yields" 
+submit = '{command}'
+dowhat = "plots"
+#dowhat = "dumps"
+#dowhat = "yields"
 #dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
 P0= "/nfs/user/pvischia/tth/v5pre"
 #P0="/eos/cms/store/cmst3/group/tthlep/peruzzi/"
 #if 'cmsco01'   in os.environ['HOSTNAME']: P0="/data1/peruzzi"
 nCores = 8
-if 'fanae' in os.environ['HOSTNAME']: 
+if 'fanae' in os.environ['HOSTNAME']:
     nCores = 22
     submit = 'sbatch -p  short -c %d --wrap "{command}"'%nCores
     P0     = "/pool/ciencias/userstorage/sscruz/NanoAOD/"
-TREESALL = "--xf THQ_LHE,THW_LHE,TTWW,TTTW,TTWH  --Fs {P}/1_lepJetBTagDeepFlav_v1  --Fs {P}/2_triggerSequence_v2 --Fs {P}/3_recleaner_v1 --FMCs {P}/4_btag --FMCs {P}/4_leptonSFs_v0 --FMCs {P}/0_mcFlags_v0 --Fs {P}/6_BDThtt --Fs /home/ucl/cp3/elfaham/CMSSW_10_4_0/src/CMGTools/TTHAnalysis/macros/2016"
-TREESONLYFULL = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
-TREESONLYSKIM = "-P "+P0+"/NanoTrees_TTH_300519_v5pre_skim2LSS/%s "%(YEAR,)
-TREESONLYMEMZVETO = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
-TREESONLYMEMZPEAK = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
+
+if 'cism.ucl.ac.be' in os.environ['HOSTNAME']:
+    P0 = "/nfs/user/pvischia/tth/v5pre/"
+
+TREESALL = "--xf THQ_LHE,THW_LHE,TTWW,TTTW,TTWH --FMCs {P}/0_jmeUnc_v1 --Fs {P}/1_recl --FMCs {P}/2_scalefactors --Fs {P}/3_tauCount0"
+YEARDIR=YEAR if YEAR != 'all' else ''
+TREESONLYFULL = "-P "+P0+"/NanoTrees_TTH_091019_v6pre%s "%(YEARDIR,)
+TREESONLYSKIM = "-P "+P0+"/NanoTrees_TTH_091019_v6pre_skim2lss/%s "%(YEARDIR,)
+TREESONLYMEMZVETO = "-P "+P0+"/NanoTrees_TTH_091019_v6pre/%s "%(YEARDIR,)
+TREESONLYMEMZPEAK = "-P "+P0+"/NanoTrees_TTH_091019_v6pre/%s "%(YEARDIR,)
+>>>>>>> 58243220a29a615ba727911801400159d3f3514b
+
+if 'cism.ucl.ac.be' in os.environ['HOSTNAME']:
+    TREESALL = "--xf THQ_LHE,THW_LHE,TTWW,TTTW,TTWH  --Fs {P}/1_lepJetBTagDeepFlav_v1  --Fs {P}/2_triggerSequence_v2 --Fs {P}/3_recleaner_v1 --FMCs {P}/4_btag --FMCs {P}/4_leptonSFs_v0 --FMCs {P}/0_mcFlags_v0"
+    TREESONLYFULL = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
+    TREESONLYSKIM = "-P "+P0+"/NanoTrees_TTH_300519_v5pre_skim2LSS/%s "%(YEAR,)
+    TREESONLYMEMZVETO = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
+    TREESONLYMEMZPEAK = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
 
 def base(selection):
 
@@ -80,7 +93,7 @@ def sigprocs(GO,mylist):
     return procs(GO,mylist)+' --showIndivSigs --noStackSig'
 def runIt(GO,name,plots=[],noplots=[]):
     if '_74vs76' in name: GO = prep74vs76(GO)
-    if dowhat == "plots":  
+    if dowhat == "plots":
         if not ('forcePlotChoice' in sys.argv[4:]): print submit.format(command=' '.join(['python mcPlots.py',"--pdir %s/%s/%s"%(ODIR,YEAR,name),GO,' '.join(['--sP %r'%p for p in plots]),' '.join(['--xP %r'%p for p in noplots]),' '.join(sys.argv[4:])]))
         else: print 'python mcPlots.py',"--pdir %s/%s/%s"%(ODIR,YEAR,name),GO,' '.join([x for x in sys.argv[4:] if x!='forcePlotChoice'])
     elif dowhat == "yields": print 'echo %s; python mcAnalysis.py'%name,GO,' '.join(sys.argv[4:])
@@ -133,7 +146,7 @@ if __name__ == '__main__':
 
         if '_splitfakes' in torun:
             x = x.replace('mca-2lss-mc.txt','mca-2lss-mc-flavsplit.txt')
-            
+
         if '_closuretest' in torun:
             x = x.replace('mca-2lss-mc.txt','mca-2lss-mc-closuretest.txt')
             x = x.replace("--maxRatioRange 0.6  1.99 --ratioYNDiv 210", "--maxRatioRange 0.0 2.49 --fixRatioRange ")
@@ -182,14 +195,14 @@ if __name__ == '__main__':
 
         runIt(x,'%s'%torun)
         if '_flav' in torun:
-            for flav in ['mm','ee','em']: 
+            for flav in ['mm','ee','em']:
                 runIt(add(x,'-E ^%s'%flav).replace("--binname 2lss","--binname 2lss_"+flav),'%s/%s'%(torun,flav))
         if '_catnosign' in torun:
-            for flav in ['mm','ee','em']: 
+            for flav in ['mm','ee','em']:
                 runIt(add(x,'-E ^%s'%flav).replace("--binname 2lss","--binname 2lss_"+flav),'%s/%s'%(torun,flav))
-            for flav in ['mm_bt','mm_bl','em_bt','em_bl']: 
+            for flav in ['mm_bt','mm_bl','em_bt','em_bl']:
                 runIt(add(x,'-E ^%s -E ^B%s'%(flav[:2], ("Tight" if "bt" in flav else "Loose"))).replace("--binname 2lss","--binname 2lss_"+flav),'%s/%s'%(torun,flav))
-            for flav in ['btight','bloose']: 
+            for flav in ['btight','bloose']:
                 runIt(add(x,' -E ^B%s'%("Tight" if "bt" in flav else "Loose")),'%s/%s'%(torun,flav))
         if '_cats' in torun:
             for cat in ['b2lss_ee_neg','b2lss_ee_pos',\
@@ -266,7 +279,7 @@ if __name__ == '__main__':
             for cat in ['b3l_bl_neg','b3l_bl_pos','b3l_bt_neg','b3l_bt_pos']:
                 runIt(add(x,'-E ^%s'%cat).replace("--binname 3l","--binname %s" % cat[1:-4]),'%s/%s'%(torun,cat))
         if '_catnosign' in torun:
-            for flav in ['btight','bloose']: 
+            for flav in ['btight','bloose']:
                 runIt(add(x,' -E ^B%s'%("Tight" if "bt" in flav else "Loose")).replace("--binname 3l","--binname 3l_%s" % flav[:2]),'%s/%s'%(torun,flav))
 
 
@@ -324,7 +337,7 @@ if __name__ == '__main__':
         x = x.replace('--rebin 4','')
         if '_appl' in torun:
             x = add(x,"-X ^TT")
-        if '_noeleid' in torun: 
+        if '_noeleid' in torun:
             x = add(x,"-X eleID -E loose_eleID")
         if '_ss' not in torun:
             x = fulltrees(x)
@@ -349,7 +362,7 @@ if __name__ == '__main__':
             x = promptsub(x)
             if not '_data' in torun: raise RuntimeError
             x = x.replace('mca-3l-mcdata.txt','mca-3l-mcdata-frdata.txt')
-        else: 
+        else:
             print "ERROR: cr_wz with MC backgrounds does not work."
         if '_unc' in torun:
             x = add(x,"--unc ttH-multilepton/systsUnc.txt")
@@ -416,4 +429,4 @@ if __name__ == '__main__':
         plots = ['lep4_pt','met','mZ1','4lep_m4l_noRecl','4lep_mZ2_noRecl','minMllAFAS','tot_weight','4lep_nJet25']
         runIt(x,'%s'%torun,plots)
 
-        
+
