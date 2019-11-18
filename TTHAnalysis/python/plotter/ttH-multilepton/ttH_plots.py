@@ -16,8 +16,7 @@ dowhat = "plots"
 #dowhat = "dumps"
 #dowhat = "yields"
 #dowhat = "ntuple" # syntax: python ttH-multilepton/ttH_plots.py no 2lss_SR_extr outfile_{cname}.root --sP var1,var2,...
-P0= "/nfs/user/pvischia/tth/v5pre"
-#P0="/eos/cms/store/cmst3/group/tthlep/peruzzi/"
+P0="/eos/cms/store/cmst3/group/tthlep/peruzzi/"
 #if 'cmsco01'   in os.environ['HOSTNAME']: P0="/data1/peruzzi"
 nCores = 8
 if 'fanae' in os.environ['HOSTNAME']:
@@ -26,22 +25,14 @@ if 'fanae' in os.environ['HOSTNAME']:
     P0     = "/pool/ciencias/userstorage/sscruz/NanoAOD/"
 
 if 'cism.ucl.ac.be' in os.environ['HOSTNAME']:
-    P0 = "/nfs/user/pvischia/tth/v5pre/"
-
-TREESALL = "--xf THQ_LHE,THW_LHE,TTWW,TTTW,TTWH --FMCs {P}/0_jmeUnc_v1 --Fs {P}/1_recl --FMCs {P}/2_scalefactors --Fs {P}/3_tauCount0"
+    Tag =sys.argv[3] #2lss_diff_NoTop-tagged or 2lss_diff_Top-tagged
+    P0   = "/nfs/user/pvischia/tth/v6"
+TREESALL = "--xf THQ_LHE,THW_LHE,TTWW,TTTW,TTWH --FMCs {P}/0_jmeUnc_v1 --Fs {P}/1_recl --FMCs {P}/2_scalefactors --Fs {P}/3_tauCount --Fs {P}/5_BDThtt_reco --Fs /nfs/user/elfaham/104X/v6/%s/%s"%(YEAR,Tag)
 YEARDIR=YEAR if YEAR != 'all' else ''
 TREESONLYFULL = "-P "+P0+"/NanoTrees_TTH_091019_v6pre%s "%(YEARDIR,)
 TREESONLYSKIM = "-P "+P0+"/NanoTrees_TTH_091019_v6pre_skim2lss/%s "%(YEARDIR,)
 TREESONLYMEMZVETO = "-P "+P0+"/NanoTrees_TTH_091019_v6pre/%s "%(YEARDIR,)
 TREESONLYMEMZPEAK = "-P "+P0+"/NanoTrees_TTH_091019_v6pre/%s "%(YEARDIR,)
->>>>>>> 58243220a29a615ba727911801400159d3f3514b
-
-if 'cism.ucl.ac.be' in os.environ['HOSTNAME']:
-    TREESALL = "--xf THQ_LHE,THW_LHE,TTWW,TTTW,TTWH  --Fs {P}/1_lepJetBTagDeepFlav_v1  --Fs {P}/2_triggerSequence_v2 --Fs {P}/3_recleaner_v1 --FMCs {P}/4_btag --FMCs {P}/4_leptonSFs_v0 --FMCs {P}/0_mcFlags_v0"
-    TREESONLYFULL = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
-    TREESONLYSKIM = "-P "+P0+"/NanoTrees_TTH_300519_v5pre_skim2LSS/%s "%(YEAR,)
-    TREESONLYMEMZVETO = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
-    TREESONLYMEMZPEAK = "-P "+P0+"/NanoTrees_TTH_300519_v5pre/%s "%(YEAR,)
 
 def base(selection):
 
@@ -58,7 +49,7 @@ def base(selection):
     if selection=='2lss':
         GO="%s ttH-multilepton/mca-2lss-mc.txt ttH-multilepton/2lss_tight.txt "%CORE
         GO="%s -W 'puWeight*btagSF_shape*leptonSF_2lss*triggerSF_2lss'"%GO
-        if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots_diff.txt --xP '^lep(3|4)_.*' --xP '^(3|4)lep_.*' --xP 'kinMVA_3l_.*' "
+        if dowhat in ["plots","ntuple"]: GO+=" ttH-multilepton/2lss_3l_plots.txt --xP '^lep(3|4)_.*' --xP '^(3|4)lep_.*' --xP 'kinMVA_3l_.*' "
         if dowhat == "plots": GO=GO.replace(LEGEND, " --legendColumns 3 --legendWidth 0.52 ")
         if dowhat == "plots": GO=GO.replace(RATIO,  " --maxRatioRange 0.6  1.99 --ratioYNDiv 210 ")
         GO += " --binname 2lss "
@@ -120,6 +111,8 @@ if __name__ == '__main__':
 
     if '2lss_' in torun:
         x = base('2lss')
+        if 'diff' in torun:
+            x = x.replace('2lss_3l_plots.txt', '2lss_3l_plots_diff.txt').replace('--showMCError', '-X --showMCError')
         if '_appl' in torun: x = add(x,'-I ^TT ')
         if '_1fo' in torun:
             x = add(x,"-A alwaystrue 1FO 'LepGood1_isLepTight+LepGood2_isLepTight==1'")
