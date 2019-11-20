@@ -79,6 +79,7 @@ class HiggsRecoTTH(Module):
         delR_H_q2l     = 0
         delR_H_j1l     = 0
         delR_H_j2l     = 0
+
         closestFatJetToLeptonVars = []
         TrueGenSum = ROOT.TLorentzVector()
 
@@ -135,25 +136,25 @@ class HiggsRecoTTH(Module):
             score = getattr(event,"BDThttTT_eventReco_mvaValue%s"%self.systsJEC[var])
             candidates=[]
             if score>self.cut_BDT_rTT_score:
-               j1top = getattr(event,"BDThttTT_eventReco_iJetSel1%s"%self.systsJEC[var])
-               j2top = getattr(event,"BDThttTT_eventReco_iJetSel2%s"%self.systsJEC[var])
-               j3top = getattr(event,"BDThttTT_eventReco_iJetSel3%s"%self.systsJEC[var])
-               jetsTopNoB   = [b for a,b in enumerate(jets) if a in [j1top,j2top,j3top] and b.btagDeepB<self.btagDeepCSVveto] #it is a jet coming from top and not a b-jet
-               jetsNoTopNoB = [j for i,j in enumerate(jets) if i not in [j1top,j2top,j3top] and j.btagDeepB<self.btagDeepCSVveto]
-               fatjetsNoB   = [b for a,b in enumerate(fatjets) if b.btagDeepB<self.bgatDeepCSVveto] # I think we want already to exclude bjets, possibly remove the requirement.
-               for _lep,lep in [(ix,x.p4()) for ix,x in enumerate(lepsFO)]:
-                   iClosestFatJetToLep = -99
-                   minDeltaRfatJetLep = 1000.
-                   for _j, j in [(ix,x.p4()) for ix,x in enumerate(fatjetsNoB)]: # Find the fat jet closest to the lepton
-                       if j.DeltaR(lep) < minDeltaRfatJetLep:
-                          iClosestFatJetToLep=_j
-                          minDeltaRfatJetLep = j.DeltaR(lep)
-                   if iClosestFatJetToLep >-1: # Otherwise there are no fat jets
-                      fj = fatjetsNoB[iClosestFatJetToLep]
-                      closestFat_deltaR = fj.p4().DeltaR(lep)
-                      closestFat_lepIsFromH = -99 # -99 if no lepton from H; 0 if this reco lepton is not the correct lepton; 1 if this reco lepton is the correct lepton
-                      if len(LFromWFromH) == 1:
-                         closestFat_lepIsFromH = 1 if (lep.DeltaR(LFromWFromH[0].p4()) < 0.1) else 0
+                j1top = getattr(event,"BDThttTT_eventReco_iJetSel1%s"%self.systsJEC[var])
+                j2top = getattr(event,"BDThttTT_eventReco_iJetSel2%s"%self.systsJEC[var])
+                j3top = getattr(event,"BDThttTT_eventReco_iJetSel3%s"%self.systsJEC[var])
+                jetsTopNoB   = [b for a,b in enumerate(jets) if a in [j1top,j2top,j3top] and b.btagDeepB<self.btagDeepCSVveto] #it is a jet coming from top and not a b-jet
+                jetsNoTopNoB = [j for i,j in enumerate(jets) if i not in [j1top,j2top,j3top] and j.btagDeepB<self.btagDeepCSVveto]
+                fatjetsNoB   = [b for a,b in enumerate(fatjets) if b.btagDeepB<self.btagDeepCSVveto] # I think we want already to exclude bjets, possibly remove the requirement.
+                for _lep,lep in [(ix,x.p4()) for ix,x in enumerate(lepsFO)]:
+                    iClosestFatJetToLep = -99
+                    minDeltaRfatJetLep = 1000.
+                    for _j, j in [(ix,x.p4()) for ix,x in enumerate(fatjetsNoB)]: # Find the fat jet closest to the lepton
+                        if j.DeltaR(lep) < minDeltaRfatJetLep:
+                            iClosestFatJetToLep=_j
+                            minDeltaRfatJetLep = j.DeltaR(lep)
+                    if iClosestFatJetToLep >-1: # Otherwise there are no fat jets
+                        fj = fatjetsNoB[iClosestFatJetToLep]
+                        closestFat_deltaR = fj.p4().DeltaR(lep)
+                        closestFat_lepIsFromH = -99 # -99 if no lepton from H; 0 if this reco lepton is not the correct lepton; 1 if this reco lepton is the correct lepton
+                        if len(LFromWFromH) == 1:
+                            closestFat_lepIsFromH = 1 if (lep.DeltaR(LFromWFromH[0].p4()) < 0.1) else 0
                         # Must probably add some ID (FatJet_jetId)
                       closestFatJetToLeptonVars.append([closestFat_deltaR, closestFat_lepIsFromH, fj.pt, fj.eta, fj.phi, fj.mass, fj.msoftdrop, fj.tau1, fj.tau2, fj.tau3, fj.tau4])
 
@@ -187,21 +188,21 @@ class HiggsRecoTTH(Module):
                            #jets tagged as coming from top didn't match with true partons coming from top"
                           mismatchedtoptaggedjets +=1 #only with respect to the hadronic top where the W is going to qq and this is what I am matching here
             best = min(candidates) if len(candidates) else None
+            for q1,q2 in itertools.combinations(QFromWFromH,2):
+                delR_H_partons = q1.p4().DeltaR(q2.p4())
             if best:
-               lepBest = leps[best[4]]
-               jetmat1 = jets[best[5]]
-               jetmat2 = jets[best[6]]
-               delR_H_j1l = leps[best[4]].p4().DeltaR(jetmat1.p4())
-               delR_H_j2l = leps[best[4]].p4().DeltaR(jetmat2.p4())
-               for q1,q2 in itertools.combinations(QFromWFromH,2):
-                   delR_H_partons = q1.p4().DeltaR(q2.p4())
-                   delR_H_q1l = q1.p4().DeltaR(leps[best[4]].p4()) # this will need to be from LFromWFromH
-                   delR_H_q2l = q2.p4().DeltaR(leps[best[4]].p4()) # this will need to be from LFromWFromH
-	           for quark in QFromWFromH:
-	               if quark.p4().DeltaR(jetmat1.p4()) < 0.3 or quark.p4().DeltaR(jetmat2.p4()) < 0.3:
-	                  matchedpartons +=1
-                   if quark.p4().DeltaR(jetmat1.p4()) < 0.3 and quark.p4().DeltaR(jetmat2.p4()) < 0.3:
-		              bothmatchedpartons +=1
+                jetmat1 = jets[best[5]]
+                jetmat2 = jets[best[6]]
+                delR_H_j1l = leps[best[4]].p4().DeltaR(jetmat1.p4())
+                delR_H_j2l = leps[best[4]].p4().DeltaR(jetmat2.p4())
+                for q1,q2 in itertools.combinations(QFromWFromH,2):
+	            delR_H_q1l = q1.p4().DeltaR(leps[best[4]].p4()) # this will need to be from LFromWFromH
+                    delR_H_q2l = q2.p4().DeltaR(leps[best[4]].p4()) # this will need to be from LFromWFromH
+                for quark in QFromWFromH:
+                    if quark.p4().DeltaR(jetmat1.p4()) < 0.3 or quark.p4().DeltaR(jetmat2.p4()) < 0.3:
+                        matchedpartons +=1
+                    if quark.p4().DeltaR(jetmat1.p4()) < 0.3 and quark.p4().DeltaR(jetmat2.p4()) < 0.3:
+		        bothmatchedpartons +=1
             else: pass
             ret["Hreco_minDRlj%s"                     %self.systsJEC[var]] = best[0 ] if best else -99
             ret["Hreco_visHmass%s"                    %self.systsJEC[var]] = best[2 ] if best else -99
