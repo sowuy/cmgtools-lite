@@ -7,6 +7,7 @@ from root_numpy import root2array, tree2array
 ## ------------------------------------------------------
 f = ROOT.TFile.Open("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root")
 #f = ROOT.TFile.Open("/home/ucl/cp3/elfaham/CMSSW_10_4_0/src/CMGTools/TTHAnalysis/macros/diff/TTHnobb_fxfx_Friend.root")
+
 t = f.Get("Friends")
 ## select branches and apply selection: only events of which visible pT is constructed
 ## -----------------------------------------------------------------------------------
