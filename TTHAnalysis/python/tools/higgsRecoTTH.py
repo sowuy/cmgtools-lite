@@ -15,8 +15,7 @@ class HiggsRecoTTH(Module):
         self.label = label
         self.branches = []
         self.systsJEC = {0:"", 1:"_jesTotalCorrUp", -1:"_jesTotalCorrDown"} if doSystJEC else {0:""}
-        for var in self.systsJEC: self.branches.extend(["Hreco_%s%s"%(x,self.systsJEC[var]) for x in ["minDRlj","visHmass","Wmass","lepIdx","j1Idx","j2Idx","pTHvis","matchedpartons","bothmatchedpartons","mismatchedtoptaggedjets","pTHgen","delR_H_partons","delR_H_j1j2","BDThttTT_eventReco_mvaValue","delR_H_q1l", "delR_H_q2l", "delR_H_j1l", "delR_H_j2l","pTTrueVisible"]]) # added new branches here
-
+        for var in self.systsJEC: self.branches.extend(["Hreco_%s%s"%(x,self.systsJEC[var]) for x in ["minDRlj","visHmass","Wmass","lepIdx","j1Idx","j2Idx","pTHvis","matchedpartons","bothmatchedpartons","mismatchedtoptaggedjets","pTHgen","pTHgenAll","delR_H_partons","delR_H_j1j2","BDThttTT_eventReco_mvaValue","delR_H_q1l", "delR_H_q2l", "delR_H_j1l", "delR_H_j2l","pTTrueGen","pTTrueGenAll"]]) # added new branches here
         self.cut_BDT_rTT_score = cut_BDT_rTT_score
         self.cuts_mW_had = cuts_mW_had
         self.cuts_mH_vis = cuts_mH_vis
@@ -57,6 +56,7 @@ class HiggsRecoTTH(Module):
         bothmatchedpartons      = 0
         mismatchedtoptaggedjets = 0
         pTHgen = 0
+        pTTrueGen = 0
         pTTrueVisible = 0
         delR_H_partons = 0
         delR_H_j1j2    = 0
@@ -98,6 +98,12 @@ class HiggsRecoTTH(Module):
                   if abs(genpar[genpar[part.genPartIdxMother].genPartIdxMother].pdgId) == 6:
                      #print "the mother of this W is a Top"
                      LFromWFromT.append(part)
+
+            for lep in LFromWFromH:
+                for q1,q2 in itertools.combinations(QFromWFromH,2)]:
+                    pTTrueGen = (lep.p4()+q1.p4()+q2.p4()).Pt()
+
+
     # loop over gen jets
     # ------------------
         #for jet in genjet:
@@ -132,7 +138,6 @@ class HiggsRecoTTH(Module):
 			mW = W.M()
 			if mW<self.cuts_mW_had[0] or mW>self.cuts_mW_had[1]: continue
 			Wconstr = ROOT.TLorentzVector()
-			trueVisible = ROOT.TLorentzVector()
 			Wconstr.SetPtEtaPhiM(W.Pt(),W.Eta(),W.Phi(),80.4)
 			Hvisconstr = lep+Wconstr
 			mHvisconstr = Hvisconstr.M()
@@ -165,8 +170,6 @@ class HiggsRecoTTH(Module):
                jetmat2 = jets[best[6]]
                delR_H_j1l = deltaR(leps[best[4]].p4().Eta(),leps[best[4]].p4().Phi(), jetmat1.p4().Eta(),jetmat1.p4().Phi())
                delR_H_j2l = deltaR(leps[best[4]].p4().Eta(),leps[best[4]].p4().Phi(), jetmat2.p4().Eta(),jetmat2.p4().Phi())
-               trueVisible = lepBest + jetmat1 + jetmat2
-               pTTrueVisible = trueVisible.Pt()
                for q1,q2 in itertools.combinations(QFromWFromH,2):
                     delR_H_partons = deltaR(q1.p4().Eta(),q1.p4().Phi(), q2.p4().Eta(),q2.p4().Phi())
 	            delR_H_q1l = deltaR(q1.p4().Eta(),q1.p4().Phi(), leps[best[4]].p4().Eta(),leps[best[4]].p4().Phi())
@@ -188,11 +191,14 @@ class HiggsRecoTTH(Module):
             ret["Hreco_delR_H_j1j2%s"                 %self.systsJEC[var]] = best[1 ] if best else -99
             ret["Hreco_matchedpartons%s"              %self.systsJEC[var]] = matchedpartons if best else -99
             ret["Hreco_bothmatchedpartons%s"          %self.systsJEC[var]] = bothmatchedpartons if best else -99
-            ret["Hreco_pTHgen%s"                      %self.systsJEC[var]] = pTHgen
+            ret["Hreco_pTHgenAll%s"                   %self.systsJEC[var]] = pTHgen
+            ret["Hreco_pTHgen%s"                      %self.systsJEC[var]] = pTHgen if best else -99
             ret["Hreco_mismatchedtoptaggedjets%s"     %self.systsJEC[var]] = mismatchedtoptaggedjets
             ret["Hreco_BDThttTT_eventReco_mvaValue%s" %self.systsJEC[var]] = score
             ret["Hreco_delR_H_q1l%s"                  %self.systsJEC[var]] = delR_H_q1l if best else -99
             ret["Hreco_delR_H_q2l%s"                  %self.systsJEC[var]] = delR_H_q2l if best else -99
             ret["Hreco_delR_H_j1l%s"                  %self.systsJEC[var]] = delR_H_j1l if best else -99
             ret["Hreco_delR_H_j2l%s"                  %self.systsJEC[var]] = delR_H_j2l if best else -99
+            ret["Hreco_pTTrueGen%s"                   %self.systsJEC[var]] = pTTrueGen if best else -99
+            ret["Hreco_pTTrueGenAll%s"                %self.systsJEC[var]] = pTTrueGen
         return ret

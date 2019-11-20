@@ -1,11 +1,12 @@
-from __future__ import division 
+from __future__ import division
 import ROOT
 import numpy as np
 from root_numpy import root2array, tree2array
 
 ## open the files and get the tree. Make sure of the path!
 ## ------------------------------------------------------
-f = ROOT.TFile.Open("/home/ucl/cp3/elfaham/CMSSW_10_4_0/src/CMGTools/TTHAnalysis/macros/diff/TTHnobb_fxfx_Friend.root")
+f = ROOT.TFile.Open("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root")
+#f = ROOT.TFile.Open("/home/ucl/cp3/elfaham/CMSSW_10_4_0/src/CMGTools/TTHAnalysis/macros/diff/TTHnobb_fxfx_Friend.root")
 t = f.Get("Friends")
 ## select branches and apply selection: only events of which visible pT is constructed
 ## -----------------------------------------------------------------------------------
@@ -16,8 +17,8 @@ array4 = tree2array(t, branches=['Hreco_matchedpartons'], selection ='Hreco_matc
 array5 = tree2array(t, branches=['Hreco_matchedpartons'], selection ='Hreco_matchedpartons == 2 ')
 array6 = tree2array(t, branches=['Hreco_matchedpartons'], selection ='Hreco_matchedpartons >= 0 ')
 
-print ("length of vis array              = " + str(len(array1))) 
-#print ("length of gen array              = " + str(len(array2))) 
+print ("length of vis array              = " + str(len(array1)))
+#print ("length of gen array              = " + str(len(array2)))
 print ("length of unvis array            = " + str(len(array3)))
 print ("length of 1 matchedpartons       = " + str(len(array4)))
 print ("length of 2 matchedpartons       = " + str(len(array5)))

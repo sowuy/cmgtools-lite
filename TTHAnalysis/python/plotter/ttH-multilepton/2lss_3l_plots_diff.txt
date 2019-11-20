@@ -19,8 +19,15 @@
 2lep_2DpT_STXS_GEN: HTXS_Higgs_pt\:Hreco_pTHgen : [0,120,350]*[0,120,350] ; XTitle="pTH_STXS (GeV)", YTitle="pTHgen (GeV)", Legend='TL', LegendCutoff=1e-5, PlotMode='COLZ TEXT', IncludeOverflows=True
 
 
+2lep_pTTrueGen                                 :  if3(nLepFO>1, Hreco_pTTrueGen,-99) : 50,0,350;        XTitle="pT of true visible (GeV)"      , Legend='TL', MoreY=1.8, IncludeOverflows=False
 
+2lep_2DpT_recoVStrue_2bins: Hreco_pTHvis\:Hreco_pTTrueGen            : [0,120,350]*[0,120,350]  ; XTitle="pTHvis (GeV)", YTitle="pTTrueGen (GeV)", Legend='TL', LegendCutoff=1e-5, PlotMode='COLZ TEXT', IncludeOverflows=True
+2lep_2DpT_recoVStrue_3bins: Hreco_pTHvis\:Hreco_pTTrueGen            : [0,120,200,350]*[0,120,200,350]  ; XTitle="pTHvis (GeV)", YTitle="pTTrueGen (GeV)", Legend='TL', LegendCutoff=1e-5, PlotMode='COLZ TEXT', IncludeOverflows=True
+2lep_2DpT_recoVStrue: Hreco_pTHvis\:Hreco_pTTrueGen            :  [25,35,50,70,90,110,130,160,200,300]*[25,35,50,70,90,110,130,160,200,300] ; XTitle="pTHvis (GeV)", YTitle="pTTrueGen (GeV)", Legend='TL', LegendCutoff=1e-5, PlotMode='COLZ', IncludeOverflows=True
 
+2lep_2DpT_trueVSgen_2bins: Hreco_pTTrueGen\:Hreco_pTHgen           :  [0,120,350]*[0,120,350] ; XTitle="pTTrueGen (GeV)", YTitle="pTHgen (GeV)", Legend='TL', LegendCutoff=1e-5, PlotMode='COLZ TEXT', IncludeOverflows=True
+2lep_2DpT_trueVSgen_3bins: Hreco_pTTrueGen\:Hreco_pTHgen           :  [0,120,200,350]*[0,120,200,350] ; XTitle="pTTrueGen (GeV)", YTitle="pTHgen (GeV)", Legend='TL', LegendCutoff=1e-5, PlotMode='COLZ TEXT', IncludeOverflows=True
+2lep_2DpT_trueVSgen: Hreco_pTTrueGen\:Hreco_pTHgen           :  [25,35,50,70,90,110,130,160,200,300]*[25,35,50,70,90,110,130,160,200,300] ; XTitle="pTTrueGen (GeV)", YTitle="pTHgen (GeV)", Legend='TL', LegendCutoff=1e-5, PlotMode='COLZ', IncludeOverflows=True
 
 
 #TODO for this you need to find the command in the mcPlots.py that disables the reweighting
