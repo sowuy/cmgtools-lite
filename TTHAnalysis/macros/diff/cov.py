@@ -3,46 +3,68 @@ import ROOT
 import numpy as np
 from root_numpy import root2array, tree2array
 
+from optparse import OptionParser
+parser = OptionParser(usage="%prog [options]")
+# common options, independent of the flavour chosen
+parser.add_option("-i", "--inputFile", dest="inputFile",  type="string", default="./skimmedTrees_16/2lss_diff_NoTop-tagged/TTHnobb_fxfx_Friend.root", help="Friend tree with the needed information");
+(options, args) = parser.parse_args()
+
 ## open the files and get the tree. Make sure of the path!
 ## ------------------------------------------------------
-f = ROOT.TFile.Open("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root")
+#f = ROOT.TFile.Open("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root")
 #f = ROOT.TFile.Open("/home/ucl/cp3/elfaham/CMSSW_10_4_0/src/CMGTools/TTHAnalysis/macros/diff/TTHnobb_fxfx_Friend.root")
 
+f = ROOT.TFile.Open(options.inputFile)
+if not f:
+    raise ValueError('File not opened')
 t = f.Get("Friends")
+if not t:
+    raise ValueError('Tree not loaded')
 ## select branches and apply selection: only events of which visible pT is constructed
 ## -----------------------------------------------------------------------------------
-array1 = tree2array(t, branches=['Hreco_pTHvis'], selection ='Hreco_pTHvis >= 0 ')
-array2 = tree2array(t, branches=['Hreco_pTHgen'], selection ='Hreco_pTHvis >= 0 ')
-array3 = tree2array(t, branches=['Hreco_pTHvis'], selection ='Hreco_pTHvis < 0  ')
-array4 = tree2array(t, branches=['Hreco_matchedpartons'], selection ='Hreco_matchedpartons == 1 ')
-array5 = tree2array(t, branches=['Hreco_matchedpartons'], selection ='Hreco_matchedpartons == 2 ')
-array6 = tree2array(t, branches=['Hreco_matchedpartons'], selection ='Hreco_matchedpartons >= 0 ')
 
-print ("length of vis array              = " + str(len(array1)))
-#print ("length of gen array              = " + str(len(array2)))
-print ("length of unvis array            = " + str(len(array3)))
-print ("length of 1 matchedpartons       = " + str(len(array4)))
-print ("length of 2 matchedpartons       = " + str(len(array5)))
-print ("length of 1 or 2  matchedpartons = " + str(len(array6)))
+hreco_pthvis = tree2array(t, branches=['Hreco_pTHvis'], selection ='Hreco_pTHvis >= 0 ')
+hreco_pthgen = tree2array(t, branches=['Hreco_pTHgen'], selection ='Hreco_pTHvis >= 0 ')
+hreco_pthvis_recoFail = tree2array(t, branches=['Hreco_pTHvis'], selection ='Hreco_pTHvis < 0  ')
+hreco_onematchedparton = tree2array(t, branches=['Hreco_nmatchedpartons'], selection ='Hreco_nmatchedpartons == 1 ')
+hreco_twomatchedpartons = tree2array(t, branches=['Hreco_nmatchedpartons'], selection ='Hreco_nmatchedpartons == 2 ')
+hreco_nmatchedpartonsall = tree2array(t, branches=['Hreco_nmatchedpartons'], selection ='Hreco_nmatchedpartons >= 0 ')
 
-a = len(array1)
-b = len(array3)
-d = len(array4)
-e = len(array5)
-f = len(array6)
+hreco_onelfromwfromh = tree2array(t, branches=['Hreco_nLFromWFromH'], selection ='Hreco_nLFromWFromH == 1 ')
+hreco_twoqfromwfromh = tree2array(t, branches=['Hreco_nQFromWFromH'], selection ='Hreco_nQFromWFromH == 2 ')
+hreco_onelandtwoqfromwfromh = tree2array(t, branches=['Hreco_nLFromWFromH'], selection ='Hreco_nLFromWFromH == 1 && Hreco_nQFromWFromH == 2 ')
+hreco_nlfromwfromh = tree2array(t, branches=['Hreco_nLFromWFromH'], selection ='')
+hreco_nqfromwfromh = tree2array(t, branches=['Hreco_nQFromWFromH'], selection ='')
 
-c = (a/(a+b))*100
-c_1 = (d/f)*100
-c_2 = (e/f)*100
+print("Fraction of events with one lepton from W from H:", float(len(hreco_onelfromwfromh)/len(hreco_nlfromwfromh)))
+print("Fraction of events with two quarks from W from H:", float(len(hreco_twoqfromwfromh)/len(hreco_nqfromwfromh)))
+print("Fraction of events with one lepton from W from H AND two quarks from W from H:", float(len(hreco_onelandtwoqfromwfromh)/len(hreco_nlfromwfromh)))
 
-print ("fraction of reconstruced events is " + str(c) + "% of the total number of events")
-print ("fraction of reconstructed events in which one parton is matched to a jet " + str(c_1) + "% of the total number of reconstructed events")
-print ("fraction of reconstructed events in which two partons are matched to two jets " + str(c_2) + "% of the total number of reconstructed events")
+print ("length of vis array              = " + str(len(hreco_pthvis)))
+#print ("length of gen array              = " + str(len(hreco_pthgen)))
+print ("length of unvis array            = " + str(len(hreco_pthvis_recoFail)))
+print ("length of 1 matchedpartons       = " + str(len(hreco_onematchedparton)))
+print ("length of 2 matchedpartons       = " + str(len(hreco_twomatchedpartons)))
+print ("length of 1 or 2  matchedpartons = " + str(len(hreco_nmatchedpartonsall)))
+
+n_hreco_pthvis = len(hreco_pthvis)
+n_hreco_pthvis_recoFail = len(hreco_pthvis_recoFail)
+n_hreco_onematchedparton = len(hreco_onematchedparton)
+n_hreco_twomatchedpartons = len(hreco_twomatchedpartons)
+n_hreco_matchedpartonsall = len(hreco_nmatchedpartonsall)
+
+fraction_pthvis_is_reconstructed = (n_hreco_pthvis/(n_hreco_pthvis+n_hreco_pthvis_recoFail))*100
+fraction_onematchedparton = (n_hreco_onematchedparton/n_hreco_matchedpartonsall)*100
+fraction_twomatchedpartons = (n_hreco_twomatchedpartons/n_hreco_matchedpartonsall)*100
+
+print ("fraction of reconstruced events is " + str(fraction_pthvis_is_reconstructed) + "% of the total number of events")
+print ("fraction of reconstructed events in which one parton is matched to a jet " + str(fraction_onematchedparton) + "% of the total number of reconstructed events")
+print ("fraction of reconstructed events in which two partons are matched to two jets " + str(fraction_twomatchedpartons) + "% of the total number of reconstructed events")
 
 ## set the arrays to float type
 ## ----------------------------
-X = np.asarray(array1 ,float)
-Y = np.asarray(array2 ,float)
+X = np.asarray(hreco_pthvis ,float)
+Y = np.asarray(hreco_pthgen ,float)
 
 print ("corr of vis with gen = "   + str(np.corrcoef(X,Y)[0,1]))
 #print ("corr of vis with itself    = "+ str(np.corrcoef(X)))
