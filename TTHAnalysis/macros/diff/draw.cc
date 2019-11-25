@@ -7,12 +7,8 @@
 
 void delR_q1_l(){
 TCanvas *c = new TCanvas;
-<<<<<<< HEAD
-TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
-//TFile *f  = new TFile("/nfs/user/elfaham/104X/v6/2016/2lss_diff_Top-tagged/TTHnobb_fxfx_Friend.root");
-=======
+
 TFile *f  = new TFile("./skimmedTrees_16/2lss_diff_Top-tagged/TTHnobb_fxfx_Friend.root");
->>>>>>> c4547a02576836d5587d48b7a4c7921ab1254b94
 //TFile *f  = new TFile("./TTHnobb_fxfx_Friend.root");
 TTree *tr = (TTree*)f->Get("Friends");
 TH1F *delR_q1_l = new TH1F("delR_q1_l","delR_q1_l", 11, 0, 10);
@@ -28,12 +24,7 @@ delete img0;
 
 void delR_q2_l(){
 TCanvas *c1 = new TCanvas;
-<<<<<<< HEAD
-TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
-//TFile *f  = new TFile("/nfs/user/elfaham/104X/v6/2016/2lss_diff_Top-tagged/TTHnobb_fxfx_Friend.root");
-=======
 TFile *f  = new TFile("./skimmedTrees_16/2lss_diff_Top-tagged/TTHnobb_fxfx_Friend.root");
->>>>>>> c4547a02576836d5587d48b7a4c7921ab1254b94
 //TFile *f  = new TFile("./TTHnobb_fxfx_Friend.root");
 TTree *tr = (TTree*)f->Get("Friends");
 TH1F *delR_q2_l = new TH1F("delR_q2_l","delR_q2_l", 11, 0, 10);
@@ -49,11 +40,8 @@ delete img1;
 
 void delR_partons(){
 TCanvas *c2 = new TCanvas;
-<<<<<<< HEAD
-TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
-=======
+
 TFile *f  = new TFile("./skimmedTrees_16/2lss_diff_Top-tagged/TTHnobb_fxfx_Friend.root");
->>>>>>> c4547a02576836d5587d48b7a4c7921ab1254b94
 //TFile *f  = new TFile("./TTHnobb_fxfx_Friend.root");
 TTree *tr = (TTree*)f->Get("Friends");
 TH1F *delR_partons = new TH1F("delR_partons","delR_partons", 11, 0, 10);
@@ -69,11 +57,8 @@ delete img2;
 
 void delR_j1j2(){
 TCanvas *c3 = new TCanvas;
-<<<<<<< HEAD
-TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
-=======
+
 TFile *f  = new TFile("./skimmedTrees_16/2lss_diff_Top-tagged/TTHnobb_fxfx_Friend.root");
->>>>>>> c4547a02576836d5587d48b7a4c7921ab1254b94
 //TFile *f  = new TFile("./TTHnobb_fxfx_Friend.root");
 TTree *tr = (TTree*)f->Get("Friends");
 TH1F *delR_j1j2 = new TH1F("delR_j1j2","delR_j1j2", 11, 0, 10);
@@ -95,11 +80,8 @@ delete img3;
 
 void delR_j1l(){
 TCanvas *c4 = new TCanvas;
-<<<<<<< HEAD
-TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
-=======
+
 TFile *f  = new TFile("./skimmedTrees_16/2lss_diff_Top-tagged/TTHnobb_fxfx_Friend.root");
->>>>>>> c4547a02576836d5587d48b7a4c7921ab1254b94
 //TFile *f  = new TFile("./TTHnobb_fxfx_Friend.root");
 TTree *tr = (TTree*)f->Get("Friends");
 TH1F *delR_j1l = new TH1F("delR_j1l","delR_j1l", 11, 0, 10);
@@ -115,11 +97,8 @@ delete img4;
 
 void delR_j2l(){
 TCanvas *c5 = new TCanvas;
-<<<<<<< HEAD
-TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
-=======
+
 TFile *f  = new TFile("./skimmedTrees_16/2lss_diff_Top-tagged/TTHnobb_fxfx_Friend.root");
->>>>>>> c4547a02576836d5587d48b7a4c7921ab1254b94
 //TFile *f  = new TFile("./TTHnobb_fxfx_Friend.root");
 TTree *tr = (TTree*)f->Get("Friends");
 TH1F *delR_j2l = new TH1F("delR_j2l","delR_j2l", 11, 0, 10);
@@ -152,7 +131,6 @@ delete img5;
 
 void drawnum_1(){
 TCanvas *c7 = new TCanvas;
-<<<<<<< HEAD
 TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
 //TFile *f  = new TFile("./TTHnobb_fxfx_Friend.root");
 TTree *tr = (TTree*)f->Get("Friends");
@@ -183,6 +161,22 @@ delete c8;
 delete img7;
 }
 
+void drawPtTrueGen(){
+TCanvas *c21 = new TCanvas;
+TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
+//TFile *f  = new TFile("./TTHnobb_fxfx_Friend.root");
+TTree *tr = (TTree*)f->Get("Friends");
+TH1F *hpTTrueGen = new TH1F("hpTTrueGen","hnum", 40, 0, 500);
+tr->Draw("Hreco_pTTrueGenAll>>hpTTrueGen","Hreco_pTTrueGenAll>-99");
+hpTTrueGen->Draw();
+TImage *img45 = TImage::Create();
+img45->FromPad(c21);
+img45->WriteImage("./rootplots/hpTTrueGentest.png");
+delete hpTTrueGen;
+delete c21;
+delete img45;
+}
+
 void drawden(){
 TCanvas *c9 = new TCanvas;
 TFile *f  = new TFile("/nfs/user/swuycken/TTH/2016/2lss_diff_Top-tagged_SW/TTHnobb_fxfx_Friend.root");
@@ -200,14 +194,15 @@ delete img8;
 }
 
 void draw(){
-drawnum_1();
-drawnum_2();
-drawden();
-drawscore();
-delR_q1_l();
-delR_q2_l();
-delR_partons();
-delR_j1l();
-delR_j2l();
-delR_j1j2();
+//drawnum_1();
+//drawnum_2();
+//drawden();
+//drawscore();
+//delR_q1_l();
+//delR_q2_l();
+//delR_partons();
+//delR_j1l();
+//delR_j2l();
+//delR_j1j2();
+drawPtTrueGen();
 }

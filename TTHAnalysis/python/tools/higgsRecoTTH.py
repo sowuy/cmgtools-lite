@@ -19,7 +19,7 @@ class HiggsRecoTTH(Module):
                                                                                                       "matchedpartons","bothmatchedpartons","mismatchedtoptaggedjets",
                                                                                                       "pTHgen","pTHgenAll","delR_H_partons","delR_H_j1j2","BDThttTT_eventReco_mvaValue",
                                                                                                       "delR_H_q1l", "delR_H_q2l", "delR_H_j1l", "delR_H_j2l",
-                                                                                                      "nQFromWFromH","nLFromWFromH","nQFromWFromT","nLFromWFromT","pTTrueGen","pTTrueGenAll"]]) # added new branches here
+                                                                                                      "nQFromWFromH","nLFromWFromH","nQFromWFromT","nLFromWFromT","pTTrueGen","pTTrueGenAll","deltaM_trueGen_H"]]) # added new branches here
 
         for mylep in [0, 1]:
             for var in self.systsJEC: self.branches.extend(["Hreco_%s%s"%(x,self.systsJEC[var]) for x in ["l%s_fj_deltaR"%mylep, "l%s_fj_lepIsFromH"%mylep,"l%s_fj_pt"%mylep,"l%s_fj_eta"%mylep,
@@ -72,6 +72,8 @@ class HiggsRecoTTH(Module):
         bothmatchedpartons      = 0
         mismatchedtoptaggedjets = 0
         pTHgen = 0
+        massHgen = 0
+        deltaM_trueGen_H=0
         pTTrueGen = 0
         delR_H_partons = 0
         delR_H_j1j2    = 0
@@ -89,6 +91,7 @@ class HiggsRecoTTH(Module):
             if part.pdgId == 25:
                if part.statusFlags &(1 << statusFlagsMap['isHardProcess']):
                   pTHgen = part.p4().Pt()
+                  massHgen = part.p4().M()
             elif abs(part.pdgId) in range (1,7): # from 1 to 6
                if self.debug: print "it is a quark"
                if part.genPartIdxMother >= 0 and abs(genpar[part.genPartIdxMother].pdgId) == 24:
@@ -114,6 +117,8 @@ class HiggsRecoTTH(Module):
             for q1,q2 in itertools.combinations(QFromWFromH,2):
                 trueGenSum = lep.p4()+q1.p4()+q2.p4()
                 pTTrueGen = trueGenSum.Pt()
+                massTrueGen = trueGenSum.M()
+                deltaM_trueGen_H = massTrueGen-massHgen
 
         # loop over gen jets
         # ------------------
@@ -156,23 +161,23 @@ class HiggsRecoTTH(Module):
                         if len(LFromWFromH) == 1:
                             closestFat_lepIsFromH = 1 if (lep.DeltaR(LFromWFromH[0].p4()) < 0.1) else 0
                         # Must probably add some ID (FatJet_jetId)
-                      closestFatJetToLeptonVars.append([closestFat_deltaR, closestFat_lepIsFromH, fj.pt, fj.eta, fj.phi, fj.mass, fj.msoftdrop, fj.tau1, fj.tau2, fj.tau3, fj.tau4])
+                        closestFatJetToLeptonVars.append([closestFat_deltaR, closestFat_lepIsFromH, fj.pt, fj.eta, fj.phi, fj.mass, fj.msoftdrop, fj.tau1, fj.tau2, fj.tau3, fj.tau4])
 
-                   for _j1,_j2,j1,j2 in [(jets.index(x1),jets.index(x2),x1.p4(),x2.p4()) for x1,x2 in itertools.combinations(jetsNoTopNoB,2)]:
-                       j1.SetPtEtaPhiM(getattr(jets[jets.index(x1)],'pt%s'%self.systsJEC[var]),j1.Eta(), j1.Phi(), j1.M())
-                       j2.SetPtEtaPhiM(getattr(jets[jets.index(x2)],'pt%s'%self.systsJEC[var]),j2.Eta(), j2.Phi(), j2.M())
-                       W = j1+j2
-                       mW = W.M()
-                       if mW<self.cuts_mW_had[0] or mW>self.cuts_mW_had[1]: continue
-                       Wconstr = ROOT.TLorentzVector()
-                       Wconstr.SetPtEtaPhiM(W.Pt(),W.Eta(),W.Phi(),80.4)
-                       Hvisconstr = lep+Wconstr
-                       mHvisconstr = Hvisconstr.M()
-                       pTHvisconstr = Hvisconstr.Pt()
-                       if mHvisconstr<self.cuts_mH_vis[0] or mHvisconstr>self.cuts_mH_vis[1]: continue
-                       mindR = min(lep.DeltaR(j1),lep.DeltaR(j2))
-                       delR_H_j1j2 = j1.DeltaR(j2)
-                       candidates.append((mindR,delR_H_j1j2,mHvisconstr,mW,_lep,_j1,_j2,pTHvisconstr))
+                    for _j1,_j2,j1,j2 in [(jets.index(x1),jets.index(x2),x1.p4(),x2.p4()) for x1,x2 in itertools.combinations(jetsNoTopNoB,2)]:
+                        j1.SetPtEtaPhiM(getattr(jets[jets.index(x1)],'pt%s'%self.systsJEC[var]),j1.Eta(), j1.Phi(), j1.M())
+                        j2.SetPtEtaPhiM(getattr(jets[jets.index(x2)],'pt%s'%self.systsJEC[var]),j2.Eta(), j2.Phi(), j2.M())
+                        W = j1+j2
+                        mW = W.M()
+                        if mW<self.cuts_mW_had[0] or mW>self.cuts_mW_had[1]: continue
+                        Wconstr = ROOT.TLorentzVector()
+                        Wconstr.SetPtEtaPhiM(W.Pt(),W.Eta(),W.Phi(),80.4)
+                        Hvisconstr = lep+Wconstr
+                        mHvisconstr = Hvisconstr.M()
+                        pTHvisconstr = Hvisconstr.Pt()
+                        if mHvisconstr<self.cuts_mH_vis[0] or mHvisconstr>self.cuts_mH_vis[1]: continue
+                        mindR = min(lep.DeltaR(j1),lep.DeltaR(j2))
+                        delR_H_j1j2 = j1.DeltaR(j2)
+                        candidates.append((mindR,delR_H_j1j2,mHvisconstr,mW,_lep,_j1,_j2,pTHvisconstr))
                         # need to remove #TODO
                         # --------------
                         #for jet in gengoodJets:
@@ -182,11 +187,11 @@ class HiggsRecoTTH(Module):
                             #elif deltaR(jet.p4().Eta(),jet.p4().Phi(), j1.Eta(),j1.Phi()) < 0.3 and deltaR(jet.p4().Eta(),jet.p4().Phi(), j2.Eta(),j2.Phi()) < 0.3:
                                  #print "both detector level jets match with both true ones --> counting it"
                                  #bothmatchedjets +=1
-               for topjet in jetsTopNoB:
-                   for gentopquark in QFromWFromT:
-                       if topjet.p4().DeltaR(gentopquark.p4()) > 0.5:
+                for topjet in jetsTopNoB:
+                    for gentopquark in QFromWFromT:
+                        if topjet.p4().DeltaR(gentopquark.p4()) > 0.5:
                            #jets tagged as coming from top didn't match with true partons coming from top"
-                          mismatchedtoptaggedjets +=1 #only with respect to the hadronic top where the W is going to qq and this is what I am matching here
+                           mismatchedtoptaggedjets +=1 #only with respect to the hadronic top where the W is going to qq and this is what I am matching here
             best = min(candidates) if len(candidates) else None
             for q1,q2 in itertools.combinations(QFromWFromH,2):
                 delR_H_partons = q1.p4().DeltaR(q2.p4())
@@ -229,6 +234,7 @@ class HiggsRecoTTH(Module):
             ret['Hreco_nLFromWFromT%s'                      %self.systsJEC[var]] = len(LFromWFromT)
             ret["Hreco_pTTrueGen%s"                   %self.systsJEC[var]] = pTTrueGen if best else -99
             ret["Hreco_pTTrueGenAll%s"                %self.systsJEC[var]] = pTTrueGen
+            ret["Hreco_deltaM_trueGen_H%s"           %self.systsJEC[var]] = deltaM_trueGen_H
 
             for mylep in [0, 1]:
                 ret["Hreco_l%s_fj_deltaR%s"      %(mylep,self.systsJEC[var])] = closestFatJetToLeptonVars[mylep][0] if len(closestFatJetToLeptonVars) == 2 else -99
